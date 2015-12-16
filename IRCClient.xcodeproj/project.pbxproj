@@ -8,12 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		86F2EFEA1C21F73600B033A4 /* IRCClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFE91C21F73600B033A4 /* IRCClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		86F2EFF81C21F81900B033A4 /* IRCClientChannel_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFF11C21F81900B033A4 /* IRCClientChannel_Private.h */; };
+		86F2EFF91C21F81900B033A4 /* IRCClientChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFF21C21F81900B033A4 /* IRCClientChannel.h */; };
+		86F2EFFA1C21F81900B033A4 /* IRCClientChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 86F2EFF31C21F81900B033A4 /* IRCClientChannel.m */; };
+		86F2EFFB1C21F81900B033A4 /* IRCClientChannelDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFF41C21F81900B033A4 /* IRCClientChannelDelegate.h */; };
+		86F2EFFC1C21F81900B033A4 /* IRCClientSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFF51C21F81900B033A4 /* IRCClientSession.h */; };
+		86F2EFFD1C21F81900B033A4 /* IRCClientSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 86F2EFF61C21F81900B033A4 /* IRCClientSession.m */; };
+		86F2EFFE1C21F81900B033A4 /* IRCClientSessionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFF71C21F81900B033A4 /* IRCClientSessionDelegate.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		86F2EFE61C21F73600B033A4 /* IRCClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IRCClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		86F2EFE91C21F73600B033A4 /* IRCClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRCClient.h; sourceTree = "<group>"; };
 		86F2EFEB1C21F73600B033A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		86F2EFF11C21F81900B033A4 /* IRCClientChannel_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClientChannel_Private.h; sourceTree = "<group>"; };
+		86F2EFF21C21F81900B033A4 /* IRCClientChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClientChannel.h; sourceTree = "<group>"; };
+		86F2EFF31C21F81900B033A4 /* IRCClientChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCClientChannel.m; sourceTree = "<group>"; };
+		86F2EFF41C21F81900B033A4 /* IRCClientChannelDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClientChannelDelegate.h; sourceTree = "<group>"; };
+		86F2EFF51C21F81900B033A4 /* IRCClientSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClientSession.h; sourceTree = "<group>"; };
+		86F2EFF61C21F81900B033A4 /* IRCClientSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRCClientSession.m; sourceTree = "<group>"; };
+		86F2EFF71C21F81900B033A4 /* IRCClientSessionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClientSessionDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +60,13 @@
 		86F2EFE81C21F73600B033A4 /* IRCClient */ = {
 			isa = PBXGroup;
 			children = (
+				86F2EFF11C21F81900B033A4 /* IRCClientChannel_Private.h */,
+				86F2EFF21C21F81900B033A4 /* IRCClientChannel.h */,
+				86F2EFF31C21F81900B033A4 /* IRCClientChannel.m */,
+				86F2EFF41C21F81900B033A4 /* IRCClientChannelDelegate.h */,
+				86F2EFF51C21F81900B033A4 /* IRCClientSession.h */,
+				86F2EFF61C21F81900B033A4 /* IRCClientSession.m */,
+				86F2EFF71C21F81900B033A4 /* IRCClientSessionDelegate.h */,
 				86F2EFE91C21F73600B033A4 /* IRCClient.h */,
 				86F2EFEB1C21F73600B033A4 /* Info.plist */,
 			);
@@ -59,6 +80,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86F2EFFE1C21F81900B033A4 /* IRCClientSessionDelegate.h in Headers */,
+				86F2EFF91C21F81900B033A4 /* IRCClientChannel.h in Headers */,
+				86F2EFFB1C21F81900B033A4 /* IRCClientChannelDelegate.h in Headers */,
+				86F2EFFC1C21F81900B033A4 /* IRCClientSession.h in Headers */,
+				86F2EFF81C21F81900B033A4 /* IRCClientChannel_Private.h in Headers */,
 				86F2EFEA1C21F73600B033A4 /* IRCClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,6 +156,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86F2EFFD1C21F81900B033A4 /* IRCClientSession.m in Sources */,
+				86F2EFFA1C21F81900B033A4 /* IRCClientChannel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +261,7 @@
 				INFOPLIST_FILE = IRCClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_BUNDLE_IDENTIFIER = saidachmiz.IRCClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -251,6 +280,7 @@
 				INFOPLIST_FILE = IRCClient/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_BUNDLE_IDENTIFIER = saidachmiz.IRCClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
