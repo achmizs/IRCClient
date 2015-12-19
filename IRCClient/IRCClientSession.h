@@ -1,3 +1,6 @@
+//
+//	IRCClientSession.h
+//	IRCClient
 /*! \mainpage IRCClient - a Cocoa IRC Framework to create IRC clients
  *
  * \section intro_sec Introduction
@@ -52,14 +55,6 @@
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public 
  * License for more details.
  * </PRE>
- */
-
-/** 
- * @file IRCClientSession.h
- * @author Nathan Ollerenshaw
- * @version 1.0
- * @date 01.2009
- * @brief Represents a connected IRC Session.
  */
 
 #import <Cocoa/Cocoa.h>

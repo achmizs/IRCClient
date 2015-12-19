@@ -1,7 +1,10 @@
-/* 
- * Modified IRCClient Copyright 2015 Said Achmiz (www.saidachmiz.net)
+//
+//	IRCClientSessionDelegate.h
+//	IRCClient
+/*
+ * Copyright 2015 Said Achmiz (www.saidachmiz.net)
  *
- * Original IRCClient Copyright (C) 2009 Nathan Ollerenshaw chrome@stupendous.net
+ * Copyright (C) 2009 Nathan Ollerenshaw chrome@stupendous.net
  *
  * This library is free software; you can redistribute it and/or modify it 
  * under the terms of the GNU Lesser General Public License as published by 
@@ -15,15 +18,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-
-/** 
- *	@file IRCClientSessionDelegate.h
- *	@author Nathan Ollerenshaw
- *	@version 1.0
- *	@date 01.2009
- *	@brief Receives delegate messages from an IRCClientSession.
- *	@protocol IRCClientSessionDelegate
- */
 
 @class IRCClientChannel;
 

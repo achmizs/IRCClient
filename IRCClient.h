@@ -2,9 +2,11 @@
 //  IRCClient.h
 //  IRCClient
 //
-//  Copyright © 2015 Said Achmiz.
-//
 /*
+ * Modified IRCClient Copyright 2015 Said Achmiz (www.saidachmiz.net)
+ *
+ * Original IRCClient Copyright (C) 2009 Nathan Ollerenshaw chrome@stupendous.net
+ *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at your
@@ -23,8 +25,6 @@ FOUNDATION_EXPORT double IRCClientVersionNumber;
 
 //! Project version string for IRCClient.
 FOUNDATION_EXPORT const unsigned char IRCClientVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <IRCClient/PublicHeader.h>
 
 #import "IRCClient/IRCClientSession.h"
 #import "IRCClient/IRCClientSessionDelegate.h"
