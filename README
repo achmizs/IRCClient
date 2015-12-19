@@ -2,28 +2,38 @@ This is a modified version of the IRCClient framework by Nathan Ollerenshaw. I�
 
 - Said Achmiz
 
-Original README follows:
+—
+
+ADDING IRCCLIENT TO YOUR APPLICATION
+(using Xcode)
+
+1. Place the entire IRCClient folder in your project folder
+
+2. Using “File -> Add Files…”, add IRCClient.xcodeproj to your project
+
+3. Build the IRCClient framework target
+
+4. Make sure the “Header Search Paths” build setting of your project contains the following entry:
+
+	$(PROJECT_DIR)/
+
+		(non-recursive)
+
+5. Configure the build phases for your application target thusly:
+
+	  i. Add IRCClient.framework to “Link Binary With Libraries”
+	 ii. Add IRCClient.framework to “Target Dependencies”
+	iii. Add a “Copy Files” build phase
+	 iv. Set destination for the just-added “Copy Files” build phase to “Frameworks”
+	  v. Add IRCClient.framework to the just-added “Copy Files” build phase
+
+6. Import IRCClient’s API into your code using “#import <IRCClient/IRCClient.h>”
 
 —
 
-IRCClient.framework 1.0 by Nathan Ollerenshaw (chrome@stupendous.net)
+See the following header files for documentation:
 
-This is a Cocoa framework wrapper around Georgy Yunaev's (gyunaev@ulduzsoft.com)
-excellent libircclient library.
-
-While Georgy's library is portable, obviously this Cocoa framework is specific
-to Mac OS X systems. Though you might be able to get it working under
-cocotron or GNUstep, those implementations of Cocoa are not supported.
-
-To build the framework, you will need to configure libircclient library first. 
-From the Terminal, run the following command in the distribution directory:
-
- ./configure --enable-thread --enable-ipv6
-
-The Xcode project is configured to include the libircclient.c source.
-
-The framework is configured to build with a relative path of ../Frameworks/ so
-it can be easily embedded in your application.
-
-For documentation, examine the header files or read the Doxygen documentations
-in 'doc'.
+IRCClientSession.h
+IRCClientSessionDelegate.h
+IRCClientChannel.h
+IRCClientChannelDelegate.h
