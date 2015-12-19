@@ -743,7 +743,6 @@ static void onChannelPrvmsg(irc_session_t *session, const char *event, const cha
 		message = [NSData dataWithBytes:params[1] length:strlen(params[1])];
 	}
 
-	NSLog(@"onChannelPrvmsg");
 	[clientSession messageSent:message toChannel:channelName byUser:nick];
 }
 

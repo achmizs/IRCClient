@@ -8,6 +8,8 @@ ADDING IRCCLIENT TO YOUR APPLICATION
 (using Xcode)
 (these instructions apply to Xcode 7.1.1, build 7B1005)
 
+0. Build libircclient and add it to the IRCClient project (see file “README_libircclient” for details)
+
 1. Place the entire IRCClient folder in your project folder
 
 2. Using “File -> Add Files…”, add IRCClient.xcodeproj to your project

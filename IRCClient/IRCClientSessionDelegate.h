@@ -99,7 +99,7 @@
  *
  *  @param channel the channel for the invitation.
  *  @param nick the nickname of the user that sent the invitation.
- */
+ */	
 - (void)invitedToChannel:(NSData *)channelName by:(NSString *)nick;
 
 /** A private CTCP request was sent to the IRC client.
