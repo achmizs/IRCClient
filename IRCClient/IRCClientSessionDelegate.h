@@ -15,7 +15,6 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#include "libircclient.h"
 
 /** 
  *	@file IRCClientSessionDelegate.h

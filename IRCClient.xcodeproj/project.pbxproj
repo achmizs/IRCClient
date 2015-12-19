@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		86B6232C1C21FD7C00D6E3AF /* README in Resources */ = {isa = PBXBuildFile; fileRef = 86B6232B1C21FD7C00D6E3AF /* README */; };
-		86B623341C21FF4200D6E3AF /* libirc_errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 86B6232E1C21FF4200D6E3AF /* libirc_errors.h */; };
-		86B623351C21FF4200D6E3AF /* libirc_events.h in Headers */ = {isa = PBXBuildFile; fileRef = 86B6232F1C21FF4200D6E3AF /* libirc_events.h */; };
-		86B623361C21FF4200D6E3AF /* libirc_options.h in Headers */ = {isa = PBXBuildFile; fileRef = 86B623301C21FF4200D6E3AF /* libirc_options.h */; };
-		86B623371C21FF4200D6E3AF /* libirc_rfcnumeric.h in Headers */ = {isa = PBXBuildFile; fileRef = 86B623311C21FF4200D6E3AF /* libirc_rfcnumeric.h */; };
-		86B623381C21FF4200D6E3AF /* libircclient.h in Headers */ = {isa = PBXBuildFile; fileRef = 86B623321C21FF4200D6E3AF /* libircclient.h */; };
-		86B623391C21FF4200D6E3AF /* libircclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B623331C21FF4200D6E3AF /* libircclient.a */; };
-		86F2EFEA1C21F73600B033A4 /* IRCClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFE91C21F73600B033A4 /* IRCClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		86D7849E1C24C2CC00C7458D /* IRCClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D7849D1C24C2CC00C7458D /* IRCClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		86D784A61C24C39F00C7458D /* libirc_errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A01C24C39F00C7458D /* libirc_errors.h */; };
+		86D784A71C24C39F00C7458D /* libirc_events.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A11C24C39F00C7458D /* libirc_events.h */; };
+		86D784A81C24C39F00C7458D /* libirc_options.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A21C24C39F00C7458D /* libirc_options.h */; };
+		86D784A91C24C39F00C7458D /* libirc_rfcnumeric.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A31C24C39F00C7458D /* libirc_rfcnumeric.h */; };
+		86D784AA1C24C39F00C7458D /* libircclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D784A41C24C39F00C7458D /* libircclient.a */; };
+		86D784AB1C24C39F00C7458D /* libircclient.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A51C24C39F00C7458D /* libircclient.h */; };
 		86F2EFF81C21F81900B033A4 /* IRCClientChannel_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFF11C21F81900B033A4 /* IRCClientChannel_Private.h */; };
 		86F2EFF91C21F81900B033A4 /* IRCClientChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFF21C21F81900B033A4 /* IRCClientChannel.h */; };
 		86F2EFFA1C21F81900B033A4 /* IRCClientChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 86F2EFF31C21F81900B033A4 /* IRCClientChannel.m */; };
@@ -26,14 +26,14 @@
 
 /* Begin PBXFileReference section */
 		86B6232B1C21FD7C00D6E3AF /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		86B6232E1C21FF4200D6E3AF /* libirc_errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_errors.h; sourceTree = "<group>"; };
-		86B6232F1C21FF4200D6E3AF /* libirc_events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_events.h; sourceTree = "<group>"; };
-		86B623301C21FF4200D6E3AF /* libirc_options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_options.h; sourceTree = "<group>"; };
-		86B623311C21FF4200D6E3AF /* libirc_rfcnumeric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_rfcnumeric.h; sourceTree = "<group>"; };
-		86B623321C21FF4200D6E3AF /* libircclient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libircclient.h; sourceTree = "<group>"; };
-		86B623331C21FF4200D6E3AF /* libircclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libircclient.a; sourceTree = "<group>"; };
+		86D7849D1C24C2CC00C7458D /* IRCClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClient.h; sourceTree = "<group>"; };
+		86D784A01C24C39F00C7458D /* libirc_errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_errors.h; sourceTree = "<group>"; };
+		86D784A11C24C39F00C7458D /* libirc_events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_events.h; sourceTree = "<group>"; };
+		86D784A21C24C39F00C7458D /* libirc_options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_options.h; sourceTree = "<group>"; };
+		86D784A31C24C39F00C7458D /* libirc_rfcnumeric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_rfcnumeric.h; sourceTree = "<group>"; };
+		86D784A41C24C39F00C7458D /* libircclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libircclient.a; sourceTree = "<group>"; };
+		86D784A51C24C39F00C7458D /* libircclient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libircclient.h; sourceTree = "<group>"; };
 		86F2EFE61C21F73600B033A4 /* IRCClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IRCClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		86F2EFE91C21F73600B033A4 /* IRCClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRCClient.h; sourceTree = "<group>"; };
 		86F2EFEB1C21F73600B033A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86F2EFF11C21F81900B033A4 /* IRCClientChannel_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClientChannel_Private.h; sourceTree = "<group>"; };
 		86F2EFF21C21F81900B033A4 /* IRCClientChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClientChannel.h; sourceTree = "<group>"; };
@@ -49,30 +49,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86B623391C21FF4200D6E3AF /* libircclient.a in Frameworks */,
+				86D784AA1C24C39F00C7458D /* libircclient.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		86B6232D1C21FF2100D6E3AF /* libircclient */ = {
+		86D7849F1C24C39F00C7458D /* libircclient */ = {
 			isa = PBXGroup;
 			children = (
-				86B6232E1C21FF4200D6E3AF /* libirc_errors.h */,
-				86B6232F1C21FF4200D6E3AF /* libirc_events.h */,
-				86B623301C21FF4200D6E3AF /* libirc_options.h */,
-				86B623311C21FF4200D6E3AF /* libirc_rfcnumeric.h */,
-				86B623321C21FF4200D6E3AF /* libircclient.h */,
-				86B623331C21FF4200D6E3AF /* libircclient.a */,
+				86D784A01C24C39F00C7458D /* libirc_errors.h */,
+				86D784A11C24C39F00C7458D /* libirc_events.h */,
+				86D784A21C24C39F00C7458D /* libirc_options.h */,
+				86D784A31C24C39F00C7458D /* libirc_rfcnumeric.h */,
+				86D784A41C24C39F00C7458D /* libircclient.a */,
+				86D784A51C24C39F00C7458D /* libircclient.h */,
 			);
-			name = libircclient;
+			path = libircclient;
 			sourceTree = "<group>";
 		};
 		86F2EFDC1C21F73600B033A4 = {
 			isa = PBXGroup;
 			children = (
-				86B6232D1C21FF2100D6E3AF /* libircclient */,
+				86D7849F1C24C39F00C7458D /* libircclient */,
 				86B6232B1C21FD7C00D6E3AF /* README */,
 				86F2EFE81C21F73600B033A4 /* IRCClient */,
 				86F2EFE71C21F73600B033A4 /* Products */,
@@ -90,6 +90,7 @@
 		86F2EFE81C21F73600B033A4 /* IRCClient */ = {
 			isa = PBXGroup;
 			children = (
+				86D7849D1C24C2CC00C7458D /* IRCClient.h */,
 				86F2EFF11C21F81900B033A4 /* IRCClientChannel_Private.h */,
 				86F2EFF21C21F81900B033A4 /* IRCClientChannel.h */,
 				86F2EFF31C21F81900B033A4 /* IRCClientChannel.m */,
@@ -97,7 +98,6 @@
 				86F2EFF51C21F81900B033A4 /* IRCClientSession.h */,
 				86F2EFF61C21F81900B033A4 /* IRCClientSession.m */,
 				86F2EFF71C21F81900B033A4 /* IRCClientSessionDelegate.h */,
-				86F2EFE91C21F73600B033A4 /* IRCClient.h */,
 				86F2EFEB1C21F73600B033A4 /* Info.plist */,
 			);
 			path = IRCClient;
@@ -110,17 +110,17 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86D7849E1C24C2CC00C7458D /* IRCClient.h in Headers */,
 				86F2EFFE1C21F81900B033A4 /* IRCClientSessionDelegate.h in Headers */,
-				86B623381C21FF4200D6E3AF /* libircclient.h in Headers */,
+				86D784AB1C24C39F00C7458D /* libircclient.h in Headers */,
+				86D784A61C24C39F00C7458D /* libirc_errors.h in Headers */,
 				86F2EFF91C21F81900B033A4 /* IRCClientChannel.h in Headers */,
-				86B623341C21FF4200D6E3AF /* libirc_errors.h in Headers */,
 				86F2EFFB1C21F81900B033A4 /* IRCClientChannelDelegate.h in Headers */,
 				86F2EFFC1C21F81900B033A4 /* IRCClientSession.h in Headers */,
+				86D784A71C24C39F00C7458D /* libirc_events.h in Headers */,
+				86D784A91C24C39F00C7458D /* libirc_rfcnumeric.h in Headers */,
+				86D784A81C24C39F00C7458D /* libirc_options.h in Headers */,
 				86F2EFF81C21F81900B033A4 /* IRCClientChannel_Private.h in Headers */,
-				86B623351C21FF4200D6E3AF /* libirc_events.h in Headers */,
-				86B623371C21FF4200D6E3AF /* libirc_rfcnumeric.h in Headers */,
-				86B623361C21FF4200D6E3AF /* libirc_options.h in Headers */,
-				86F2EFEA1C21F73600B033A4 /* IRCClient.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,46 +288,58 @@
 		86F2EFEF1C21F73600B033A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2.0;
 				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 2.0;
+				DYLIB_CURRENT_VERSION = 2.0;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
+				FRAMEWORK_VERSION = 2.0;
+				HEADER_SEARCH_PATHS = libircclient/;
 				INFOPLIST_FILE = IRCClient/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libircclient",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_BUNDLE_IDENTIFIER = saidachmiz.IRCClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
 		86F2EFF01C21F73600B033A4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2.0;
 				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 2.0;
+				DYLIB_CURRENT_VERSION = 2.0;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
+				FRAMEWORK_VERSION = 2.0;
+				HEADER_SEARCH_PATHS = libircclient/;
 				INFOPLIST_FILE = IRCClient/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/libircclient",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_BUNDLE_IDENTIFIER = saidachmiz.IRCClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
