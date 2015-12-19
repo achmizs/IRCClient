@@ -6,6 +6,7 @@
 //
 
 #import "IRCClientChannel.h"
+#include "libircclient.h"
 
 @interface IRCClientChannel ()
 

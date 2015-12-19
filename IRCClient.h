@@ -26,7 +26,7 @@ FOUNDATION_EXPORT const unsigned char IRCClientVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <IRCClient/PublicHeader.h>
 
-#import "IRCClientChannel.h"
-#import "IRCClientChannelDelegate.h"
-#import "IRCClientSession.h"
-#import "IRCClientSessionDelegate.h"
+#import "IRCClient/IRCClientSession.h"
+#import "IRCClient/IRCClientSessionDelegate.h"
+#import "IRCClient/IRCClientChannel.h"
+#import "IRCClient/IRCClientChannelDelegate.h"

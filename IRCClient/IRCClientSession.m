@@ -21,6 +21,7 @@
 #import "IRCClientSession.h"
 #import "IRCClientChannel.h"
 #import "IRCClientChannel_Private.h"
+#include "libircclient.h"
 #include "string.h"
 
 #pragma mark - Callback function declarations
