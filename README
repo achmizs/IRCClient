@@ -6,6 +6,7 @@ This is a modified version of the IRCClient framework by Nathan Ollerenshaw. Iâ€
 
 ADDING IRCCLIENT TO YOUR APPLICATION
 (using Xcode)
+(these instructions apply to Xcode 7.1.1, build 7B1005)
 
 1. Place the entire IRCClient folder in your project folder
 
