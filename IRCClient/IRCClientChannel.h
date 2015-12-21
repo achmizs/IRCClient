@@ -79,7 +79,7 @@
 /** Sets the topic of the channel.
  *
  *	Note that not all users on a channel have permission to change the topic; if you fail
- *	to set the topic, then you will not see an onTopic event on the IRCClientChannelDelegate.
+ *	to set the topic, then you will not see a topicSet:by: event on the IRCClientChannelDelegate.
  *
  *  @param aTopic the topic the client wishes to set for the channel.
  */
@@ -88,7 +88,7 @@
 /** Sets the mode of the channel.
  *
  *	Note that not all users on a channel have permission to change the mode; if you fail
- *	to set the mode, then you will not see a modeSet event on the IRCClientChannelDelegate.
+ *	to set the mode, then you will not see a modeSet:withParams:by: event on the IRCClientChannelDelegate.
  *
  *  @param mode the mode to set the channel to
  */

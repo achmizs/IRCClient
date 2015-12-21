@@ -168,12 +168,19 @@
 	of IRC commands. */
 - (int)sendRaw:(NSData *)message;
 
-/** quits the IRC server with the given reason. On success, an onQuit event will be
-	sent to the IRCClientSessionDelegate with the nickname of the IRC client.
+/** quits the IRC server with the given reason.
+ 
+	On success, a userQuit:withReason: event will be sent to the 
+	IRCClientSessionDelegate with the nickname of the IRC client and the reason 
+	provided by the user (or nil if no reason was provided).
  */
 - (int)quit:(NSData *)reason;
 
 /** Joins a channel with a given name and key
+ 
+	On success, a userJoined:channel: event will be sent to the 
+	IRCClientSessionDelegate with the nickname of the IRC client and the name of
+	the channel that was joined.
  
 	@param channel the channel to join
 	@param key they key for the channel (may be nil)
@@ -192,7 +199,11 @@
  */
 - (int)userMode:(NSString *)mode;
 
-/**	sets the IRC client nickname. On success, an onNick event will be sent to the delegate 
+/**	sets the IRC client nickname.
+ 
+	On success, a nickChangedFrom:to: event will be sent to the 
+	IRCClientSessionDelegate with our old nick and the new nick that we now 
+	have.
  
 	@param newnick new nickname to set.
  */
@@ -234,8 +245,8 @@
 
 /** send a CTCP reply to another IRC client
  
- @param reply the CTCP reply string to send
- @param target the nickname of the IRC client to send the reply to.
+	@param reply the CTCP reply string to send
+	@param target the nickname of the IRC client to send the reply to.
  */
 - (int)ctcpReply:(NSData *)reply target:(NSString *)target;
 
