@@ -19,6 +19,7 @@
 
 #import "IRCClientChannel.h"
 #import "IRCClientChannel_Private.h"
+#import "NSData+SA_NSDataExtensions.h"
 
 /*********************************************/
 #pragma mark IRCClientChannel private category
@@ -93,22 +94,22 @@
 
 - (int)part
 {
-	return irc_cmd_part(_irc_session, _name.bytes);
+	return irc_cmd_part(_irc_session, _name.SA_terminatedCString);
 }
 
 - (int)invite:(NSString *)nick
 {
-	return irc_cmd_invite(_irc_session, nick.UTF8String, _name.bytes);
+	return irc_cmd_invite(_irc_session, nick.UTF8String, _name.SA_terminatedCString);
 }
 
 - (int)refreshNames
 {
-	return irc_cmd_names(_irc_session, _name.bytes);
+	return irc_cmd_names(_irc_session, _name.SA_terminatedCString);
 }
 
 - (void)setChannelTopic:(NSString *)newTopic
 {	
-	irc_cmd_topic(_irc_session, _name.bytes, [newTopic cStringUsingEncoding:_encoding]);
+	irc_cmd_topic(_irc_session, _name.SA_terminatedCString, [newTopic cStringUsingEncoding:_encoding]);
 }
 
 - (int)setMode:(NSString *)mode params:(NSString *)params
@@ -118,32 +119,32 @@
 	if(params != nil && params.length > 0)
 		[modeString appendFormat:@" %@", params];
 	
-	return irc_cmd_channel_mode(_irc_session, _name.bytes, modeString.UTF8String);
+	return irc_cmd_channel_mode(_irc_session, _name.SA_terminatedCString, modeString.UTF8String);
 }
 
 - (int)message:(NSString *)message
 {
-	return irc_cmd_msg(_irc_session, _name.bytes, [message cStringUsingEncoding:_encoding]);
+	return irc_cmd_msg(_irc_session, _name.SA_terminatedCString, [message cStringUsingEncoding:_encoding]);
 }
 
 - (int)action:(NSString *)action
 {
-	return irc_cmd_me(_irc_session, _name.bytes, [action cStringUsingEncoding:_encoding]);
+	return irc_cmd_me(_irc_session, _name.SA_terminatedCString, [action cStringUsingEncoding:_encoding]);
 }
 
 - (int)notice:(NSString *)notice
 {
-	return irc_cmd_notice(_irc_session, _name.bytes, [notice cStringUsingEncoding:_encoding]);
+	return irc_cmd_notice(_irc_session, _name.SA_terminatedCString, [notice cStringUsingEncoding:_encoding]);
 }
 
 - (int)kick:(NSString *)nick reason:(NSString *)reason
 {
-	return irc_cmd_kick(_irc_session, nick.UTF8String, _name.bytes, [reason cStringUsingEncoding:_encoding]);
+	return irc_cmd_kick(_irc_session, nick.UTF8String, _name.SA_terminatedCString, [reason cStringUsingEncoding:_encoding]);
 }
 
 - (int)ctcpRequest:(NSData *)request
 {
-	return irc_cmd_ctcp_request(_irc_session, _name.bytes, request.bytes);
+	return irc_cmd_ctcp_request(_irc_session, _name.SA_terminatedCString, request.SA_terminatedCString);
 }
 
 /****************************/
@@ -157,7 +158,7 @@
 
 - (void)userParted:(NSString *)nick withReason:(NSData *)reason us:(BOOL)wasItUs
 {
-	NSString* reasonString = [[NSString alloc] initWithData:reason encoding:_encoding];
+	NSString* reasonString = [NSString stringWithCString:reason.SA_terminatedCString encoding:_encoding];
 	[_delegate userParted:nick withReason:reasonString us:wasItUs];
 }
 
@@ -170,31 +171,31 @@
 {
 	_topic = topic;
 	
-	NSString* topicString = [[NSString alloc] initWithData:_topic encoding:_encoding];
+	NSString* topicString = [NSString stringWithCString:topic.SA_terminatedCString encoding:_encoding];
 	[_delegate topicSet:topicString by:nick];
 }
 
 - (void)userKicked:(NSString *)nick withReason:(NSData *)reason by:(NSString *)byNick us:(BOOL)wasItUs
 {
-	NSString* reasonString = [[NSString alloc] initWithData:reason encoding:_encoding];
+	NSString* reasonString = [NSString stringWithCString:reason.SA_terminatedCString encoding:_encoding];
 	[_delegate userKicked:nick withReason:reasonString by:byNick us:wasItUs];
 }
 
 - (void)messageSent:(NSData *)message byUser:(NSString *)nick
 {
-	NSString* messageString = [[NSString alloc] initWithData:message encoding:_encoding];
+	NSString* messageString = [NSString stringWithCString:message.SA_terminatedCString encoding:_encoding];
 	[_delegate messageSent:messageString byUser:nick];
 }
 
 - (void)noticeSent:(NSData *)notice byUser:(NSString *)nick
 {
-	NSString* noticeString = [[NSString alloc] initWithData:notice encoding:_encoding];
+	NSString* noticeString = [NSString stringWithCString:notice.SA_terminatedCString encoding:_encoding];
 	[_delegate noticeSent:noticeString byUser:nick];
 }
 
 - (void)actionPerformed:(NSData *)action byUser:(NSString *)nick
 {
-	NSString* actionString = [[NSString alloc] initWithData:action encoding:_encoding];
+	NSString* actionString = [NSString stringWithCString:action.SA_terminatedCString encoding:_encoding];
 	[_delegate actionPerformed:actionString byUser:nick];
 }
 

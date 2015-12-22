@@ -24,6 +24,7 @@
 #import "IRCClientSession.h"
 #import "IRCClientChannel.h"
 #import "IRCClientChannel_Private.h"
+#import "NSData+SA_NSDataExtensions.h"
 #include "string.h"
 
 #pragma mark - Callback function declarations
@@ -163,7 +164,7 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 
 - (int)connect;
 {
-	return irc_connect(_irc_session, _server.UTF8String, (unsigned short) _port, (_password.length > 0 ? _password.bytes : NULL), _nickname.UTF8String, _username.UTF8String, _realname.UTF8String);
+	return irc_connect(_irc_session, _server.UTF8String, (unsigned short) _port, (_password.length > 0 ? _password.SA_terminatedCString : NULL), _nickname.UTF8String, _username.UTF8String, _realname.UTF8String);
 }
 
 - (void)disconnect
@@ -195,12 +196,12 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 
 - (int)sendRaw:(NSData *)message
 {
-	return irc_send_raw(_irc_session, message.bytes);
+	return irc_send_raw(_irc_session, message.SA_terminatedCString);
 }
 
 - (int)quit:(NSData *)reason
 {
-	return irc_cmd_quit(_irc_session, reason.bytes);
+	return irc_cmd_quit(_irc_session, reason.SA_terminatedCString);
 }
 
 - (int)join:(NSData *)channel key:(NSData *)key
@@ -208,14 +209,14 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 	NSLog(@"Joining %@", channel);
 	
 	if (!key || !key.length > 0)
-		return irc_cmd_join(_irc_session, channel.bytes, NULL);
+		return irc_cmd_join(_irc_session, channel.SA_terminatedCString, NULL);
 
-	return irc_cmd_join(_irc_session, channel.bytes, key.bytes);
+	return irc_cmd_join(_irc_session, channel.SA_terminatedCString, key.SA_terminatedCString);
 }
 
 - (int)list:(NSData *)channel
 {
-	return irc_cmd_list(_irc_session, channel.bytes);
+	return irc_cmd_list(_irc_session, channel.SA_terminatedCString);
 }
 
 - (int)userMode:(NSString *)mode
@@ -235,27 +236,27 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 
 - (int)message:(NSData *)message to:(NSString *)target
 {
-	return irc_cmd_msg(_irc_session, target.UTF8String, message.bytes);
+	return irc_cmd_msg(_irc_session, target.UTF8String, message.SA_terminatedCString);
 }
 
 - (int)action:(NSData *)action to:(NSString *)target
 {
-	return irc_cmd_me(_irc_session, target.UTF8String, action.bytes);
+	return irc_cmd_me(_irc_session, target.UTF8String, action.SA_terminatedCString);
 }
 
 - (int)notice:(NSData *)notice to:(NSString *)target
 {
-	return irc_cmd_notice(_irc_session, target.UTF8String, notice.bytes);
+	return irc_cmd_notice(_irc_session, target.UTF8String, notice.SA_terminatedCString);
 }
 
 - (int)ctcpRequest:(NSData *)request target:(NSString *)target
 {
-	return irc_cmd_ctcp_request(_irc_session, target.UTF8String, request.bytes);
+	return irc_cmd_ctcp_request(_irc_session, target.UTF8String, request.SA_terminatedCString);
 }
 
 - (int)ctcpReply:(NSData *)reply target:(NSString *)target
 {
-	return irc_cmd_ctcp_reply(_irc_session, target.UTF8String, reply.bytes);
+	return irc_cmd_ctcp_reply(_irc_session, target.UTF8String, reply.SA_terminatedCString);
 }
 
 /****************************/
@@ -286,7 +287,7 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 	
 	if(reason)
 	{
-		reasonString = [[NSString alloc] initWithData:reason encoding:_encoding];
+		reasonString = [NSString stringWithCString:reason.SA_terminatedCString encoding:_encoding];
 	}
 	
 	[_delegate userQuit:nick withReason:reasonString];
@@ -377,7 +378,7 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 
 - (void)privateMessageReceived:(NSData *)message fromUser:(NSString *)nick
 {
-	NSString* messageString = [[NSString alloc] initWithData:message encoding:_encoding];
+	NSString* messageString = [NSString stringWithCString:message.SA_terminatedCString encoding:_encoding];
 	
 	[_delegate privateMessageReceived:messageString fromUser:nick];
 }
@@ -391,7 +392,7 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 
 - (void)privateNoticeReceived:(NSData *)notice fromUser:(NSString *)nick
 {
-	NSString* noticeString = [[NSString alloc] initWithData:notice encoding:_encoding];
+	NSString* noticeString = [NSString stringWithCString:notice.SA_terminatedCString encoding:_encoding];
 	
 	[_delegate privateNoticeReceived:noticeString fromUser:nick];
 }
@@ -404,7 +405,7 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 - (void)CTCPRequestReceived:(NSData *)request fromUser:(NSString *)nick
 {
 	const char* the_nick = getNickFromNickUserHost(nick).UTF8String;
-	const char* the_request = request.bytes;
+	const char* the_request = request.SA_terminatedCString;
 	
 	if (strstr(the_request, "PING") == the_request)
 	{
@@ -432,7 +433,7 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 			char* request_type = strtok(request_string, " ");
 			char* request_body = strtok(NULL, " " );
 			
-			[_delegate CTCPRequestReceived:[NSData dataWithBytes:request_body length:strlen(request_body)+1] ofType:[NSData dataWithBytes:request_type length:strlen(request_type)+1] fromUser:nick];
+			[_delegate CTCPRequestReceived:[NSData dataWithBytes:request_body length:strlen(request_body) + 1] ofType:[NSData dataWithBytes:request_type length:strlen(request_type) + 1] fromUser:nick];
 			
 			free(request_string);
 		}
@@ -456,7 +457,7 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 	else
 	{
 		// An action in a private message
-		NSString* actionString = [[NSString alloc] initWithData:action encoding:_encoding];
+		NSString* actionString = [NSString stringWithCString:action.SA_terminatedCString encoding:_encoding];
 		[_delegate privateCTCPActionReceived:actionString fromUser:nick];
 	}
 }
@@ -565,7 +566,7 @@ static void onQuit(irc_session_t *session, const char *event, const char *origin
 	NSData *reason = nil;
 	if(count > 0)
 	{
-		reason = [[NSData alloc] initWithBytes:params[0] length:strlen(params[0])];
+		reason = [[NSData alloc] initWithBytes:params[0] length:strlen(params[0]) + 1];
 	}
 
 	[clientSession userQuit:nick withReason:reason];
@@ -608,7 +609,7 @@ static void onPartChannel(irc_session_t *session, const char *event, const char 
 	
 	if (count > 1)
 	{
-		reason = [NSData dataWithBytes:params[1] length:strlen(params[1])+1];
+		reason = [NSData dataWithBytes:params[1] length:strlen(params[1])];
 	}
 	
 	[clientSession userParted:nick channel:channelName withReason:reason];
@@ -678,7 +679,7 @@ static void onTopic(irc_session_t *session, const char *event, const char *origi
 	
 	if (count > 1)
 	{
-		topic = [NSData dataWithBytes:params[1] length:strlen(params[1])];
+		topic = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
 	}
 	
 	[clientSession topicSet:topic forChannel:channelName by:nick];
@@ -698,7 +699,7 @@ static void onKick(irc_session_t *session, const char *event, const char *origin
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *byNick = @(origin);
-	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	NSString *nick = nil;
 	NSData *reason = nil;
 	
@@ -709,7 +710,7 @@ static void onKick(irc_session_t *session, const char *event, const char *origin
 	
 	if (count > 2)
 	{
-		reason = [NSData dataWithBytes:params[2] length:strlen(params[2])];
+		reason = [NSData dataWithBytes:params[2] length:strlen(params[2]) + 1];
 	}
 	
 	[clientSession userKicked:nick fromChannel:channelName by:byNick withReason:reason];
@@ -729,12 +730,12 @@ static void onChannelPrvmsg(irc_session_t *session, const char *event, const cha
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *nick = @(origin);
-	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	NSData *message = nil;
 	
 	if (count > 1)
 	{
-		message = [NSData dataWithBytes:params[1] length:strlen(params[1])];
+		message = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
 	}
 
 	[clientSession messageSent:message toChannel:channelName byUser:nick];
@@ -757,7 +758,7 @@ static void onPrivmsg(irc_session_t *session, const char *event, const char *ori
 
 	if (count > 1)
 	{
-		message = [NSData dataWithBytes:params[1] length:strlen(params[1])];
+		message = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
 	}
 	
 	[clientSession privateMessageReceived:message fromUser:nick];
@@ -784,7 +785,7 @@ static void onNotice(irc_session_t *session, const char *event, const char *orig
 	
 	if (count > 1)
 	{
-		notice = [NSData dataWithBytes:params[1] length:strlen(params[1])];
+		notice = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
 	}
 	
 	[clientSession privateNoticeReceived:notice fromUser:nick];
@@ -807,12 +808,12 @@ static void onChannelNotice(irc_session_t *session, const char *event, const cha
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *nick = @(origin);
-	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	NSData *notice = nil;
 	
 	if (count > 1)
 	{
-		notice = [NSData dataWithBytes:params[1] length:strlen(params[1])];
+		notice = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
 	}
 
 	[clientSession noticeSent:notice toChannel:channelName byUser:nick];
@@ -833,7 +834,7 @@ static void onInvite(irc_session_t *session, const char *event, const char *orig
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *nick = @(origin);
-	NSData *channelName = [NSData dataWithBytes:params[1] length:strlen(params[1])];
+	NSData *channelName = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
 	
 	[clientSession invitedToChannel:channelName by:nick];
 }
@@ -857,7 +858,7 @@ static void onCtcpRequest(irc_session_t *session, const char *event, const char 
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *nick = @(origin);
-	NSData* request = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData* request = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	
 	[clientSession CTCPRequestReceived:request fromUser:nick];
 }
@@ -873,7 +874,7 @@ static void onCtcpReply(irc_session_t *session, const char *event, const char *o
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	
 	NSString *nick = @(origin);
-	NSData *reply = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData *reply = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	
 	[clientSession CTCPReplyReceived:reply fromUser:nick];
 }
@@ -894,8 +895,8 @@ static void onCtcpAction(irc_session_t *session, const char *event, const char *
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	
 	NSString *nick = @(origin);
-	NSData *target = [NSData dataWithBytes:params[0] length:strlen(params[0])];
-	NSData *action = [NSData dataWithBytes:params[1] length:strlen(params[1])];
+	NSData *target = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
+	NSData *action = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
 	
 	[clientSession CTCPActionPerformed:action byUser:nick atTarget:target];
 }
@@ -908,7 +909,7 @@ static void onCtcpAction(irc_session_t *session, const char *event, const char *
 static void onUnknownEvent(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count)
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
-	NSData *eventString = [NSData dataWithBytes:event length:strlen(event)];
+	NSData *eventString = [NSData dataWithBytes:event length:strlen(event) + 1];
 	NSString *sender = nil;
 	
 	if (origin != NULL)
@@ -917,7 +918,7 @@ static void onUnknownEvent(irc_session_t *session, const char *event, const char
 	NSMutableArray *paramsArray = [[NSMutableArray alloc] init];
 	
 	for (unsigned int i = 0; i < count; i++)
-		[paramsArray addObject:[NSData dataWithBytes:params[i] length:strlen(params[i])]];
+		[paramsArray addObject:[NSData dataWithBytes:params[i] length:strlen(params[i]) + 1]];
 	
 	[clientSession unknownEventReceived:eventString from:sender params:[paramsArray copy]];
 }
@@ -938,7 +939,7 @@ static void onNumericEvent(irc_session_t * session, unsigned int event, const ch
 	NSMutableArray *paramsArray = [[NSMutableArray alloc] init];
 	
 	for (unsigned int i = 0; i < count; i++)
-		[paramsArray addObject:[NSData dataWithBytes:params[i] length:strlen(params[i])]];
+		[paramsArray addObject:[NSData dataWithBytes:params[i] length:strlen(params[i]) + 1]];
 	
 	[clientSession numericEventReceived:eventNumber from:sender params:[paramsArray copy]];
 }

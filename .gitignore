@@ -28,5 +28,6 @@ xcuserdata
 *.ipa
 
 libirc*
+NSData*
 
 *~
