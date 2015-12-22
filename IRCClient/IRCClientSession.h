@@ -74,7 +74,9 @@
 
 @class IRCClientChannel;
 
+/**********************************************/
 #pragma mark IRCClientSession class declaration
+/**********************************************/
 
 @interface IRCClientSession : NSObject
 
@@ -88,7 +90,7 @@
 /** User-defined session ID (for one delegate to keep track of multiple sessions,
     if desired).
  */
-@property NSUInteger sessionID;
+@property (assign) NSUInteger sessionID;
 
 /** The version string for the client to send back on CTCP VERSION requests */
 @property (copy) NSString *version;
@@ -97,7 +99,7 @@
 @property (copy) NSString *server;
 
 /** IRC port to connect to */
-@property NSUInteger port;
+@property (assign) NSUInteger port;
 
 /** Server password to provide on connect (may be left empty or nil) */
 @property (copy) NSData *password;
@@ -119,10 +121,7 @@
  */
 @property (copy) NSString *realname;
 
-/** An NSDictionary of channels that the client is currently connected to. */
-@property (retain, readonly) NSDictionary *channels;
-
-/** The default text encoding for messages on this server. 
+/** The default text encoding for messages on this server.
  
 	This concerns messages received via PRIVMSG and NOTICE, and TOPIC in a channel.
 	It also affects what encoding reasons given for QUIT messages are assumed to be in.
@@ -130,9 +129,12 @@
  */
 @property (assign) NSStringEncoding encoding;
 
+/** An NSDictionary of channels that the client is currently connected to. */
+@property (readonly) NSDictionary *channels;
+
 /** returns YES if the server is currently connected successfully, and NO if
 	it is not. */
-@property (nonatomic, readonly) bool connected;
+@property (readonly, getter=isConnected) bool connected;
 
 /***************************/
 #pragma mark - Class methods

@@ -27,8 +27,6 @@
  *  for a given session when the client joins an IRC channel.
  */
 
-@class IRCClientSession;
-
 #pragma mark IRCClientChannel class declaration
 
 @interface IRCClientChannel : NSObject
@@ -41,7 +39,7 @@
 @property (assign) id <IRCClientChannelDelegate> delegate;
 
 /** Name of the channel */
-@property (nonatomic, retain) NSData *name;
+@property (copy) NSData *name;
 
 /** Encoding used by, and in, this channel */
 @property (assign) NSStringEncoding encoding;
@@ -54,14 +52,14 @@
  *	topicSet:by: message (and the topic property of the channel object will be
  *	updated automatically).
  */
-@property (nonatomic, readonly) NSData *topic;
+@property (readonly) NSData *topic;
 
 /** Modes of the channel */
-@property (nonatomic, retain) NSString *modes;
+@property (readonly) NSString *modes;
 
 /** An array of nicknames stored as NSStrings that list the connected users
     for the channel */
-@property (nonatomic, readonly) NSArray *nicks;
+@property (readonly) NSArray *nicks;
 
 /**************************/
 #pragma mark - IRC commands
