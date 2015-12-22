@@ -150,6 +150,7 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 		_version = [NSString stringWithFormat:@"IRCClient Framework v%s (Said Achmiz) - libirc v%d.%d (George Yunaev)", IRCCLIENTVERSION, high, low];
 		
 		_channels = [[NSMutableDictionary alloc] init];
+		_encoding = NSUTF8StringEncoding;
     }
     return self;
 }
@@ -585,7 +586,7 @@ static void onJoinChannel(irc_session_t *session, const char *event, const char 
 {
 	IRCClientSession* clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *nick = @(origin);
-	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	
 	[clientSession userJoined:nick channel:channelName];
 }
@@ -604,12 +605,12 @@ static void onPartChannel(irc_session_t *session, const char *event, const char 
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *nick = @(origin);
-	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	NSData *reason = nil;
 	
 	if (count > 1)
 	{
-		reason = [NSData dataWithBytes:params[1] length:strlen(params[1])];
+		reason = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
 	}
 	
 	[clientSession userParted:nick channel:channelName withReason:reason];
@@ -632,7 +633,7 @@ static void onMode(irc_session_t *session, const char *event, const char *origin
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *nick = @(origin);
-	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	NSString *mode = @(params[1]);
 	NSString *modeParams = nil;
 	
@@ -674,7 +675,7 @@ static void onTopic(irc_session_t *session, const char *event, const char *origi
 {
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	NSString *nick = @(origin);
-	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0])];
+	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	NSData *topic = nil;
 	
 	if (count > 1)

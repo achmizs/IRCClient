@@ -1,5 +1,5 @@
 //
-//  NSData+SA_NSDataExtensions.h
+//  NSData+SA_NSDataExtensions.m
 //
 //  Copyright (c) 2015 Said Achmiz.
 //
@@ -51,7 +51,7 @@
 		[self getBytes:terminated_string_buffer length:self.length];
 		terminated_string_buffer[self.length] = '\0';
 		
-		return [NSData dataWithBytesNoCopy:terminated_string_buffer length:self.length + 1 freeWhenDone:YES];
+		return [NSData dataWithBytesNoCopy:terminated_string_buffer length:(self.length + 1) freeWhenDone:YES];
 	}
 }
 
@@ -71,7 +71,7 @@
 		char* unterminated_string_buffer = malloc(self.length - 1);
 		[self getBytes:unterminated_string_buffer length:self.length - 1];
 		
-		return [NSData dataWithBytesNoCopy:unterminated_string_buffer length:self.length - 1 freeWhenDone:YES];
+		return [NSData dataWithBytesNoCopy:unterminated_string_buffer length:(self.length - 1) freeWhenDone:YES];
 	}
 }
 
