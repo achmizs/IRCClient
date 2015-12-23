@@ -39,7 +39,7 @@
 @property (assign) id <IRCClientChannelDelegate> delegate;
 
 /** Name of the channel */
-@property (copy) NSData *name;
+@property (readonly) NSData *name;
 
 /** Encoding used by, and in, this channel */
 @property (assign) NSStringEncoding encoding;

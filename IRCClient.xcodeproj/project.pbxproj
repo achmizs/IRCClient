@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8657E6DD1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8657E6DB1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h */; };
 		8657E6DE1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8657E6DC1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m */; };
+		8657E6E01C2A172300BD4E50 /* IRC_Numerics.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8657E6DF1C2A172300BD4E50 /* IRC_Numerics.plist */; };
 		866EF0101C25FF07006303A1 /* libircclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 866EF00F1C25FF07006303A1 /* libircclient.a */; };
 		868374A91C24E774005B97E5 /* IRCClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 868374A81C24E774005B97E5 /* IRCClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		86B6232C1C21FD7C00D6E3AF /* README in Resources */ = {isa = PBXBuildFile; fileRef = 86B6232B1C21FD7C00D6E3AF /* README */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		8657E6DB1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SA_NSDataExtensions.h"; sourceTree = "<group>"; };
 		8657E6DC1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SA_NSDataExtensions.m"; sourceTree = "<group>"; };
+		8657E6DF1C2A172300BD4E50 /* IRC_Numerics.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = IRC_Numerics.plist; sourceTree = "<group>"; };
 		866EF00F1C25FF07006303A1 /* libircclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libircclient.a; sourceTree = "<group>"; };
 		868374A81C24E774005B97E5 /* IRCClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClient.h; sourceTree = "<group>"; };
 		86B6232B1C21FD7C00D6E3AF /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				86F2EFF61C21F81900B033A4 /* IRCClientSession.m */,
 				86F2EFF71C21F81900B033A4 /* IRCClientSessionDelegate.h */,
 				86F2EFEB1C21F73600B033A4 /* Info.plist */,
+				8657E6DF1C2A172300BD4E50 /* IRC_Numerics.plist */,
 			);
 			path = IRCClient;
 			sourceTree = "<group>";
@@ -197,6 +200,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				86B6232C1C21FD7C00D6E3AF /* README in Resources */,
+				8657E6E01C2A172300BD4E50 /* IRC_Numerics.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
