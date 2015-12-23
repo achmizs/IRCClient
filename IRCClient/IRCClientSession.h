@@ -72,8 +72,6 @@
  *	or to the IRCClientChannel delegate as required.
  */
 
-@class IRCClientChannel;
-
 /**********************************************/
 #pragma mark IRCClientSession class declaration
 /**********************************************/

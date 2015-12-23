@@ -19,13 +19,12 @@
 
 #pragma mark Defines and includes
 
-#define IRCCLIENTVERSION "2.0"
+#define IRCCLIENTVERSION "2.0a1"
 
 #import "IRCClientSession.h"
 #import "IRCClientChannel.h"
 #import "IRCClientChannel_Private.h"
 #import "NSData+SA_NSDataExtensions.h"
-#include "string.h"
 
 #pragma mark - Callback function declarations
 
