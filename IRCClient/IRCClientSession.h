@@ -102,22 +102,17 @@
 /** Server password to provide on connect (may be left empty or nil) */
 @property (copy) NSData *password;
 
-/** Nickname of the connected client. Note that setting this after connection will
-    not result in the client renaming on IRC. You need to send a nick: message instead. 
+/** Nickname of the connected client.
  */
-@property (copy) NSString *nickname;
+@property (readonly) NSString *nickname;
 
 /** Username of the connected client. Also known as the ident.
- 
-	Setting this after connection does nothing.
  */
-@property (copy) NSString *username;
+@property (readonly) NSString *username;
 
 /** Realname of the connected client.
- 
-	Setting this after connection does nothing.
  */
-@property (copy) NSString *realname;
+@property (readonly) NSString *realname;
 
 /** The default text encoding for messages on this server.
  
@@ -137,6 +132,15 @@
 /***************************/
 #pragma mark - Class methods
 /***************************/
+
+/** Set the nickname, username, and realname for the session.
+ 
+	Returns 1 if successfully set, 0 otherwise.
+	(0 is returned if you try to call this method after the session has
+	already connected; use the nick: method to attempt a nick change while
+	connected.)
+ */
+-(int)setNickname:(NSString *)nickname username:(NSString *)username realname:(NSString *)realname;
 
 /** Connect to the IRC server.
  

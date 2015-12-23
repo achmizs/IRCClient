@@ -19,7 +19,7 @@
 
 #pragma mark Defines and includes
 
-#define IRCCLIENTVERSION "2.0a1"
+#define IRCCLIENTVERSION "2.0a2"
 
 #import "IRCClientSession.h"
 #import "IRCClientChannel.h"
@@ -188,6 +188,22 @@ static void onNumericEvent(irc_session_t *session, unsigned int event, const cha
 	
 	_thread = [[NSThread alloc] initWithTarget:self selector:@selector(startThread) object:nil];
 	[_thread start];
+}
+
+-(int)setNickname:(NSString *)nickname username:(NSString *)username realname:(NSString *)realname
+{
+	if(self.isConnected)
+	{
+		return 0;
+	}
+	else
+	{
+		_nickname = nickname;
+		_username = username;
+		_realname = realname;
+		
+		return 1;
+	}
 }
 
 /**************************/
