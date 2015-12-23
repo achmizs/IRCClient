@@ -81,7 +81,7 @@
 
 		_name = name;
 		_encoding = NSUTF8StringEncoding;
-		_topic = [NSData dataWithBytes:@"".UTF8String length:0];
+		_topic = [NSData dataWithBytes:@"".UTF8String length:1];
 		_modes = @"";
 	}
 	
