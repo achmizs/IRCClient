@@ -55,9 +55,9 @@
 @property (readonly) NSData *topic;
 
 /** Modes of the channel */
-@property (readonly) NSString *modes;
+@property (readonly) NSData *modes;
 
-/** An array of nicknames stored as NSStrings that list the connected users
+/** An array of nicknames stored as NSData objects that list the connected users
     for the channel */
 @property (readonly) NSArray *nicks;
 
@@ -72,7 +72,7 @@
  *
  *  @param nick the nickname of the client to invite.
  */
-- (int)invite:(NSString *)nick;
+- (int)invite:(NSData *)nick;
 
 /** Sets the topic of the channel.
  *
@@ -81,7 +81,7 @@
  *
  *  @param aTopic the topic the client wishes to set for the channel.
  */
-- (void)setChannelTopic:(NSString *)newTopic;
+- (void)setChannelTopic:(NSData *)newTopic;
 
 /** Sets the mode of the channel.
  *
@@ -90,33 +90,33 @@
  *
  *  @param mode the mode to set the channel to
  */
-- (int)setMode:(NSString *)mode params:(NSString *)params;
+- (int)setMode:(NSData *)mode params:(NSData *)params;
 
 /** Sends a public PRIVMSG to the channel. If you try to send more than can fit on an IRC
   	buffer, it will be truncated.
  
     @param message the message to send to the channel.
  */
-- (int)message:(NSString *)message;
+- (int)message:(NSData *)message;
 
 /** Sends a public CTCP ACTION to the channel.
  *
  *  @param action action to send to the channel.
  */
-- (int)action:(NSString *)action;
+- (int)action:(NSData *)action;
 
 /** Sends a public NOTICE to the channel.
  *
  *  @param notice message to send to the channel.
  */
-- (int)notice:(NSString *)notice;
+- (int)notice:(NSData *)notice;
 
 /** Kicks someone from a channel.
  *
  *  @param nick the IRC client to kick from the channel.
  *  @param reason the message to give to the channel and the IRC client for the kick.
  */
-- (int)kick:(NSString *)nick reason:(NSString *)reason;
+- (int)kick:(NSData *)nick reason:(NSData *)reason;
 
 /** Sends a CTCP request to the channel.
  *

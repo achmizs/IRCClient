@@ -40,20 +40,20 @@
  *	in files that make use of the IRCClientChannel class.
  */
 
-- (void)userJoined:(NSString *)nick;
+- (void)userJoined:(NSData *)nick;
 
-- (void)userParted:(NSString *)nick withReason:(NSData *)reason us:(BOOL)wasItUs;
+- (void)userParted:(NSData *)nick withReason:(NSData *)reason us:(BOOL)wasItUs;
 
-- (void)modeSet:(NSString *)mode withParams:(NSString *)params by:(NSString *)nick;
+- (void)modeSet:(NSData *)mode withParams:(NSData *)params by:(NSData *)nick;
 
-- (void)topicSet:(NSData *)newTopic by:(NSString *)nick;
+- (void)topicSet:(NSData *)newTopic by:(NSData *)nick;
 
-- (void)userKicked:(NSString *)nick withReason:(NSData *)reason by:(NSString *)byNick us:(BOOL)wasItUs;
+- (void)userKicked:(NSData *)nick withReason:(NSData *)reason by:(NSData *)byNick us:(BOOL)wasItUs;
 
-- (void)messageSent:(NSData *)message byUser:(NSString *)nick;
+- (void)messageSent:(NSData *)message byUser:(NSData *)nick;
 
-- (void)noticeSent:(NSData *)notice byUser:(NSString *)nick;
+- (void)noticeSent:(NSData *)notice byUser:(NSData *)nick;
 
-- (void)actionPerformed:(NSData *)action byUser:(NSString *)nick;
+- (void)actionPerformed:(NSData *)action byUser:(NSData *)nick;
 
 @end

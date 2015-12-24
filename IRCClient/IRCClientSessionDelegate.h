@@ -42,14 +42,14 @@
  *	@param oldNick the old nickname
  *  @param wasItUs did our nick change, or someone else's?
  */
-- (void)nickChangedFrom:(NSString *)oldNick to:(NSString *)newNick own:(BOOL)wasItUs;
+- (void)nickChangedFrom:(NSData *)oldNick to:(NSData *)newNick own:(BOOL)wasItUs;
 
 /** An IRC client on a channel that this client is connected to has quit IRC.
  *
  *  @param nick the nickname of the client that quit.
  *  @param reason (optional) the quit message, if any.
  */
-- (void)userQuit:(NSString *)nick withReason:(NSString *)reason;
+- (void)userQuit:(NSData *)nick withReason:(NSData *)reason;
 
 /** The IRC client has joined (connected) successfully to a new channel. This
  *  event creates an IRCClientChannel object, which you are expected to assign a
@@ -69,52 +69,42 @@
  *
  *  @param mode the new mode.
  */
-- (void)modeSet:(NSString *)mode by:(NSString *)nick;
+- (void)modeSet:(NSData *)mode by:(NSData *)nick;
 
 /** The client has received a private PRIVMSG from another IRC client.
  *
  *  @param message the text of the message
  *  @param nick the other IRC Client that sent the message.
  */
-- (void)privateMessageReceived:(NSString *)message fromUser:(NSString *)nick;
+- (void)privateMessageReceived:(NSData *)message fromUser:(NSData *)nick;
 
 /** The client has received a private NOTICE from another client.
  *
  *  @param notice the text of the message
  *  @param nick the nickname of the other IRC client that sent the message.
  */
-- (void)privateNoticeReceived:(NSString *)notice fromUser:(NSString *)nick;
+- (void)privateNoticeReceived:(NSData *)notice fromUser:(NSData *)nick;
 
 /** The client has received a private PRIVMSG from the server.
  *
  *  @param origin the sender of the message
  *  @param params the parameters of the message
  */
-- (void)serverMessageReceivedFrom:(NSString *)origin params:(NSArray *)params;
+- (void)serverMessageReceivedFrom:(NSData *)origin params:(NSArray *)params;
 
 /** The client has received a private NOTICE from the server.
  *
  *  @param origin the sender of the notice
  *  @param params the parameters of the notice
  */
-- (void)serverNoticeReceivedFrom:(NSString *)origin params:(NSArray *)params;
+- (void)serverNoticeReceivedFrom:(NSData *)origin params:(NSArray *)params;
 
 /** The IRC client has been invited to a channel.
- *	
- *	Note that the name is provided as an NSData object, because we have no idea
- *	what encoding the channel name is in (it needn't be the same as used by e.g.
- *	server messages, etc.), and it's important to attempt to join *exactly* the
- *	channel you're being invited to, byte for byte, otherwise you might end up
- *	joining the wrong channel. You should convert the name to an NSString for 
- *	display (using the encoding set for the server is probably a sane default)
- *	but be aware that you might be displaying entirely wrong characters and are 
- *	not gauranteed that the channel name will look right - only that it will be 
- *	actually be the right name, internally.
  *
  *  @param channel the channel for the invitation.
  *  @param nick the nickname of the user that sent the invitation.
  */	
-- (void)invitedToChannel:(NSData *)channelName by:(NSString *)nick;
+- (void)invitedToChannel:(NSData *)channelName by:(NSData *)nick;
 
 /** A private CTCP request was sent to the IRC client.
  *
@@ -122,14 +112,14 @@
  *  @param type the CTCP request type
  *  @param nick the nickname of the user that sent the request.
  */
-- (void)CTCPRequestReceived:(NSData *)request ofType:(NSData *)type fromUser:(NSString *)nick;
+- (void)CTCPRequestReceived:(NSData *)request ofType:(NSData *)type fromUser:(NSData *)nick;
 
 /** A private CTCP reply was sent to the IRC client.
  *
  *  @param reply an NSData containing the raw C string of the reply.
  *  @param nick the nickname of the user that sent the reply.
  */
-- (void)CTCPReplyReceived:(NSData *)reply fromUser:(NSString *)nick;
+- (void)CTCPReplyReceived:(NSData *)reply fromUser:(NSData *)nick;
 
 /** A private CTCP ACTION was sent to the IRC client.
  *
@@ -138,7 +128,7 @@
  *  @param action the action message text.
  *  @param nick the nickname of the client that sent the action.
  */
-- (void)privateCTCPActionReceived:(NSString *)action fromUser:(NSString *)nick;
+- (void)privateCTCPActionReceived:(NSData *)action fromUser:(NSData *)nick;
 
 /** An unhandled event was received from the IRC server.
  *
@@ -146,7 +136,7 @@
  *  @param origin the sender of the event
  *  @param params an NSArray of NSData objects that are the raw C strings of the event.
  */
-- (void)unknownEventReceived:(NSData *)event from:(NSString *)origin params:(NSArray *)params;
+- (void)unknownEventReceived:(NSData *)event from:(NSData *)origin params:(NSArray *)params;
 
 /** An unhandled numeric was received from the IRC server
  *
@@ -154,6 +144,6 @@
  *  @param origin the sender of the event
  *  @param params an NSArray of NSData objects that are the raw C strings of the event.
  */
-- (void)numericEventReceived:(NSUInteger)event from:(NSString *)origin params:(NSArray *)params;
+- (void)numericEventReceived:(NSUInteger)event from:(NSData *)origin params:(NSArray *)params;
 
 @end

@@ -33,7 +33,7 @@
 }
 
 @property (readwrite) NSData *topic;
-@property (readwrite) NSString *modes;
+@property (readwrite) NSData *modes;
 @property (readwrite) NSMutableArray *nicks;
 
 @end
@@ -81,8 +81,8 @@
 
 		_name = name;
 		_encoding = NSUTF8StringEncoding;
-		_topic = [NSData dataWithBytes:@"".UTF8String length:1];
-		_modes = @"";
+		_topic = [NSData dataWithBytes:"\0" length:1];
+		_modes = [NSData dataWithBytes:"\0" length:1];
 	}
 	
 	return self;
@@ -97,9 +97,9 @@
 	return irc_cmd_part(_irc_session, _name.SA_terminatedCString);
 }
 
-- (int)invite:(NSString *)nick
+- (int)invite:(NSData *)nick
 {
-	return irc_cmd_invite(_irc_session, nick.UTF8String, _name.SA_terminatedCString);
+	return irc_cmd_invite(_irc_session, nick.SA_terminatedCString, _name.SA_terminatedCString);
 }
 
 - (int)refreshNames
@@ -107,39 +107,44 @@
 	return irc_cmd_names(_irc_session, _name.SA_terminatedCString);
 }
 
-- (void)setChannelTopic:(NSString *)newTopic
+- (void)setChannelTopic:(NSData *)newTopic
 {	
-	irc_cmd_topic(_irc_session, _name.SA_terminatedCString, [newTopic cStringUsingEncoding:_encoding]);
+	irc_cmd_topic(_irc_session, _name.SA_terminatedCString, newTopic.SA_terminatedCString);
 }
 
-- (int)setMode:(NSString *)mode params:(NSString *)params
+- (int)setMode:(NSData *)mode params:(NSData *)params
 {
-	NSMutableString* modeString = [mode mutableCopy];
-	
-	if(params != nil && params.length > 0)
-		[modeString appendFormat:@" %@", params];
-	
-	return irc_cmd_channel_mode(_irc_session, _name.SA_terminatedCString, modeString.UTF8String);
+	if(params != nil)
+	{
+		NSMutableData *fullModeString = (params != nil) ? [NSMutableData dataWithLength:mode.length + 1 + params.length] : [NSMutableData dataWithLength:mode.length];
+		sprintf(fullModeString.mutableBytes, "%s %s", mode.bytes, params.bytes);
+		
+		return irc_cmd_channel_mode(_irc_session, _name.SA_terminatedCString, fullModeString.SA_terminatedCString);
+	}
+	else
+	{
+		return irc_cmd_channel_mode(_irc_session, _name.SA_terminatedCString, mode.SA_terminatedCString);
+	}
 }
 
-- (int)message:(NSString *)message
+- (int)message:(NSData *)message
 {
-	return irc_cmd_msg(_irc_session, _name.SA_terminatedCString, [message cStringUsingEncoding:_encoding]);
+	return irc_cmd_msg(_irc_session, _name.SA_terminatedCString, message.SA_terminatedCString);
 }
 
-- (int)action:(NSString *)action
+- (int)action:(NSData *)action
 {
-	return irc_cmd_me(_irc_session, _name.SA_terminatedCString, [action cStringUsingEncoding:_encoding]);
+	return irc_cmd_me(_irc_session, _name.SA_terminatedCString, action.SA_terminatedCString);
 }
 
-- (int)notice:(NSString *)notice
+- (int)notice:(NSData *)notice
 {
-	return irc_cmd_notice(_irc_session, _name.SA_terminatedCString, [notice cStringUsingEncoding:_encoding]);
+	return irc_cmd_notice(_irc_session, _name.SA_terminatedCString, notice.SA_terminatedCString);
 }
 
-- (int)kick:(NSString *)nick reason:(NSString *)reason
+- (int)kick:(NSData *)nick reason:(NSData *)reason
 {
-	return irc_cmd_kick(_irc_session, nick.UTF8String, _name.SA_terminatedCString, [reason cStringUsingEncoding:_encoding]);
+	return irc_cmd_kick(_irc_session, nick.SA_terminatedCString, _name.SA_terminatedCString, reason.SA_terminatedCString);
 }
 
 - (int)ctcpRequest:(NSData *)request
@@ -151,52 +156,46 @@
 #pragma mark - Event handlers
 /****************************/
 
-- (void)userJoined:(NSString *)nick
+- (void)userJoined:(NSData *)nick
 {
 	[_delegate userJoined:nick];
 }
 
-- (void)userParted:(NSString *)nick withReason:(NSData *)reason us:(BOOL)wasItUs
+- (void)userParted:(NSData *)nick withReason:(NSData *)reason us:(BOOL)wasItUs
 {
-	NSString* reasonString = [NSString stringWithCString:reason.SA_terminatedCString encoding:_encoding];
-	[_delegate userParted:nick withReason:reasonString us:wasItUs];
+	[_delegate userParted:nick withReason:reason us:wasItUs];
 }
 
-- (void)modeSet:(NSString *)mode withParams:(NSString *)params by:(NSString *)nick
+- (void)modeSet:(NSData *)mode withParams:(NSData *)params by:(NSData *)nick
 {
 	[_delegate modeSet:mode withParams:params by:nick];
 }
 
-- (void)topicSet:(NSData *)topic by:(NSString *)nick
+- (void)topicSet:(NSData *)topic by:(NSData *)nick
 {
 	_topic = topic;
 	
-	NSString* topicString = [NSString stringWithCString:topic.SA_terminatedCString encoding:_encoding];
-	[_delegate topicSet:topicString by:nick];
+	[_delegate topicSet:topic by:nick];
 }
 
-- (void)userKicked:(NSString *)nick withReason:(NSData *)reason by:(NSString *)byNick us:(BOOL)wasItUs
+- (void)userKicked:(NSData *)nick withReason:(NSData *)reason by:(NSData *)byNick us:(BOOL)wasItUs
 {
-	NSString* reasonString = [NSString stringWithCString:reason.SA_terminatedCString encoding:_encoding];
-	[_delegate userKicked:nick withReason:reasonString by:byNick us:wasItUs];
+	[_delegate userKicked:nick withReason:reason by:byNick us:wasItUs];
 }
 
-- (void)messageSent:(NSData *)message byUser:(NSString *)nick
+- (void)messageSent:(NSData *)message byUser:(NSData *)nick
 {
-	NSString* messageString = [NSString stringWithCString:message.SA_terminatedCString encoding:_encoding];
-	[_delegate messageSent:messageString byUser:nick];
+	[_delegate messageSent:message byUser:nick];
 }
 
-- (void)noticeSent:(NSData *)notice byUser:(NSString *)nick
+- (void)noticeSent:(NSData *)notice byUser:(NSData *)nick
 {
-	NSString* noticeString = [NSString stringWithCString:notice.SA_terminatedCString encoding:_encoding];
-	[_delegate noticeSent:noticeString byUser:nick];
+	[_delegate noticeSent:notice byUser:nick];
 }
 
-- (void)actionPerformed:(NSData *)action byUser:(NSString *)nick
+- (void)actionPerformed:(NSData *)action byUser:(NSData *)nick
 {
-	NSString* actionString = [NSString stringWithCString:action.SA_terminatedCString encoding:_encoding];
-	[_delegate actionPerformed:actionString byUser:nick];
+	[_delegate actionPerformed:action byUser:nick];
 }
 
 @end

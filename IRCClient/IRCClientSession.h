@@ -91,10 +91,10 @@
 @property (assign) NSUInteger sessionID;
 
 /** The version string for the client to send back on CTCP VERSION requests */
-@property (copy) NSString *version;
+@property (copy) NSData *version;
 
 /** IRC server to connect to */
-@property (copy) NSString *server;
+@property (copy) NSData *server;
 
 /** IRC port to connect to */
 @property (assign) NSUInteger port;
@@ -104,17 +104,17 @@
 
 /** Nickname of the connected client.
  */
-@property (readonly) NSString *nickname;
+@property (readonly) NSData *nickname;
 
 /** Username of the connected client. Also known as the ident.
  */
-@property (readonly) NSString *username;
+@property (readonly) NSData *username;
 
 /** Realname of the connected client.
  */
-@property (readonly) NSString *realname;
+@property (readonly) NSData *realname;
 
-/** The default text encoding for messages on this server.
+/** The suggested text encoding for messages on this server.
  
 	This concerns messages received via PRIVMSG and NOTICE, and TOPIC in a channel.
 	It also affects what encoding reasons given for QUIT messages are assumed to be in.
@@ -155,7 +155,7 @@
 	already connected; use the nick: method to attempt a nick change while
 	connected.)
  */
--(int)setNickname:(NSString *)nickname username:(NSString *)username realname:(NSString *)realname;
+-(int)setNickname:(NSData *)nickname username:(NSData *)username realname:(NSData *)realname;
 
 /** Connect to the IRC server.
  
@@ -216,7 +216,7 @@
  
 	@param mode string to set
  */
-- (int)userMode:(NSString *)mode;
+- (int)userMode:(NSData *)mode;
 
 /**	sets the IRC client nickname.
  
@@ -226,53 +226,53 @@
  
 	@param newnick new nickname to set.
  */
-- (int)nick:(NSString *)newnick;
+- (int)nick:(NSData *)newnick;
 
 /**	sends a WHOIS request to the IRC server
  
 	@param nick nickname of the irc client to whois.
 */
-- (int)whois:(NSString *)nick;
+- (int)whois:(NSData *)nick;
 
 /**	send a PRIVMSG to another IRC client
  
 	@param message message to send
 	@param target the other IRC client to send the message to.
  */
-- (int)message:(NSData *)message to:(NSString *)target;
+- (int)message:(NSData *)message to:(NSData *)target;
 
 /**	send a CTCP ACTION to another IRC client
  
 	@param action the action message to send
 	@param target the nickname of the irc client to send the message to.
  */
-- (int)action:(NSData *)action to:(NSString *)target;
+- (int)action:(NSData *)action to:(NSData *)target;
 
 /**	send a NOTICE to another IRC client
  
 	@param notice the message text to send
 	@param target the nickname of the irc client to send the notice to.
  */
-- (int)notice:(NSData *)notice to:(NSString *)target;
+- (int)notice:(NSData *)notice to:(NSData *)target;
 
 /** send a CTCP request to another IRC client
  
 	@param request the CTCP request string to send
 	@param target the nickname of the IRC client to send the request to.
  */
-- (int)ctcpRequest:(NSData *)request target:(NSString *)target;
+- (int)ctcpRequest:(NSData *)request target:(NSData *)target;
 
 /** send a CTCP reply to another IRC client
  
 	@param reply the CTCP reply string to send
 	@param target the nickname of the IRC client to send the reply to.
  */
-- (int)ctcpReply:(NSData *)reply target:(NSString *)target;
+- (int)ctcpReply:(NSData *)reply target:(NSData *)target;
 
 @end
 
-NSString* getNickFromNickUserHost(NSString *nuh);
+NSData* getNickFromNickUserHost(NSData *nuh);
 
-NSString* getUserFromNickUserHost(NSString *nuh);
+NSData* getUserFromNickUserHost(NSData *nuh);
 
-NSString* getHostFromNickUserHost(NSString *nuh);
+NSData* getHostFromNickUserHost(NSData *nuh);
