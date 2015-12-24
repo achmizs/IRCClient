@@ -17,7 +17,9 @@
  * License for more details.
  */
 
+/********************************/
 #pragma mark Defines and includes
+/********************************/
 
 #define IRCCLIENTVERSION "2.0a3"
 
@@ -26,7 +28,9 @@
 #import "IRCClientChannel_Private.h"
 #import "NSData+SA_NSDataExtensions.h"
 
+/********************************************/
 #pragma mark - Callback function declarations
+/********************************************/
 
 static void onConnect(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onNick(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
@@ -50,7 +54,9 @@ static void onCtcpAction(irc_session_t *session, const char *event, const char *
 static void onUnknownEvent(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onNumericEvent(irc_session_t *session, unsigned int event, const char *origin, const char **params, unsigned int count);
 
+/***********************************************************/
 #pragma mark - IRCClientSession private category declaration
+/***********************************************************/
 
 static NSDictionary* ircNumericCodeList;
 
@@ -69,11 +75,15 @@ static NSDictionary* ircNumericCodeList;
 
 @end
 
+/***************************************************/
 #pragma mark - IRCClientSession class implementation
+/***************************************************/
 
 @implementation IRCClientSession
 
+/********************************/
 #pragma mark - Property synthesis
+/********************************/
 
 @synthesize delegate = _delegate;
 @synthesize sessionID = _sessionID;
@@ -89,15 +99,17 @@ static NSDictionary* ircNumericCodeList;
 
 @synthesize encoding = _encoding;
 
+/******************************/
 #pragma mark - Custom accessors
+/******************************/
 
--(NSDictionary*)channels
+- (NSDictionary*)channels
 {
 	NSDictionary* channelsCopy = [_channels copy];
 	return channelsCopy;
 }
 
--(void)setChannels:(NSDictionary *)channels
+- (void)setChannels:(NSDictionary *)channels
 {
 	_channels = [channels mutableCopy];
 }
@@ -107,13 +119,14 @@ static NSDictionary* ircNumericCodeList;
 	return irc_is_connected(_irc_session);
 }
 
-/************************************/
+/***************************/
 #pragma mark - Class methods
-/************************************/
+/***************************/
 
--(instancetype)init
+- (instancetype)init
 {
-    if ((self = [super init])) {
+    if ((self = [super init]))
+	{
 		_callbacks.event_connect = onConnect;
 		_callbacks.event_nick = onNick;
 		_callbacks.event_quit = onQuit;
@@ -165,15 +178,17 @@ static NSDictionary* ircNumericCodeList;
     return self;
 }
 
--(void)dealloc
+- (void)dealloc
 {
 	if (irc_is_connected(_irc_session))
+	{
 		NSLog(@"Warning: IRC Session is not disconnected on dealloc");
-		
+	}
+	
 	irc_destroy_session(_irc_session);
 }
 
-+(NSDictionary *)ircNumericCodes
++ (NSDictionary *)ircNumericCodes
 {
 	if(ircNumericCodeList == nil)
 	{
@@ -183,7 +198,7 @@ static NSDictionary* ircNumericCodeList;
 	return ircNumericCodeList;
 }
 
-+(void)loadNumericCodes
++ (void)loadNumericCodes
 {
 	NSString* numericCodeListPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IRC_Numerics" ofType:@"plist"];
 	ircNumericCodeList = [NSDictionary dictionaryWithContentsOfFile:numericCodeListPath];
@@ -226,7 +241,7 @@ static NSDictionary* ircNumericCodeList;
 	[_thread start];
 }
 
--(int)setNickname:(NSData *)nickname username:(NSData *)username realname:(NSData *)realname
+- (int)setNickname:(NSData *)nickname username:(NSData *)username realname:(NSData *)realname
 {
 	if(self.isConnected)
 	{
