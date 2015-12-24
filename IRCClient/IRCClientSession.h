@@ -146,7 +146,7 @@
 	messages have implementation-specific uses. See the various RFCs, and other
 	info sources, for details.
  */
-+(NSDictionary *)IRCNumericCodes;
++(NSDictionary *)ircNumericCodes;
 
 /** Set the nickname, username, and realname for the session.
  

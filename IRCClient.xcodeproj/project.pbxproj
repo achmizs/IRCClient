@@ -10,11 +10,11 @@
 		8657E6DD1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8657E6DB1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h */; };
 		8657E6DE1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8657E6DC1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m */; };
 		8657E6E21C2B55B900BD4E50 /* IRC_Numerics.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8657E6E11C2B55B900BD4E50 /* IRC_Numerics.plist */; };
-		866EF0101C25FF07006303A1 /* libircclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 866EF00F1C25FF07006303A1 /* libircclient.a */; };
 		868374A91C24E774005B97E5 /* IRCClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 868374A81C24E774005B97E5 /* IRCClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		86B6232C1C21FD7C00D6E3AF /* README in Resources */ = {isa = PBXBuildFile; fileRef = 86B6232B1C21FD7C00D6E3AF /* README */; };
+		86CEFEEB1C2BC9A6000DB861 /* libircclient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CEFEEA1C2BC9A6000DB861 /* libircclient.a */; };
+		86CEFEED1C2BC9BC000DB861 /* libirc_events.h in Headers */ = {isa = PBXBuildFile; fileRef = 86CEFEEC1C2BC9BC000DB861 /* libirc_events.h */; };
 		86D784A61C24C39F00C7458D /* libirc_errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A01C24C39F00C7458D /* libirc_errors.h */; };
-		86D784A71C24C39F00C7458D /* libirc_events.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A11C24C39F00C7458D /* libirc_events.h */; };
 		86D784A81C24C39F00C7458D /* libirc_options.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A21C24C39F00C7458D /* libirc_options.h */; };
 		86D784A91C24C39F00C7458D /* libirc_rfcnumeric.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A31C24C39F00C7458D /* libirc_rfcnumeric.h */; };
 		86D784AB1C24C39F00C7458D /* libircclient.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D784A51C24C39F00C7458D /* libircclient.h */; };
@@ -31,11 +31,11 @@
 		8657E6DB1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SA_NSDataExtensions.h"; sourceTree = "<group>"; };
 		8657E6DC1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SA_NSDataExtensions.m"; sourceTree = "<group>"; };
 		8657E6E11C2B55B900BD4E50 /* IRC_Numerics.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = IRC_Numerics.plist; sourceTree = "<group>"; };
-		866EF00F1C25FF07006303A1 /* libircclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libircclient.a; sourceTree = "<group>"; };
 		868374A81C24E774005B97E5 /* IRCClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRCClient.h; sourceTree = "<group>"; };
 		86B6232B1C21FD7C00D6E3AF /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		86CEFEEA1C2BC9A6000DB861 /* libircclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libircclient.a; sourceTree = "<group>"; };
+		86CEFEEC1C2BC9BC000DB861 /* libirc_events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_events.h; sourceTree = "<group>"; };
 		86D784A01C24C39F00C7458D /* libirc_errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_errors.h; sourceTree = "<group>"; };
-		86D784A11C24C39F00C7458D /* libirc_events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_events.h; sourceTree = "<group>"; };
 		86D784A21C24C39F00C7458D /* libirc_options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_options.h; sourceTree = "<group>"; };
 		86D784A31C24C39F00C7458D /* libirc_rfcnumeric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_rfcnumeric.h; sourceTree = "<group>"; };
 		86D784A51C24C39F00C7458D /* libircclient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libircclient.h; sourceTree = "<group>"; };
@@ -55,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				866EF0101C25FF07006303A1 /* libircclient.a in Frameworks */,
+				86CEFEEB1C2BC9A6000DB861 /* libircclient.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,9 +74,9 @@
 		86D7849F1C24C39F00C7458D /* libircclient */ = {
 			isa = PBXGroup;
 			children = (
-				866EF00F1C25FF07006303A1 /* libircclient.a */,
+				86CEFEEA1C2BC9A6000DB861 /* libircclient.a */,
 				86D784A01C24C39F00C7458D /* libirc_errors.h */,
-				86D784A11C24C39F00C7458D /* libirc_events.h */,
+				86CEFEEC1C2BC9BC000DB861 /* libirc_events.h */,
 				86D784A21C24C39F00C7458D /* libirc_options.h */,
 				86D784A31C24C39F00C7458D /* libirc_rfcnumeric.h */,
 				86D784A51C24C39F00C7458D /* libircclient.h */,
@@ -135,9 +135,9 @@
 				86F2EFFB1C21F81900B033A4 /* IRCClientChannelDelegate.h in Headers */,
 				8657E6DD1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h in Headers */,
 				86F2EFFC1C21F81900B033A4 /* IRCClientSession.h in Headers */,
-				86D784A71C24C39F00C7458D /* libirc_events.h in Headers */,
 				86D784A91C24C39F00C7458D /* libirc_rfcnumeric.h in Headers */,
 				86D784A81C24C39F00C7458D /* libirc_options.h in Headers */,
+				86CEFEED1C2BC9BC000DB861 /* libirc_events.h in Headers */,
 				86F2EFF81C21F81900B033A4 /* IRCClientChannel_Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

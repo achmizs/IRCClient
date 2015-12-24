@@ -85,6 +85,20 @@
  */
 - (void)privateNoticeReceived:(NSString *)notice fromUser:(NSString *)nick;
 
+/** The client has received a private PRIVMSG from the server.
+ *
+ *  @param origin the sender of the message
+ *  @param params the parameters of the message
+ */
+- (void)serverMessageReceivedFrom:(NSString *)origin params:(NSArray *)params;
+
+/** The client has received a private NOTICE from the server.
+ *
+ *  @param origin the sender of the notice
+ *  @param params the parameters of the notice
+ */
+- (void)serverNoticeReceivedFrom:(NSString *)origin params:(NSArray *)params;
+
 /** The IRC client has been invited to a channel.
  *	
  *	Note that the name is provided as an NSData object, because we have no idea

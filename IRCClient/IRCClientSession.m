@@ -39,8 +39,10 @@ static void onTopic(irc_session_t *session, const char *event, const char *origi
 static void onKick(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onChannelPrvmsg(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onPrivmsg(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
+static void onServerMsg(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onNotice(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onChannelNotice(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
+static void onServerNotice(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onInvite(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onCtcpRequest(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onCtcpReply(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
@@ -124,8 +126,10 @@ static NSDictionary* ircNumericCodeList;
 		_callbacks.event_kick = onKick;
 		_callbacks.event_channel = onChannelPrvmsg;
 		_callbacks.event_privmsg = onPrivmsg;
+		_callbacks.event_server_msg = onServerMsg;
 		_callbacks.event_notice = onNotice;
 		_callbacks.event_channel_notice = onChannelNotice;
+		_callbacks.event_server_notice = onServerNotice;
 		_callbacks.event_invite = onInvite;
 		_callbacks.event_ctcp_req = onCtcpRequest;
 		_callbacks.event_ctcp_rep = onCtcpReply;
@@ -143,7 +147,10 @@ static NSDictionary* ircNumericCodeList;
 		}
 		
 		// Strip server info from nicks.
-//		irc_option_set(irc_session, LIBIRC_OPTION_STRIPNICKS);
+//		irc_option_set(_irc_session, LIBIRC_OPTION_STRIPNICKS);
+		
+		// Set debug mode.
+		irc_option_set(_irc_session, LIBIRC_OPTION_DEBUG);
 		
 		irc_set_ctx(_irc_session, (__bridge void *)(self));
 		
@@ -166,7 +173,7 @@ static NSDictionary* ircNumericCodeList;
 	irc_destroy_session(_irc_session);
 }
 
-+(NSDictionary *)IRCNumericCodes
++(NSDictionary *)ircNumericCodes
 {
 	if(ircNumericCodeList == nil)
 	{
@@ -178,11 +185,12 @@ static NSDictionary* ircNumericCodeList;
 
 +(void)loadNumericCodes
 {
-	NSString* numericCodeListPath = [[NSBundle mainBundle] pathForResource:@"IRC_Numerics" ofType:@"plist"];
+	NSString* numericCodeListPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IRC_Numerics" ofType:@"plist"];
 	ircNumericCodeList = [NSDictionary dictionaryWithContentsOfFile:numericCodeListPath];
 	if(ircNumericCodeList)
 	{
 		NSLog(@"IRC numeric codes list loaded successfully.\n");
+//		NSLog(@"%@", ircNumericCodeList);
 	}
 	else
 	{
@@ -427,6 +435,11 @@ static NSDictionary* ircNumericCodeList;
 	[_delegate privateMessageReceived:messageString fromUser:nick];
 }
 
+- (void)serverMessageReceivedFrom:(NSString *)origin params:(NSArray *)params
+{
+	[_delegate serverMessageReceivedFrom:origin params:params];
+}
+
 - (void)privateNoticeReceived:(NSData *)notice fromUser:(NSString *)nick
 {
 	NSString* noticeString = [NSString stringWithCString:notice.SA_terminatedCString encoding:_encoding];
@@ -439,6 +452,11 @@ static NSDictionary* ircNumericCodeList;
 	IRCClientChannel *channel = _channels[channelName];
 	
 	[channel noticeSent:notice byUser:nick];
+}
+
+- (void)serverNoticeReceivedFrom:(NSString *)origin params:(NSArray *)params
+{
+	[_delegate serverNoticeReceivedFrom:origin params:params];
 }
 
 - (void)invitedToChannel:(NSData *)channelName by:(NSString *)nick
@@ -840,6 +858,28 @@ static void onPrivmsg(irc_session_t *session, const char *event, const char *ori
 }
 
 /*!
+ * The "privmsg" event is triggered upon receipt of a PRIVMSG message
+ * which is addressed to no one in particular, but it sent to the client
+ * anyway.
+ *
+ * \param origin the person, who generates the message.
+ * \param params optional, contains who knows what.
+ */
+static void onServerMsg(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count)
+{
+	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
+	NSString *sender = @(origin);
+	
+	NSMutableArray *paramsArray = [[NSMutableArray alloc] init];
+	for (unsigned int i = 0; i < count; i++)
+	{
+		[paramsArray addObject:[NSData dataWithBytes:params[i] length:strlen(params[i]) + 1]];
+	}
+	
+	[clientSession serverMessageReceivedFrom:sender params:paramsArray];
+}
+
+/*!
  * The "notice" event is triggered upon receipt of a NOTICE message
  * which means that someone has sent the client a public or private
  * notice. According to RFC 1459, the only difference between NOTICE 
@@ -900,6 +940,34 @@ static void onChannelNotice(irc_session_t *session, const char *event, const cha
 	}
 
 	[clientSession noticeSent:notice toChannel:channelName byUser:nick];
+}
+
+/*!
+ * The "server_notice" event is triggered upon receipt of a NOTICE
+ * message which means that the server has sent the client a notice.
+ * This notice is not necessarily addressed to the client's nick
+ * (for example, AUTH notices, sent before the client's nick is known).
+ * According to RFC 1459, the only difference between NOTICE
+ * and PRIVMSG is that you should NEVER automatically reply to NOTICE
+ * messages. Unfortunately, this rule is frequently violated by IRC
+ * servers itself - for example, NICKSERV messages require reply, and
+ * are NOTICEs.
+ *
+ * \param origin the person, who generates the message.
+ * \param params optional, contains who knows what.
+ */
+static void onServerNotice(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count)
+{
+	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
+	NSString *sender = @(origin);
+	
+	NSMutableArray *paramsArray = [[NSMutableArray alloc] init];
+	for (unsigned int i = 0; i < count; i++)
+	{
+		[paramsArray addObject:[NSData dataWithBytes:params[i] length:strlen(params[i]) + 1]];
+	}
+	
+	[clientSession serverNoticeReceivedFrom:sender params:paramsArray];
 }
 
 /*!
