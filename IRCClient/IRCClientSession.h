@@ -133,6 +133,21 @@
 #pragma mark - Class methods
 /***************************/
 
+/**	Returns a dictionary of IRC numeric codes.
+ 
+	The dictionary contains entries for all known IRC numeric codes (as keys).
+	(The list is taken from https://www.alien.net.au/irc/irc2numerics.html .)
+	
+	The value for each key is an NSArray with the known numeric reply names for
+	which the numeric code is used.
+ 
+	Note that there is no gaurantee whatsoever that any given numeric reply 
+	name will, in fact, describe the contents of the message; most IRC numeric
+	messages have implementation-specific uses. See the various RFCs, and other
+	info sources, for details.
+ */
++(NSDictionary *)IRCNumericCodes;
+
 /** Set the nickname, username, and realname for the session.
  
 	Returns 1 if successfully set, 0 otherwise.
