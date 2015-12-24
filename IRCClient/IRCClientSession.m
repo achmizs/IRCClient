@@ -156,7 +156,7 @@ static NSDictionary* ircNumericCodeList;
 		unsigned int high, low;
 		irc_get_version (&high, &low);
 		
-		NSString* versionString = [NSString stringWithFormat:@"IRCClient Framework v%s (Said Achmiz) - libirc v%d.%d (George Yunaev)", IRCCLIENTVERSION, high, low];
+		NSString* versionString = [NSString stringWithFormat:@"IRCClient Framework v%s (Said Achmiz) - libirc v%d.%d (Georgy Yunaev)", IRCCLIENTVERSION, high, low];
 		_version = [NSData dataWithBytes:versionString.UTF8String length:versionString.length];
 		
 		_channels = [[NSMutableDictionary alloc] init];
@@ -543,7 +543,7 @@ NSData* getNickFromNickUserHost(NSData *nuh)
 	[nuh getBytes:nick_user_host_buf];
 	
 	char *nick_buf;
-	nick_buf = strtok(nick_user_host_buf, "!@");
+	nick_buf = strtok(nick_user_host_buf, "!");
 	
 	NSData* nick = (nick_buf != NULL) ? [NSData dataWithBytes:nick_buf length:strlen(nick_buf) + 1] : nil;
 	
@@ -558,8 +558,8 @@ NSData* getUserFromNickUserHost(NSData *nuh)
 	[nuh getBytes:nick_user_host_buf];
 	
 	char *nick_buf, *user_buf;
-	nick_buf = strtok(nick_user_host_buf, "!@");
-	user_buf = strtok(NULL, "!@");
+	nick_buf = strtok(nick_user_host_buf, "!");
+	user_buf = strtok(NULL, "@");
 	
 	NSData* user = (user_buf != NULL) ? [NSData dataWithBytes:user_buf length:strlen(user_buf) + 1] : nil;
 	
@@ -574,9 +574,9 @@ NSData* getHostFromNickUserHost(NSData *nuh)
 	[nuh getBytes:nick_user_host_buf];
 	
 	char *nick_buf, *user_buf, *host_buf;
-	nick_buf = strtok(nick_user_host_buf, "!@");
-	user_buf = strtok(NULL, "!@");
-	host_buf = strtok(NULL, "!@");
+	nick_buf = strtok(nick_user_host_buf, "!");
+	user_buf = strtok(NULL, "@");
+	host_buf = strtok(NULL, "");
 	
 	NSData* host = (host_buf != NULL) ? [NSData dataWithBytes:host_buf length:strlen(host_buf) + 1] : nil;
 	

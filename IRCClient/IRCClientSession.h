@@ -22,14 +22,18 @@
  * IRCClientSession *session = [[IRCClientSession alloc] init];
  * MyIRCClientSessionDelegate *controller = [[MyIRCClientSessionDelegate alloc] init];
  * 
- * [session setDelegate:controller];
- * [controller setSession:session];
+ * session.delegate = controller;
+ * controller.session = session;
  * 
- * [session setServer:@"irc.dal.net"];
- * [session setPort:@"6667"];
- * [session setNickname:@"test"];
- * [session setUsername:@"test"];
- * [session setRealname:@"test"];
+ * NSData *server = [NSData dataWithBytes:@"chat.freenode.net".UTF8String length:strlen(@"chat.freenode.net".UTF8String.length) + 1];
+ * NSUinteger port = 6665;
+ * NSData *nickname = [NSData dataWithBytes:@"test".UTF8String length:strlen(@"test".UTF8String) + 1];
+ * NSData *username = [NSData dataWithBytes:@"test".UTF8String length:strlen(@"test".UTF8String) + 1];
+ * NSData *realname = [NSData dataWithBytes:@"test".UTF8String length:strlen(@"test".UTF8String) + 1];
+ *
+ * [session setServer:server];
+ * [session setPort:port];
+ * [session setNickname:nickname username:username realname:realname];
  * [session connect];
  * 
  * [session run]; //starts the thread
@@ -37,8 +41,11 @@
  * 
  * \section author Author, copyright, support.
  *
- * If you have any questions, bug reports, suggestions regarding libircclient 
- * or the IRCClient framework, please visit http://libircclient.sourceforge.net
+ * If you have questions, bug reports, or suggestions regarding IRCClient,
+ * find Obormot on the Freenode IRC network.
+ *
+ * If you have any questions, bug reports, suggestions regarding libircclient,
+ * please visit http://libircclient.sourceforge.net
  *
  * <PRE>
  * libircclient Copyright (C) 2004-2009 Georgy Yunaev gyunaev@ulduzsoft.com
@@ -64,12 +71,13 @@
  *	@brief Represents a connected IRC Session.
  *
  *	IRCClientSession represents a single connection to an IRC server. On initialising
- *  the object, and setting the delegate, server, port, password, nickname, username and realname
- *	properties, you call the connect: and run: methods to connect to the IRC server
- *	and start a new thread.
+ *  the object, and setting the delegate, server, port, and password (if required)
+ *	properties, and setting the nickname, username and realname using the
+ *	setNickname:username:realname: method, you call the connect: and run: methods 
+ *	to connect to the IRC server and start a new thread.
  *
- *	This thread then sends messages back to the main runloop to the IRC server delegate,
- *	or to the IRCClientChannel delegate as required.
+ *	This thread then sends messages to the IRC server delegate,
+ *	or to the IRCClientChannel delegate, as required.
  */
 
 /**********************************************/
@@ -90,7 +98,10 @@
  */
 @property (assign) NSUInteger sessionID;
 
-/** The version string for the client to send back on CTCP VERSION requests */
+/** The version string for the client to send back on CTCP VERSION requests.
+	There is usually no reason to set this, as IRCClient correctly sets its
+	own version string automatically, but this can be any string you like.
+ */
 @property (copy) NSData *version;
 
 /** IRC server to connect to */
@@ -116,8 +127,10 @@
 
 /** The suggested text encoding for messages on this server.
  
-	This concerns messages received via PRIVMSG and NOTICE, and TOPIC in a channel.
-	It also affects what encoding reasons given for QUIT messages are assumed to be in.
+	This is almost entirely irrelevant (except for CTCP TIME replies), as 
+	all messages and other strings are taken and returned as C strings
+	encapsulated in NSData objects. This property is for your convenience.
+ 
 	You may change this at any time.
  */
 @property (assign) NSStringEncoding encoding;
@@ -271,8 +284,22 @@
 
 @end
 
+/*************************************/
+#pragma mark - Useful helper functions
+/*************************************/
+
+/**	Returns the nick part of a nick!user@host string.
+ */
 NSData* getNickFromNickUserHost(NSData *nuh);
 
+/**	Returns the user part of a nick!user@host string.
+	Returns nil if the user component can't be found (i.e. if the passed string
+	is not, in fact, in nick!user@host format).
+ */
 NSData* getUserFromNickUserHost(NSData *nuh);
 
+/**	Returns the host part of a nick!user@host string.
+	Returns nil if the host component can't be found (i.e. if the passed string
+	is not, in fact, in nick!user@host format).
+ */
 NSData* getHostFromNickUserHost(NSData *nuh);

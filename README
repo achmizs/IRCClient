@@ -2,7 +2,7 @@ This is a modified version of the IRCClient framework by Nathan Ollerenshaw. I�
 
 - Said Achmiz
 
-—
+---
 
 ADDING IRCCLIENT TO YOUR APPLICATION
 (using Xcode)
@@ -32,7 +32,7 @@ ADDING IRCCLIENT TO YOUR APPLICATION
 
 6. Import IRCClient’s API into your code using “#import <IRCClient/IRCClient.h>”
 
-—
+---
 
 See the following header files for documentation:
 
@@ -40,3 +40,15 @@ IRCClientSession.h
 IRCClientSessionDelegate.h
 IRCClientChannel.h
 IRCClientChannelDelegate.h
+
+---
+
+NOTE on strings:
+
+IRCClient stores and passes all strings (messages, nicks, channel names, mode strings, channel topics, etc.) as NSData objects, which contain null-terminated C strings. Values passed to framework methods (such as the IRC commands) should also be in this format[1]. This means that IRCClient is encoding-agnostic[2]; it is up to you to pass it properly encoded C-string representations of your text strings, and it is also up to you to select an appropriate encoding for display or other handling of received strings, as necessary. The 'encoding' property of IRCClientSession and IRCClientChannel may be useful in this regard (i.e. for the convenience associating a server's or channel's preferred encoding with the relevant server or channel object), although note that this property is almost entirely epiphenomenal[3].
+
+[1] Although note that if you pass unterminated strings instead, IRCClient will add the null termination for you - but there is a slight performance penalty for this, so be sure to null-terminate the contents of your NSData objects, for optimal performance.
+
+[2] Of course, IRCClient does not support UTF-16 nor any other non-8-bit encoding (since the byte representations of such encodings may contain nulls, and therefore cannot be used as C strings), but the IRC protocol does not support such encodings either.
+
+[3] The 'encoding' property of IRCClientSession does have one effect: it controls the encoding used by replies to CTCP TIME requests.
