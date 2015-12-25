@@ -87,4 +87,9 @@
  */
 @property (readonly) NSData *SA_dataWithUnterminatedByteString;
 
+/** Returns an NSData object containing a blank C string (i.e. a byte sequence
+	of length 1, containing the null character '\0').
+ */
++(NSData *)dataWithBlankCString;
+
 @end

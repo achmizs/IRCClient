@@ -81,8 +81,8 @@
 
 		_name = name;
 		_encoding = NSUTF8StringEncoding;
-		_topic = [NSData dataWithBytes:"\0" length:1];
-		_modes = [NSData dataWithBytes:"\0" length:1];
+		_topic = [NSData dataWithBlankCString];
+		_modes = [NSData dataWithBlankCString];
 	}
 	
 	return self;

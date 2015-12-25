@@ -290,16 +290,16 @@
 
 /**	Returns the nick part of a nick!user@host string.
  */
-NSData* getNickFromNickUserHost(NSData *nuh);
+NSData* getNickFromNickUserHost(NSData *nickUserHost);
 
 /**	Returns the user part of a nick!user@host string.
-	Returns nil if the user component can't be found (i.e. if the passed string
-	is not, in fact, in nick!user@host format).
+	May be blank if the user component can't be found 
+	(i.e. if the passed string is not, in fact, in nick!user@host format).
  */
-NSData* getUserFromNickUserHost(NSData *nuh);
+NSData* getUserFromNickUserHost(NSData *nickUserHost);
 
 /**	Returns the host part of a nick!user@host string.
-	Returns nil if the host component can't be found (i.e. if the passed string
-	is not, in fact, in nick!user@host format).
+	May be blank if the host component can't be found 
+	(i.e. if the passed string is not, in fact, in nick!user@host format).
  */
-NSData* getHostFromNickUserHost(NSData *nuh);
+NSData* getHostFromNickUserHost(NSData *nickUserHost);

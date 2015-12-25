@@ -75,4 +75,9 @@
 	}
 }
 
++(NSData *)dataWithBlankCString
+{
+	return [NSData dataWithBytes:"\0" length:1];
+}
+
 @end

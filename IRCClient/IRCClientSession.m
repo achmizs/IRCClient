@@ -552,48 +552,48 @@ static NSDictionary* ircNumericCodeList;
 #pragma mark - Useful helper functions
 /*************************************/
 
-NSData* getNickFromNickUserHost(NSData *nuh)
+NSData* getNickFromNickUserHost(NSData *nickUserHost)
 {
-	char* nick_user_host_buf = malloc(nuh.length);
-	[nuh getBytes:nick_user_host_buf];
+	char *nick_user_host_buf = malloc(nickUserHost.length);
+	[nickUserHost getBytes:nick_user_host_buf];
 	
 	char *nick_buf;
 	nick_buf = strtok(nick_user_host_buf, "!");
 	
-	NSData* nick = (nick_buf != NULL) ? [NSData dataWithBytes:nick_buf length:strlen(nick_buf) + 1] : nil;
+	NSData *nick = (nick_buf != NULL) ? [NSData dataWithBytes:nick_buf length:strlen(nick_buf) + 1] : [NSData dataWithBlankCString];
 	
 	free(nick_user_host_buf);
 	
 	return nick;
 }
 
-NSData* getUserFromNickUserHost(NSData *nuh)
+NSData* getUserFromNickUserHost(NSData *nickUserHost)
 {
-	char* nick_user_host_buf = malloc(nuh.length);
-	[nuh getBytes:nick_user_host_buf];
+	char *nick_user_host_buf = malloc(nickUserHost.length);
+	[nickUserHost getBytes:nick_user_host_buf];
 	
 	char *nick_buf, *user_buf;
 	nick_buf = strtok(nick_user_host_buf, "!");
 	user_buf = strtok(NULL, "@");
 	
-	NSData* user = (user_buf != NULL) ? [NSData dataWithBytes:user_buf length:strlen(user_buf) + 1] : nil;
+	NSData *user = (user_buf != NULL) ? [NSData dataWithBytes:user_buf length:strlen(user_buf) + 1] : [NSData dataWithBlankCString];
 	
 	free(nick_user_host_buf);
 	
 	return user;
 }
 
-NSData* getHostFromNickUserHost(NSData *nuh)
+NSData* getHostFromNickUserHost(NSData *nickUserHost)
 {
-	char* nick_user_host_buf = malloc(nuh.length);
-	[nuh getBytes:nick_user_host_buf];
+	char *nick_user_host_buf = malloc(nickUserHost.length);
+	[nickUserHost getBytes:nick_user_host_buf];
 	
 	char *nick_buf, *user_buf, *host_buf;
 	nick_buf = strtok(nick_user_host_buf, "!");
 	user_buf = strtok(NULL, "@");
 	host_buf = strtok(NULL, "");
 	
-	NSData* host = (host_buf != NULL) ? [NSData dataWithBytes:host_buf length:strlen(host_buf) + 1] : nil;
+	NSData *host = (host_buf != NULL) ? [NSData dataWithBytes:host_buf length:strlen(host_buf) + 1] : [NSData dataWithBlankCString];
 	
 	free(nick_user_host_buf);
 	
@@ -646,7 +646,7 @@ static void onQuit(irc_session_t *session, const char *event, const char *origin
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	
 	NSData *nick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
-	NSData *reason = (count > 0) ? [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *reason = (count > 0) ? [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1] : [NSData dataWithBlankCString];
 
 	[clientSession userQuit:nick withReason:reason];
 }
@@ -686,7 +686,7 @@ static void onPartChannel(irc_session_t *session, const char *event, const char 
 	
 	NSData *nick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
 	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
-	NSData *reason = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *reason = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBlankCString];
 	
 	[clientSession userParted:nick channel:channelName withReason:reason];
 }
@@ -711,7 +711,7 @@ static void onMode(irc_session_t *session, const char *event, const char *origin
 	NSData *nick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
 	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	NSData *mode = [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1];
-	NSData *modeParams = (count > 2) ? [NSData dataWithBytes:params[2] length:strlen(params[2]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *modeParams = (count > 2) ? [NSData dataWithBytes:params[2] length:strlen(params[2]) + 1] : [NSData dataWithBlankCString];
 	
 	[clientSession modeSet:mode withParams:modeParams forChannel:channelName by:nick];
 }
@@ -749,7 +749,7 @@ static void onTopic(irc_session_t *session, const char *event, const char *origi
 	
 	NSData *nick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
 	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
-	NSData *topic = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *topic = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBlankCString];
 	
 	[clientSession topicSet:topic forChannel:channelName by:nick];
 }
@@ -771,7 +771,7 @@ static void onKick(irc_session_t *session, const char *event, const char *origin
 	NSData *byNick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
 	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
 	NSData *nick = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : nil;
-	NSData *reason = (count > 2) ? [NSData dataWithBytes:params[2] length:strlen(params[2]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *reason = (count > 2) ? [NSData dataWithBytes:params[2] length:strlen(params[2]) + 1] : [NSData dataWithBlankCString];
 	
 	[clientSession userKicked:nick fromChannel:channelName by:byNick withReason:reason];
 }
@@ -792,7 +792,7 @@ static void onChannelPrvmsg(irc_session_t *session, const char *event, const cha
 	
 	NSData *nick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
 	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
-	NSData *message = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *message = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBlankCString];
 
 	[clientSession messageSent:message toChannel:channelName byUser:nick];
 }
@@ -811,7 +811,7 @@ static void onPrivmsg(irc_session_t *session, const char *event, const char *ori
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	
 	NSData *nick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
-	NSData *message = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *message = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBlankCString];
 	
 	[clientSession privateMessageReceived:message fromUser:nick];
 }
@@ -856,7 +856,7 @@ static void onNotice(irc_session_t *session, const char *event, const char *orig
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	
 	NSData *nick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
-	NSData *notice = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *notice = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBlankCString];
 	
 	[clientSession privateNoticeReceived:notice fromUser:nick];
 }
@@ -880,7 +880,7 @@ static void onChannelNotice(irc_session_t *session, const char *event, const cha
 	
 	NSData *nick = [NSData dataWithBytes:origin length:strlen(origin) + 1];
 	NSData *channelName = [NSData dataWithBytes:params[0] length:strlen(params[0]) + 1];
-	NSData *notice = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *notice = (count > 1) ? [NSData dataWithBytes:params[1] length:strlen(params[1]) + 1] : [NSData dataWithBlankCString];
 
 	[clientSession noticeSent:notice toChannel:channelName byUser:nick];
 }
@@ -1007,7 +1007,7 @@ static void onUnknownEvent(irc_session_t *session, const char *event, const char
 	IRCClientSession *clientSession = (__bridge IRCClientSession *) irc_get_ctx(session);
 	
 	NSData *eventType = [NSData dataWithBytes:event length:strlen(event) + 1];
-	NSData *sender = (origin != NULL) ? [NSData dataWithBytes:origin length:strlen(origin) + 1] : [NSData dataWithBytes:"\0" length:1];
+	NSData *sender = (origin != NULL) ? [NSData dataWithBytes:origin length:strlen(origin) + 1] : [NSData dataWithBlankCString];
 	NSMutableArray *paramsArray = [NSMutableArray arrayWithCapacity:count];
 	for (unsigned int i = 0; i < count; i++)
 	{
