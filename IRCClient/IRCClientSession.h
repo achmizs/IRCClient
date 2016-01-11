@@ -93,11 +93,6 @@
 /** delegate to send events to. */
 @property (assign) id <IRCClientSessionDelegate> delegate;
 
-/** User-defined session ID (for one delegate to keep track of multiple sessions,
-    if desired).
- */
-@property (assign) NSUInteger sessionID;
-
 /** The version string for the client to send back on CTCP VERSION requests.
 	There is usually no reason to set this, as IRCClient correctly sets its
 	own version string automatically, but this can be any string you like.

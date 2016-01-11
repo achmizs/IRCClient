@@ -27,7 +27,9 @@
  *  for a given session when the client joins an IRC channel.
  */
 
+/**********************************************/
 #pragma mark IRCClientChannel class declaration
+/**********************************************/
 
 @interface IRCClientChannel : NSObject
 

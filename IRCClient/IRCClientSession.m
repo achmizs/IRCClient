@@ -54,11 +54,11 @@ static void onCtcpAction(irc_session_t *session, const char *event, const char *
 static void onUnknownEvent(irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 static void onNumericEvent(irc_session_t *session, unsigned int event, const char *origin, const char **params, unsigned int count);
 
-/***********************************************************/
-#pragma mark - IRCClientSession private category declaration
-/***********************************************************/
-
 static NSDictionary* ircNumericCodeList;
+
+/**********************************************/
+#pragma mark - IRCClientSession class extension
+/**********************************************/
 
 @interface IRCClientSession()
 {
@@ -80,24 +80,6 @@ static NSDictionary* ircNumericCodeList;
 /***************************************************/
 
 @implementation IRCClientSession
-
-/********************************/
-#pragma mark - Property synthesis
-/********************************/
-
-@synthesize delegate = _delegate;
-@synthesize sessionID = _sessionID;
-@synthesize version = _version;
-
-@synthesize server = _server;
-@synthesize port = _port;
-@synthesize password = _password;
-
-@synthesize nickname = _nickname;
-@synthesize username = _username;
-@synthesize realname = _realname;
-
-@synthesize encoding = _encoding;
 
 /******************************/
 #pragma mark - Custom accessors
@@ -337,14 +319,16 @@ static NSDictionary* ircNumericCodeList;
 
 - (void)nickChangedFrom:(NSData *)oldNick to:(NSData *)newNick
 {
-	if ([_nickname isEqualToData:oldNick])
+	NSData* oldNickOnly = getNickFromNickUserHost(oldNick);
+	
+	if ([_nickname isEqualToData:oldNickOnly])
 	{
 		_nickname = newNick;
-		[_delegate nickChangedFrom:oldNick to:newNick own:YES];
+		[_delegate nickChangedFrom:oldNickOnly to:newNick own:YES];
 	}
 	else
 	{
-		[_delegate nickChangedFrom:oldNick to:newNick own:NO];
+		[_delegate nickChangedFrom:oldNickOnly to:newNick own:NO];
 	}
 }
 

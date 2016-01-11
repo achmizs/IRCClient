@@ -18,6 +18,10 @@
 #import "IRCClientChannel.h"
 #include "libircclient.h"
 
+/********************************************/
+#pragma mark IRCClientChannel class extension
+/********************************************/
+
 @interface IRCClientChannel ()
 
 /** initWithName:andIRCSession:

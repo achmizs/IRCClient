@@ -21,9 +21,9 @@
 #import "IRCClientChannel_Private.h"
 #import "NSData+SA_NSDataExtensions.h"
 
-/*********************************************/
-#pragma mark IRCClientChannel private category
-/*********************************************/
+/********************************************/
+#pragma mark IRCClientChannel class extension
+/********************************************/
 
 @interface IRCClientChannel()
 {
@@ -43,16 +43,6 @@
 /***************************************************/
 
 @implementation IRCClientChannel
-
-/********************************/
-#pragma mark - Property synthesis
-/********************************/
-
-@synthesize delegate = _delegate;
-@synthesize name = _name;
-@synthesize encoding = _encoding;
-@synthesize topic = _topic;
-@synthesize modes = _modes;
 
 /******************************/
 #pragma mark - Custom accessors
