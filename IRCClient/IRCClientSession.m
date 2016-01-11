@@ -343,8 +343,8 @@ static NSDictionary* ircNumericCodeList;
 	
 	if ([_nickname isEqualToData:nickOnly])
 	{
-		// We just joined a channel; allocate an IRCClientChannel object and send it
-		// to the main thread.
+		// We just joined a channel; allocate an IRCClientChannel object and
+		// add it to our channels list.
 		
 		IRCClientChannel* newChannel = [[IRCClientChannel alloc] initWithName:channelName andIRCSession:_irc_session];
 		_channels[channelName] = newChannel;
