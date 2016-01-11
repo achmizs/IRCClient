@@ -9,10 +9,4 @@ Before you can add IRCClient to your project, you must build libircclient and ad
 
 3. Place the library (libircclient.a) and the headers (libircclient.h, libirc_errors.h, libirc_events.h, libirc_options.h, and libirc_rfcnumeric.h) into the libircclient folder you created
 
-4. Open IRCClient.xcodeproj in Xcode and use “File -> Add Files…” to add the libircclient folder to the project
-
-5. Configure the build phases for the IRCClient framework target by adding libircclient.a to the “Link Binary With Libraries” build phase
-
-6. Close the project
-
 Now you can proceed with step 1 of the instructions in the main README file.
