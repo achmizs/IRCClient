@@ -148,44 +148,44 @@
 
 - (void)userJoined:(NSData *)nick
 {
-	[_delegate userJoined:nick];
+	[_delegate userJoined:nick channel:self];
 }
 
 - (void)userParted:(NSData *)nick withReason:(NSData *)reason us:(BOOL)wasItUs
 {
-	[_delegate userParted:nick withReason:reason us:wasItUs];
+	[_delegate userParted:nick channel:self withReason:reason us:wasItUs];
 }
 
 - (void)modeSet:(NSData *)mode withParams:(NSData *)params by:(NSData *)nick
 {
-	[_delegate modeSet:mode withParams:params by:nick];
+	[_delegate modeSet:mode forChannel:self withParams:params by:nick];
 }
 
 - (void)topicSet:(NSData *)topic by:(NSData *)nick
 {
 	_topic = topic;
 	
-	[_delegate topicSet:topic by:nick];
+	[_delegate topicSet:topic forChannel:self by:nick];
 }
 
 - (void)userKicked:(NSData *)nick withReason:(NSData *)reason by:(NSData *)byNick us:(BOOL)wasItUs
 {
-	[_delegate userKicked:nick withReason:reason by:byNick us:wasItUs];
+	[_delegate userKicked:nick fromChannel:self withReason:reason by:byNick us:wasItUs];
 }
 
 - (void)messageSent:(NSData *)message byUser:(NSData *)nick
 {
-	[_delegate messageSent:message byUser:nick];
+	[_delegate messageSent:message byUser:nick onChannel:self];
 }
 
 - (void)noticeSent:(NSData *)notice byUser:(NSData *)nick
 {
-	[_delegate noticeSent:notice byUser:nick];
+	[_delegate noticeSent:notice byUser:nick onChannel:self];
 }
 
 - (void)actionPerformed:(NSData *)action byUser:(NSData *)nick
 {
-	[_delegate actionPerformed:action byUser:nick];
+	[_delegate actionPerformed:action byUser:nick onChannel:self];
 }
 
 @end

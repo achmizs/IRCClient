@@ -28,6 +28,8 @@
  *  object may be supplied instead of the given parameter.
  */
 
+@class IRCClientChannel;
+
 @protocol IRCClientChannelDelegate <NSObject>
 
 /** When a client joins this channel, the userJoined event is fired. Note that
@@ -39,7 +41,7 @@
  *
  *  @param nick The nickname of the user that joined the channel.
  */
-- (void)userJoined:(NSData *)nick;
+- (void)userJoined:(NSData *)nick channel:(IRCClientChannel *)sender;
 
 /** When an IRC client parts a channel you are connect to, you will see
  *  an onPart event. You will also see this event when you part a channel.
@@ -48,7 +50,7 @@
  *  @param reason (optional) The reason, if any, that the user gave for leaving.
  *	@param wasItUs (required) Was it us who parted, or another user?
  */
-- (void)userParted:(NSData *)nick withReason:(NSData *)reason us:(BOOL)wasItUs;
+- (void)userParted:(NSData *)nick channel:(IRCClientChannel *)sender withReason:(NSData *)reason us:(BOOL)wasItUs;
 
 /** Received when an IRC client changes the channel mode. What modes are available
  *  for a given channel is an implementation detail for each server.
@@ -57,14 +59,14 @@
  *  @param params any parameters with the mode (such as channel key).
  *  @param nick the nickname of the IRC client that changed the mode.
  */
-- (void)modeSet:(NSData *)mode withParams:(NSData *)params by:(NSData *)nick;
+- (void)modeSet:(NSData *)mode forChannel:(IRCClientChannel *)sender withParams:(NSData *)params by:(NSData *)nick;
 
 /** Received when the topic is changed for the channel.
  *	
  *  @param aTopic The new topic of the channel. 
  *  @param nick Nickname of the IRC client that changed the topic.
  */
-- (void)topicSet:(NSData *)topic by:(NSData *)nick;
+- (void)topicSet:(NSData *)topic forChannel:(IRCClientChannel *)sender by:(NSData *)nick;
 
 /** Received when an IRC client is kicked from a channel.
  *
@@ -73,7 +75,7 @@
  *  @param byNick nickname of the client that performed the kick command
  *	@param wasItUs Was it us who got kicked, or another user?
  */
-- (void)userKicked:(NSData *)nick withReason:(NSData *)reason by:(NSData *)byNick us:(BOOL)wasItUs;
+- (void)userKicked:(NSData *)nick fromChannel:(IRCClientChannel *)sender withReason:(NSData *)reason by:(NSData *)byNick us:(BOOL)wasItUs;
 
 /** Received when an IRC client sends a public PRIVMSG to the channel. Note that the
  *  user may not necessarily be required to be on the channel to send a message
@@ -82,7 +84,7 @@
  *  @param message the message sent to the channel.
  *  @param nick the nickname of the IRC client that sent the message.
  */
-- (void)messageSent:(NSData *)message byUser:(NSData *)nick;
+- (void)messageSent:(NSData *)message byUser:(NSData *)nick onChannel:(IRCClientChannel *)sender;
 
 /** Received when an IRC client sends a public NOTICE to the channel. Note that
  *	the user may not necessarily be required to be on the channel to send a notice to
@@ -92,13 +94,13 @@
  *  @param notice the notice sent to the channel.
  *  @param nick the nickname of the IRC client that sent the notice.
  */
-- (void)noticeSent:(NSData *)notice byUser:(NSData *)nick;
+- (void)noticeSent:(NSData *)notice byUser:(NSData *)nick onChannel:(IRCClientChannel *)sender;
 
 /** Received when an IRC client sends a CTCP ACTION message to the channel.
  *
  *  @param action the action message sent to the channel.
  *  @param nick the nickname of the IRC client that sent the message.
  */
-- (void)actionPerformed:(NSData *)action byUser:(NSData *)nick;
+- (void)actionPerformed:(NSData *)action byUser:(NSData *)nick onChannel:(IRCClientChannel *)sender;
 
 @end

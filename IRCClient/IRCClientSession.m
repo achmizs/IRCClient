@@ -314,7 +314,7 @@ static NSDictionary* ircNumericCodeList;
 
 - (void)connectionSucceeded
 {
-	[_delegate connectionSucceeded];
+	[_delegate connectionSucceeded:self];
 }
 
 - (void)nickChangedFrom:(NSData *)oldNick to:(NSData *)newNick
@@ -324,17 +324,17 @@ static NSDictionary* ircNumericCodeList;
 	if ([_nickname isEqualToData:oldNickOnly])
 	{
 		_nickname = newNick;
-		[_delegate nickChangedFrom:oldNickOnly to:newNick own:YES];
+		[_delegate nickChangedFrom:oldNickOnly to:newNick own:YES session:self];
 	}
 	else
 	{
-		[_delegate nickChangedFrom:oldNickOnly to:newNick own:NO];
+		[_delegate nickChangedFrom:oldNickOnly to:newNick own:NO session:self];
 	}
 }
 
 - (void)userQuit:(NSData *)nick withReason:(NSData *)reason
 {
-	[_delegate userQuit:nick withReason:reason];
+	[_delegate userQuit:nick withReason:reason session:self];
 }
 
 - (void)userJoined:(NSData *)nick channel:(NSData *)channelName
@@ -348,7 +348,7 @@ static NSDictionary* ircNumericCodeList;
 		
 		IRCClientChannel* newChannel = [[IRCClientChannel alloc] initWithName:channelName andIRCSession:_irc_session];
 		_channels[channelName] = newChannel;
-		[_delegate joinedNewChannel:newChannel];
+		[_delegate joinedNewChannel:newChannel session:self];
 	}
 	else
 	{
@@ -386,7 +386,7 @@ static NSDictionary* ircNumericCodeList;
 
 - (void)modeSet:(NSData *)mode by:(NSData *)nick
 {
-	[_delegate modeSet:mode by:nick];
+	[_delegate modeSet:mode by:nick session:self];
 }
 
 - (void)topicSet:(NSData *)newTopic forChannel:(NSData *)channelName by:(NSData *)nick
@@ -422,17 +422,17 @@ static NSDictionary* ircNumericCodeList;
 
 - (void)privateMessageReceived:(NSData *)message fromUser:(NSData *)nick
 {
-	[_delegate privateMessageReceived:message fromUser:nick];
+	[_delegate privateMessageReceived:message fromUser:nick session:self];
 }
 
 - (void)serverMessageReceivedFrom:(NSData *)origin params:(NSArray *)params
 {
-	[_delegate serverMessageReceivedFrom:origin params:params];
+	[_delegate serverMessageReceivedFrom:origin params:params session:self];
 }
 
 - (void)privateNoticeReceived:(NSData *)notice fromUser:(NSData *)nick
 {
-	[_delegate privateNoticeReceived:notice fromUser:nick];
+	[_delegate privateNoticeReceived:notice fromUser:nick session:self];
 }
 
 - (void)noticeSent:(NSData *)notice toChannel:(NSData *)channelName byUser:(NSData *)nick
@@ -444,12 +444,12 @@ static NSDictionary* ircNumericCodeList;
 
 - (void)serverNoticeReceivedFrom:(NSData *)origin params:(NSArray *)params
 {
-	[_delegate serverNoticeReceivedFrom:origin params:params];
+	[_delegate serverNoticeReceivedFrom:origin params:params session:self];
 }
 
 - (void)invitedToChannel:(NSData *)channelName by:(NSData *)nick
 {
-	[_delegate invitedToChannel:channelName by:nick];
+	[_delegate invitedToChannel:channelName by:nick session:self];
 }
 
 - (void)CTCPRequestReceived:(NSData *)request fromUser:(NSData *)nick
@@ -481,7 +481,7 @@ static NSDictionary* ircNumericCodeList;
 	}
 	else
 	{
-		if ([_delegate respondsToSelector:@selector(CTCPRequestReceived:ofType:fromUser:)])
+		if ([_delegate respondsToSelector:@selector(CTCPRequestReceived:ofType:fromUser:session:)])
 		{
 			char* request_string = malloc(request.length);
 			[request getBytes:request_string length:request.length];
@@ -492,7 +492,7 @@ static NSDictionary* ircNumericCodeList;
 			NSData* requestTypeData = [NSData dataWithBytes:request_body length:strlen(request_body) + 1];
 			NSData* requestBodyData = [NSData dataWithBytes:request_type length:strlen(request_type) + 1];
 			
-			[_delegate CTCPRequestReceived:requestBodyData ofType:requestTypeData fromUser:nick];
+			[_delegate CTCPRequestReceived:requestBodyData ofType:requestTypeData fromUser:nick session:self];
 			
 			free(request_string);
 		}
@@ -501,7 +501,7 @@ static NSDictionary* ircNumericCodeList;
 
 - (void)CTCPReplyReceived:(NSData *)reply fromUser:(NSData *)nick
 {
-	[_delegate CTCPReplyReceived:reply fromUser:nick];
+	[_delegate CTCPReplyReceived:reply fromUser:nick session:self];
 }
 
 - (void)CTCPActionPerformed:(NSData *)action byUser:(NSData *)nick atTarget:(NSData *)target
@@ -516,18 +516,18 @@ static NSDictionary* ircNumericCodeList;
 	else
 	{
 		// An action in a private message
-		[_delegate privateCTCPActionReceived:action fromUser:nick];
+		[_delegate privateCTCPActionReceived:action fromUser:nick session:self];
 	}
 }
 
 - (void)unknownEventReceived:(NSData *)event from:(NSData *)origin params:(NSArray *)params
 {
-	[_delegate unknownEventReceived:event from:origin params:params];
+	[_delegate unknownEventReceived:event from:origin params:params session:self];
 }
 
 -(void)numericEventReceived:(NSUInteger)event from:(NSData *)origin params:(NSArray *)params
 {
-	[_delegate numericEventReceived:event from:origin params:params];
+	[_delegate numericEventReceived:event from:origin params:params session:self];
 }
 
 @end
