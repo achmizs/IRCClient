@@ -501,7 +501,10 @@ static NSDictionary* ircNumericCodeList;
 
 - (void)CTCPReplyReceived:(NSData *)reply fromUser:(NSData *)nick
 {
-	[_delegate CTCPReplyReceived:reply fromUser:nick session:self];
+	if([_delegate respondsToSelector:@selector(CTCPReplyReceived:fromUser:session:)])
+	{
+		[_delegate CTCPReplyReceived:reply fromUser:nick session:self];
+	}
 }
 
 - (void)CTCPActionPerformed:(NSData *)action byUser:(NSData *)nick atTarget:(NSData *)target
@@ -522,12 +525,18 @@ static NSDictionary* ircNumericCodeList;
 
 - (void)unknownEventReceived:(NSData *)event from:(NSData *)origin params:(NSArray *)params
 {
-	[_delegate unknownEventReceived:event from:origin params:params session:self];
+	if([_delegate respondsToSelector:@selector(unknownEventReceived:from:params:session:)])
+	{
+		[_delegate unknownEventReceived:event from:origin params:params session:self];
+	}
 }
 
 -(void)numericEventReceived:(NSUInteger)event from:(NSData *)origin params:(NSArray *)params
 {
-	[_delegate numericEventReceived:event from:origin params:params session:self];
+	if([_delegate respondsToSelector:@selector(numericEventReceived:from:params:session:)])
+	{
+		[_delegate numericEventReceived:event from:origin params:params session:self];
+	}
 }
 
 @end
