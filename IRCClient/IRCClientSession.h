@@ -137,6 +137,9 @@
 	it is not. */
 @property (readonly, getter=isConnected) bool connected;
 
+/** Stores arbitrary user info. */
+@property (strong) NSDictionary *userInfo;
+
 /***************************/
 #pragma mark - Class methods
 /***************************/

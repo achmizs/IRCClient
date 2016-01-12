@@ -63,6 +63,9 @@
     for the channel */
 @property (readonly) NSArray *nicks;
 
+/** Stores arbitrary user info. */
+@property (strong) NSDictionary *userInfo;
+
 /**************************/
 #pragma mark - IRC commands
 /**************************/
