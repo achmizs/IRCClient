@@ -70,8 +70,8 @@
 /** @class IRCClientSession
  *	@brief Represents a connected IRC Session.
  *
- *	IRCClientSession represents a single connection to an IRC server. On initialising
- *  the object, and setting the delegate, server, port, and password (if required)
+ *	IRCClientSession represents a single connection to an IRC server. After initialising
+ *  the object, setting the delegate, server, port, and password (if required)
  *	properties, and setting the nickname, username and realname using the
  *	setNickname:username:realname: method, you call the connect: and run: methods 
  *	to connect to the IRC server and start a new thread.
@@ -130,10 +130,13 @@
  */
 @property (assign) NSStringEncoding encoding;
 
-/** An NSDictionary of channels that the client is currently connected to. */
+/** An NSDictionary of channels that the client is currently connected to.
+	Keys are channel names (NSData objects containing C strings), values are
+	IRCClientChannel objects.
+ */
 @property (readonly) NSDictionary *channels;
 
-/** returns YES if the server is currently connected successfully, and NO if
+/** Returns YES if the server is currently connected successfully, and NO if
 	it is not. */
 @property (readonly, getter=isConnected) bool connected;
 
@@ -157,7 +160,7 @@
 	messages have implementation-specific uses. See the various RFCs, and other
 	info sources, for details.
  */
-+(NSDictionary *)ircNumericCodes;
++ (NSDictionary *)ircNumericCodes;
 
 /** Set the nickname, username, and realname for the session.
  
@@ -166,7 +169,7 @@
 	already connected; use the nick: method to attempt a nick change while
 	connected.)
  */
--(int)setNickname:(NSData *)nickname username:(NSData *)username realname:(NSData *)realname;
+- (int)setNickname:(NSData *)nickname username:(NSData *)username realname:(NSData *)realname;
 
 /** Connect to the IRC server.
  
@@ -219,7 +222,8 @@
 
 /**	lists channels on the IRC server.
  
-	@param channel a channel name or string to pass to the LIST command. Implementation specific.
+	@param channel a channel name or string to pass to the LIST command. 
+	Implementation specific.
  */
 - (int)list:(NSData *)channel;
 
