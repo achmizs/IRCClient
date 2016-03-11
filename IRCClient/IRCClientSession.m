@@ -477,7 +477,7 @@ static NSDictionary* ircNumericCodeList;
 	}
 	else if (!strcmp (the_request, "TIME"))
 	{
-		irc_cmd_ctcp_reply(_irc_session, the_nick, [[[NSDate dateWithTimeIntervalSinceNow:0] descriptionWithCalendarFormat:@"TIME %a %b %e %H:%M:%S %Z %Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]] cStringUsingEncoding:_encoding]);
+//		irc_cmd_ctcp_reply(_irc_session, the_nick, [[[NSDate dateWithTimeIntervalSinceNow:0] descriptionWithCalendarFormat:@"TIME %a %b %e %H:%M:%S %Z %Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]] cStringUsingEncoding:_encoding]);
 	}
 	else
 	{
