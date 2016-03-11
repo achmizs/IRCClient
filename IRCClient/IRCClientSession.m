@@ -548,7 +548,7 @@ static NSDictionary* ircNumericCodeList;
 NSData* getNickFromNickUserHost(NSData *nickUserHost)
 {
 	char *nick_user_host_buf = malloc(nickUserHost.length);
-	[nickUserHost getBytes:nick_user_host_buf];
+	[nickUserHost getBytes:nick_user_host_buf length:nickUserHost.length];
 	
 	char *nick_buf;
 	nick_buf = strtok(nick_user_host_buf, "!");
@@ -563,7 +563,7 @@ NSData* getNickFromNickUserHost(NSData *nickUserHost)
 NSData* getUserFromNickUserHost(NSData *nickUserHost)
 {
 	char *nick_user_host_buf = malloc(nickUserHost.length);
-	[nickUserHost getBytes:nick_user_host_buf];
+	[nickUserHost getBytes:nick_user_host_buf length:nickUserHost.length];
 	
 	char *nick_buf, *user_buf;
 	nick_buf = strtok(nick_user_host_buf, "!");
@@ -579,7 +579,7 @@ NSData* getUserFromNickUserHost(NSData *nickUserHost)
 NSData* getHostFromNickUserHost(NSData *nickUserHost)
 {
 	char *nick_user_host_buf = malloc(nickUserHost.length);
-	[nickUserHost getBytes:nick_user_host_buf];
+	[nickUserHost getBytes:nick_user_host_buf length:nickUserHost.length];
 	
 	char *nick_buf, *user_buf, *host_buf;
 	nick_buf = strtok(nick_user_host_buf, "!");
