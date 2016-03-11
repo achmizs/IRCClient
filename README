@@ -32,6 +32,8 @@ ADDING IRCCLIENT TO YOUR APPLICATION
 
 6. Import IRCClient’s API into your code using “#import <IRCClient/IRCClient.h>”
 
+7. If you’re using Swift in your project, add “IRCClient/IRCClient.h” to the “Objective-C Bridging Header” build setting.
+
 ---
 
 See the following header files for documentation:
