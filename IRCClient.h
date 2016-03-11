@@ -18,7 +18,7 @@
  * License for more details.
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for IRCClient.
 FOUNDATION_EXPORT double IRCClientVersionNumber;

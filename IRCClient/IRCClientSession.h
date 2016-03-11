@@ -64,7 +64,7 @@
  * </PRE>
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import "IRCClientSessionDelegate.h"
 
 /** @class IRCClientSession

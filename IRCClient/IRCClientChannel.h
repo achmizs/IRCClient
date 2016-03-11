@@ -17,7 +17,7 @@
  * License for more details.
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 #import "IRCClientChannelDelegate.h"
 
 /** \class IRCClientChannel

@@ -17,7 +17,7 @@
  * License for more details.
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 /** @brief Receives delegate messages from an IRCClientChannel.
  *
