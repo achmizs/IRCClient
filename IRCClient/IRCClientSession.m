@@ -477,7 +477,16 @@ static NSDictionary* ircNumericCodeList;
 	}
 	else if (!strcmp (the_request, "TIME"))
 	{
-//		irc_cmd_ctcp_reply(_irc_session, the_nick, [[[NSDate dateWithTimeIntervalSinceNow:0] descriptionWithCalendarFormat:@"TIME %a %b %e %H:%M:%S %Z %Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]] cStringUsingEncoding:_encoding]);
+		time_t current_time;
+		char timestamp[40];
+		struct tm *time_info;
+		
+		time(&current_time);
+		time_info = localtime(&current_time);
+		
+		strftime(timestamp, 40, "TIME %a %b %e %H:%M:%S %Z %Y", time_info);
+		
+		irc_cmd_ctcp_reply(_irc_session, the_nick, timestamp);
 	}
 	else
 	{
