@@ -27,6 +27,6 @@ xcuserdata
 *.hmap
 *.ipa
 
-libirc*
+.DS_Store
 
 *~
