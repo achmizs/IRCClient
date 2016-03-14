@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8657E6DD1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8657E6DB1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h */; };
-		8657E6DE1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8657E6DC1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m */; };
 		8657E6E21C2B55B900BD4E50 /* IRC_Numerics.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8657E6E11C2B55B900BD4E50 /* IRC_Numerics.plist */; };
+		866B9D531C97530E00F460BB /* NSData+SA_NSDataExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 866B9D501C97530E00F460BB /* NSData+SA_NSDataExtensions.h */; };
+		866B9D541C97530E00F460BB /* NSData+SA_NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 866B9D511C97530E00F460BB /* NSData+SA_NSDataExtensions.m */; };
+		866B9D551C97530E00F460BB /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 866B9D521C97530E00F460BB /* README.md */; };
 		86769D6D1C94DC5300B86A72 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 86769D5B1C94DC5300B86A72 /* config.h */; };
 		86769D6E1C94DC5300B86A72 /* dcc.h in Headers */ = {isa = PBXBuildFile; fileRef = 86769D5C1C94DC5300B86A72 /* dcc.h */; };
 		86769D6F1C94DC5300B86A72 /* libirc_errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 86769D5D1C94DC5300B86A72 /* libirc_errors.h */; };
@@ -32,9 +33,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8657E6DB1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SA_NSDataExtensions.h"; sourceTree = "<group>"; };
-		8657E6DC1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SA_NSDataExtensions.m"; sourceTree = "<group>"; };
 		8657E6E11C2B55B900BD4E50 /* IRC_Numerics.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = IRC_Numerics.plist; sourceTree = "<group>"; };
+		866B9D501C97530E00F460BB /* NSData+SA_NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+SA_NSDataExtensions.h"; sourceTree = "<group>"; };
+		866B9D511C97530E00F460BB /* NSData+SA_NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+SA_NSDataExtensions.m"; sourceTree = "<group>"; };
+		866B9D521C97530E00F460BB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		86769D5B1C94DC5300B86A72 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		86769D5C1C94DC5300B86A72 /* dcc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dcc.h; sourceTree = "<group>"; };
 		86769D5D1C94DC5300B86A72 /* libirc_errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_errors.h; sourceTree = "<group>"; };
@@ -69,13 +71,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8657E6DA1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions */ = {
+		866B9D4F1C97530E00F460BB /* SA_NSDataExtensions */ = {
 			isa = PBXGroup;
 			children = (
-				8657E6DB1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h */,
-				8657E6DC1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m */,
+				866B9D501C97530E00F460BB /* NSData+SA_NSDataExtensions.h */,
+				866B9D511C97530E00F460BB /* NSData+SA_NSDataExtensions.m */,
+				866B9D521C97530E00F460BB /* README.md */,
 			);
-			path = "NSData+SA_NSDataExtensions";
+			path = SA_NSDataExtensions;
 			sourceTree = "<group>";
 		};
 		86769D591C94DC5300B86A72 /* libircclient */ = {
@@ -114,9 +117,9 @@
 		86F2EFDC1C21F73600B033A4 = {
 			isa = PBXGroup;
 			children = (
+				866B9D4F1C97530E00F460BB /* SA_NSDataExtensions */,
 				868374A81C24E774005B97E5 /* IRCClient.h */,
 				86769D591C94DC5300B86A72 /* libircclient */,
-				8657E6DA1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions */,
 				86B6232B1C21FD7C00D6E3AF /* README */,
 				86F2EFE81C21F73600B033A4 /* IRCClient */,
 				86F2EFE71C21F73600B033A4 /* Products */,
@@ -160,9 +163,9 @@
 				86769D751C94DC5300B86A72 /* session.h in Headers */,
 				86769D6E1C94DC5300B86A72 /* dcc.h in Headers */,
 				86F2EFFB1C21F81900B033A4 /* IRCClientChannelDelegate.h in Headers */,
+				866B9D531C97530E00F460BB /* NSData+SA_NSDataExtensions.h in Headers */,
 				86769D721C94DC5300B86A72 /* libirc_rfcnumeric.h in Headers */,
 				86769D6D1C94DC5300B86A72 /* config.h in Headers */,
-				8657E6DD1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.h in Headers */,
 				86769D731C94DC5300B86A72 /* libircclient.h in Headers */,
 				86769D741C94DC5300B86A72 /* params.h in Headers */,
 				86F2EFFC1C21F81900B033A4 /* IRCClientSession.h in Headers */,
@@ -243,9 +246,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				86F2EFFD1C21F81900B033A4 /* IRCClientSession.m in Sources */,
-				8657E6DE1C29F4C700BD4E50 /* NSData+SA_NSDataExtensions.m in Sources */,
 				86F2EFFA1C21F81900B033A4 /* IRCClientChannel.m in Sources */,
+				866B9D551C97530E00F460BB /* README.md in Sources */,
 				86769D791C94DC5300B86A72 /* libircclient.c in Sources */,
+				866B9D541C97530E00F460BB /* NSData+SA_NSDataExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
