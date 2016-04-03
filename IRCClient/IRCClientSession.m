@@ -255,7 +255,7 @@ static NSDictionary* ircNumericCodeList;
 
 - (int)join:(NSData *)channel key:(NSData *)key
 {
-	if (!key || !key.length > 0)
+	if (!key || !(key.length > 0))
 	{
 		return irc_cmd_join(_irc_session, channel.SA_terminatedCString, NULL);
 	}
