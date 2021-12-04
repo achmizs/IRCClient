@@ -18,6 +18,9 @@
  * License for more details.
  */
 
+#ifndef IRCCLIENT
+#define IRCCLIENT
+
 #import <Foundation/Foundation.h>
 
 //! Project version number for IRCClient.
@@ -30,3 +33,5 @@ FOUNDATION_EXPORT const unsigned char IRCClientVersionString[];
 #import "IRCClient/IRCClientSessionDelegate.h"
 #import "IRCClient/IRCClientChannel.h"
 #import "IRCClient/IRCClientChannelDelegate.h"
+
+#endif
