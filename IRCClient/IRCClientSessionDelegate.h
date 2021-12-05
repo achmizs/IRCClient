@@ -35,7 +35,15 @@
 
 /** The client has successfully connected to the IRC server. */
 @required
-- (void)connectionSucceeded:(IRCClientSession *)sender;
+-(void) connectionSucceeded:(IRCClientSession *)session;
+
+/** The client has disconnected from the IRC server. */
+@required
+-(void) disconnected:(IRCClientSession *)session;
+
+@optional
+-(void) ping:(NSData *)pingData
+	 session:(IRCClientSession *)session;
 
 /** An IRC client on a channel that this client is connected to has changed nickname,
  *	or this IRC client has changed nicknames.
@@ -45,7 +53,10 @@
  *  @param wasItUs did our nick change, or someone else's?
  */
 @required
-- (void)nickChangedFrom:(NSData *)oldNick to:(NSData *)newNick own:(BOOL)wasItUs session:(IRCClientSession *)sender;
+-(void) nickChangedFrom:(NSData *)oldNick 
+					 to:(NSData *)newNick 
+					own:(BOOL)wasItUs 
+				session:(IRCClientSession *)session;
 
 /** An IRC client on a channel that this client is connected to has quit IRC.
  *
@@ -53,7 +64,9 @@
  *  @param reason (optional) the quit message, if any.
  */
 @required
-- (void)userQuit:(NSData *)nick withReason:(NSData *)reason session:(IRCClientSession *)sender;
+-(void) userQuit:(NSData *)nick 
+	  withReason:(NSData *)reason 
+		 session:(IRCClientSession *)session;
 
 /** The IRC client has joined (connected) successfully to a new channel. This
  *  event creates an IRCClientChannel object, which you are expected to assign a
@@ -68,14 +81,23 @@
  *  @param channel the IRCClientChannel object for the newly joined channel.
  */
 @required
-- (void)joinedNewChannel:(IRCClientChannel *)channel session:(IRCClientSession *)sender;
+-(void) joinedNewChannel:(IRCClientChannel *)channel 
+				 session:(IRCClientSession *)session;
 
-/** The client has changed it's user mode.
+/** The client has changed its user mode.
  *
  *  @param mode the new mode.
  */
 @required
-- (void)modeSet:(NSData *)mode by:(NSData *)nick session:(IRCClientSession *)sender;
+-(void) modeSet:(NSData *)mode 
+			 by:(NSData *)nick 
+		session:(IRCClientSession *)session;
+
+/** The client has received an ERROR message from the server.
+ */
+@required
+-(void) errorReceived:(NSData *)error
+			  session:(IRCClientSession *)session;
 
 /** The client has received a private PRIVMSG from another IRC client.
  *
@@ -83,7 +105,9 @@
  *  @param nick the other IRC Client that sent the message.
  */
 @required
-- (void)privateMessageReceived:(NSData *)message fromUser:(NSData *)nick session:(IRCClientSession *)sender;
+-(void) privateMessageReceived:(NSData *)message 
+					  fromUser:(NSData *)nick 
+					   session:(IRCClientSession *)session;
 
 /** The client has received a private NOTICE from another client.
  *
@@ -91,7 +115,9 @@
  *  @param nick the nickname of the other IRC client that sent the message.
  */
 @required
-- (void)privateNoticeReceived:(NSData *)notice fromUser:(NSData *)nick session:(IRCClientSession *)sender;
+-(void) privateNoticeReceived:(NSData *)notice 
+					 fromUser:(NSData *)nick 
+					  session:(IRCClientSession *)session;
 
 /** The client has received a private PRIVMSG from the server.
  *
@@ -99,7 +125,9 @@
  *  @param params the parameters of the message
  */
 @required
-- (void)serverMessageReceivedFrom:(NSData *)origin params:(NSArray *)params session:(IRCClientSession *)sender;
+-(void) serverMessageReceivedFrom:(NSData *)origin
+						   params:(NSArray *)params
+						  session:(IRCClientSession *)session;
 
 /** The client has received a private NOTICE from the server.
  *
@@ -107,7 +135,9 @@
  *  @param params the parameters of the notice
  */
 @required
-- (void)serverNoticeReceivedFrom:(NSData *)origin params:(NSArray *)params session:(IRCClientSession *)sender;
+-(void) serverNoticeReceivedFrom:(NSData *)origin 
+						  params:(NSArray *)params 
+						 session:(IRCClientSession *)session;
 
 /** The IRC client has been invited to a channel.
  *
@@ -115,7 +145,9 @@
  *  @param nick the nickname of the user that sent the invitation.
  */	
 @required
-- (void)invitedToChannel:(NSData *)channelName by:(NSData *)nick session:(IRCClientSession *)sender;
+-(void) invitedToChannel:(NSData *)channelName 
+					  by:(NSData *)nick 
+				 session:(IRCClientSession *)session;
 
 /** A private CTCP request was sent to the IRC client.
  *
@@ -124,7 +156,10 @@
  *  @param nick the nickname of the user that sent the request.
  */
 @optional
-- (void)CTCPRequestReceived:(NSData *)request ofType:(NSData *)type fromUser:(NSData *)nick session:(IRCClientSession *)sender;
+-(void) CTCPRequestReceived:(NSData *)request 
+					 ofType:(NSData *)type 
+				   fromUser:(NSData *)nick 
+					session:(IRCClientSession *)session;
 
 /** A private CTCP reply was sent to the IRC client.
  *
@@ -132,7 +167,9 @@
  *  @param nick the nickname of the user that sent the reply.
  */
 @optional
-- (void)CTCPReplyReceived:(NSData *)reply fromUser:(NSData *)nick session:(IRCClientSession *)sender;
+-(void) CTCPReplyReceived:(NSData *)reply 
+				 fromUser:(NSData *)nick 
+				  session:(IRCClientSession *)session;
 
 /** A private CTCP ACTION was sent to the IRC client.
  *
@@ -142,7 +179,9 @@
  *  @param nick the nickname of the client that sent the action.
  */
 @required
-- (void)privateCTCPActionReceived:(NSData *)action fromUser:(NSData *)nick session:(IRCClientSession *)sender;
+-(void) privateCTCPActionReceived:(NSData *)action 
+						 fromUser:(NSData *)nick 
+						  session:(IRCClientSession *)session;
 
 /** An unhandled numeric was received from the IRC server
  *
@@ -151,7 +190,10 @@
  *  @param params an NSArray of NSData objects that are the raw C strings of the event.
  */
 @optional
-- (void)numericEventReceived:(NSUInteger)event from:(NSData *)origin params:(NSArray *)params session:(IRCClientSession *)sender;
+-(void) numericEventReceived:(NSUInteger)event 
+						from:(NSData *)origin 
+					  params:(NSArray *)params 
+					 session:(IRCClientSession *)session;
 
 /** An unhandled event was received from the IRC server.
  *
@@ -160,6 +202,9 @@
  *  @param params an NSArray of NSData objects that are the raw C strings of the event.
  */
 @optional
-- (void)unknownEventReceived:(NSData *)event from:(NSData *)origin params:(NSArray *)params session:(IRCClientSession *)sender;
+-(void) unknownEventReceived:(NSData *)event 
+						from:(NSData *)origin 
+					  params:(NSArray *)params 
+					 session:(IRCClientSession *)session;
 
 @end
