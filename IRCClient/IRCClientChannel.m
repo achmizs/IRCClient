@@ -57,8 +57,8 @@
 
 -(instancetype) initWithName:(NSData *)name 
 			   andIRCSession:(irc_session_t *)irc_session {
-	self = [super init];
-	if (!self) return nil;
+	if (!(self = [super init]))
+		return nil;
 
 	_irc_session = irc_session;
 
@@ -203,10 +203,15 @@
 -(void) userParted:(NSData *)nick 
 		withReason:(NSData *)reason 
 				us:(BOOL)wasItUs {
-	if (!wasItUs)
+	if (!wasItUs) {
 		[_nicks removeObject:nick];
-	// TODO: but what if it was us? the delegate handles it...? or do we do
-	// something here?
+	} else {
+		// NOTE: When the channel object receives this message, and wasItUs
+		// is true, its session has already removed the channel from its list
+		// of channels.
+		// TODO: but what if it was us? the delegate handles it...? or do we do
+		// something here?
+	}
 
 	[_delegate userParted:nick 
 				  channel:self 
@@ -240,10 +245,15 @@
 		withReason:(NSData *)reason 
 				by:(NSData *)byNick
 				us:(BOOL)wasItUs {
-	if (!wasItUs)
+	if (!wasItUs) {
 		[_nicks removeObject:nick];
-	// TODO: but what if it was us? the delegate handles it...? or do we do
-	// something here?
+	} else {
+		// NOTE: When the channel object receives this message, and wasItUs
+		// is true, its session has already removed the channel from its list
+		// of channels.
+		// TODO: but what if it was us? the delegate handles it...? or do we do
+		// something here?
+	}
 
 	[_delegate userKicked:nick
 			  fromChannel:self 
