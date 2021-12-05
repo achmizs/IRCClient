@@ -25,15 +25,9 @@
  * session.delegate = controller;
  * controller.session = session;
  * 
- * NSData *server = [NSData dataWithBytes:@"chat.freenode.net".UTF8String length:strlen(@"chat.freenode.net".UTF8String.length) + 1];
- * NSUinteger port = 6665;
- * NSData *nickname = [NSData dataWithBytes:@"test".UTF8String length:strlen(@"test".UTF8String) + 1];
- * NSData *username = [NSData dataWithBytes:@"test".UTF8String length:strlen(@"test".UTF8String) + 1];
- * NSData *realname = [NSData dataWithBytes:@"test".UTF8String length:strlen(@"test".UTF8String) + 1];
- *
- * [session setServer:server];
- * [session setPort:port];
- * [session setNickname:nickname username:username realname:realname];
+ * session.server = @"chat.freenode.net".dataAsUTF8];
+ * session.port = 6665;
+ * [session setNickname:@"test".dataAsUTF8 username:@"test".dataAsUTF8 realname:@"test".dataAsUTF8];
  * [session connect];
  * 
  * [session run]; //starts the thread
@@ -97,28 +91,28 @@
 	There is usually no reason to set this, as IRCClient correctly sets its
 	own version string automatically, but this can be any string you like.
  */
-@property (copy) NSData *version;
+@property (copy, nonatomic) NSData *version;
 
 /** IRC server to connect to */
-@property (copy) NSData *server;
+@property (copy, nonatomic) NSData *server;
 
 /** IRC port to connect to */
 @property (assign) NSUInteger port;
 
 /** Server password to provide on connect (may be left empty or nil) */
-@property (copy) NSData *password;
+@property (copy, nonatomic) NSData *password;
 
 /** Nickname of the connected client.
  */
-@property (readonly) NSData *nickname;
+@property (nonatomic, readonly) NSData *nickname;
 
 /** Username of the connected client. Also known as the ident.
  */
-@property (readonly) NSData *username;
+@property (nonatomic, readonly) NSData *username;
 
 /** Realname of the connected client.
  */
-@property (readonly) NSData *realname;
+@property (nonatomic, readonly) NSData *realname;
 
 /** The suggested text encoding for messages on this server.
  
@@ -134,33 +128,59 @@
 	Keys are channel names (NSData objects containing C strings), values are
 	IRCClientChannel objects.
  */
-@property (readonly) NSDictionary *channels;
+@property (nonatomic, readonly) NSDictionary <NSData *, IRCClientChannel *> *channels;
 
 /** Returns YES if the server is currently connected successfully, and NO if
 	it is not. */
 @property (readonly, getter=isConnected) bool connected;
 
 /** Stores arbitrary user info. */
-@property (strong) NSDictionary *userInfo;
+@property (nonatomic, readonly) NSMutableDictionary *userInfo;
+
+/**	Returns a dictionary of IRC numeric codes.
+
+	The dictionary contains entries for all known IRC numeric codes (as keys).
+	(The list is taken from https://www.alien.net.au/irc/irc2numerics.html .)
+
+	The value for each key is an NSArray with the known numeric reply names for
+	which the numeric code is used.
+
+	Note that there is no guarantee whatsoever that any given numeric reply
+	name will, in fact, describe the contents of the message; most IRC numeric
+	messages have implementation-specific uses. See the various RFCs, and other
+	info sources, for details.
+ */
+@property (class, nonatomic, readonly) NSDictionary <NSString *, NSDictionary *> *ircNumericCodes;
+
+/********************************************/
+#pragma mark - Initializers & factory methods
+/********************************************/
+
++(instancetype) session;
 
 /***************************/
 #pragma mark - Class methods
 /***************************/
 
-/**	Returns a dictionary of IRC numeric codes.
- 
-	The dictionary contains entries for all known IRC numeric codes (as keys).
-	(The list is taken from https://www.alien.net.au/irc/irc2numerics.html .)
-	
-	The value for each key is an NSArray with the known numeric reply names for
-	which the numeric code is used.
- 
-	Note that there is no gaurantee whatsoever that any given numeric reply 
-	name will, in fact, describe the contents of the message; most IRC numeric
-	messages have implementation-specific uses. See the various RFCs, and other
-	info sources, for details.
+/**	Returns the nick part of a nick!user@host string.
  */
-+ (NSDictionary *)ircNumericCodes;
++(NSData *) nickFromNickUserHost:(NSData *)nickUserHost;
+
+/**	Returns the user part of a nick!user@host string.
+	May be blank if the user component can’t be found
+	(i.e. if the passed string is not, in fact, in nick!user@host format).
+ */
++(NSData *) userFromNickUserHost:(NSData *)nickUserHost;
+
+/**	Returns the host part of a nick!user@host string.
+	May be blank if the host component can’t be found
+	(i.e. if the passed string is not, in fact, in nick!user@host format).
+ */
++(NSData *) hostFromNickUserHost:(NSData *)nickUserHost;
+
+/******************************/
+#pragma mark - Instance methods
+/******************************/
 
 /** Set the nickname, username, and realname for the session.
  
@@ -169,7 +189,9 @@
 	already connected; use the nick: method to attempt a nick change while
 	connected.)
  */
-- (int)setNickname:(NSData *)nickname username:(NSData *)username realname:(NSData *)realname;
+-(int) setNickname:(NSData *)nickname 
+		  username:(NSData *)username 
+		  realname:(NSData *)realname;
 
 /** Connect to the IRC server.
  
@@ -178,38 +200,39 @@
  
 	Look at the libircclient documentation for the different return codes.
  */
-- (int)connect;
+-(int) connect;
 
 /** Disconnect from the IRC server.
  
 	This always works, as it simply shuts down the socket. If you want to disconnect
 	in a friendly way, you should use the quit: message.
  */
-- (void)disconnect;
+-(void) disconnect;
 
 /**	Starts a new thread and starts the libircclient runloop, processing events and
 	firing messages back to the main runloop as required. Calling this again will
 	do nothing other than raise a warning in your logs.
  */
-- (void)run;
+-(void) run;
 
 /**************************/
 #pragma mark - IRC commands
 /**************************/
 
 /** Sends a raw message to the IRC server. Please consult rfc1459 for the format
-	of IRC commands. */
-- (int)sendRaw:(NSData *)message;
+	of IRC commands. 
+ */
+-(int) sendRaw:(NSData *)message;
 
-/** quits the IRC server with the given reason.
+/** Quits the IRC server with the given reason.
  
 	On success, a userQuit:withReason: event will be sent to the 
 	IRCClientSessionDelegate with the nickname of the IRC client and the reason 
 	provided by the user (or nil if no reason was provided).
  */
-- (int)quit:(NSData *)reason;
+-(int) quit:(NSData *)reason;
 
-/** Joins a channel with a given name and key
+/** Joins a channel with a given name and key.
  
 	On success, a userJoined:channel: event will be sent to the 
 	IRCClientSessionDelegate with the nickname of the IRC client and the name of
@@ -218,22 +241,30 @@
 	@param channel the channel to join
 	@param key they key for the channel (may be nil)
  */
-- (int)join:(NSData *)channel key:(NSData *)key;
+-(int) join:(NSData *)channel 
+		key:(NSData *)key;
 
-/**	lists channels on the IRC server.
+/**	Lists users in an IRC channel (or channels).
+
+	@param channel a channel name or string to pass to the NAMES command.
+	Implementation specific.
+ */
+-(int) names:(NSData *)channel;
+
+/**	Lists channels on the IRC server.
  
 	@param channel a channel name or string to pass to the LIST command. 
 	Implementation specific.
  */
-- (int)list:(NSData *)channel;
+-(int) list:(NSData *)channel;
 
-/** sets the user mode for the IRC client
+/** Sets the user mode for the IRC client.
  
 	@param mode string to set
  */
-- (int)userMode:(NSData *)mode;
+-(int) userMode:(NSData *)mode;
 
-/**	sets the IRC client nickname.
+/**	Sets the IRC client nickname.
  
 	On success, a nickChangedFrom:to: event will be sent to the 
 	IRCClientSessionDelegate with our old nick and the new nick that we now 
@@ -241,67 +272,58 @@
  
 	@param newnick new nickname to set.
  */
-- (int)nick:(NSData *)newnick;
+-(int) nick:(NSData *)newnick;
 
-/**	sends a WHOIS request to the IRC server
+/**	Sends a WHO query to the IRC server.
+
+	@param nickmask nickname mask of the irc client to who.
+ */
+-(int) who:(NSData *)nickmask;
+
+/**	Sends a WHOIS query to the IRC server.
  
 	@param nick nickname of the irc client to whois.
 */
-- (int)whois:(NSData *)nick;
+-(int) whois:(NSData *)nick;
 
-/**	send a PRIVMSG to another IRC client
+/**	Send a PRIVMSG to another IRC client.
  
 	@param message message to send
 	@param target the other IRC client to send the message to.
  */
-- (int)message:(NSData *)message to:(NSData *)target;
+-(int) message:(NSData *)message 
+			to:(NSData *)target;
 
-/**	send a CTCP ACTION to another IRC client
+/**	Sends a CTCP ACTION to another IRC client.
  
 	@param action the action message to send
 	@param target the nickname of the irc client to send the message to.
  */
-- (int)action:(NSData *)action to:(NSData *)target;
+-(int) action:(NSData *)action 
+		   to:(NSData *)target;
 
-/**	send a NOTICE to another IRC client
+/**	Send a NOTICE to another IRC client.
  
 	@param notice the message text to send
 	@param target the nickname of the irc client to send the notice to.
  */
-- (int)notice:(NSData *)notice to:(NSData *)target;
+-(int) notice:(NSData *)notice 
+		   to:(NSData *)target;
 
-/** send a CTCP request to another IRC client
+/** Send a CTCP request to another IRC client.
  
 	@param request the CTCP request string to send
 	@param target the nickname of the IRC client to send the request to.
  */
-- (int)ctcpRequest:(NSData *)request target:(NSData *)target;
+-(int) ctcpRequest:(NSData *)request 
+			target:(NSData *)target;
 
-/** send a CTCP reply to another IRC client
+/** Send a CTCP reply to another IRC client.
  
 	@param reply the CTCP reply string to send
 	@param target the nickname of the IRC client to send the reply to.
  */
-- (int)ctcpReply:(NSData *)reply target:(NSData *)target;
+-(int) ctcpReply:(NSData *)reply 
+		  target:(NSData *)target;
 
 @end
-
-/*************************************/
-#pragma mark - Useful helper functions
-/*************************************/
-
-/**	Returns the nick part of a nick!user@host string.
- */
-NSData* getNickFromNickUserHost(NSData *nickUserHost);
-
-/**	Returns the user part of a nick!user@host string.
-	May be blank if the user component can't be found 
-	(i.e. if the passed string is not, in fact, in nick!user@host format).
- */
-NSData* getUserFromNickUserHost(NSData *nickUserHost);
-
-/**	Returns the host part of a nick!user@host string.
-	May be blank if the host component can't be found 
-	(i.e. if the passed string is not, in fact, in nick!user@host format).
- */
-NSData* getHostFromNickUserHost(NSData *nickUserHost);
