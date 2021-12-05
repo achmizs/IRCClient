@@ -207,12 +207,12 @@ static NSDictionary* ircNumericCodeList;
 
 -(int) connect {
 	return irc_connect(_irc_session,
-					   _server.SA_terminatedCString,
+					   _server.terminatedCString,
 					   (unsigned short) _port,
-					   (_password.length > 0 ? _password.SA_terminatedCString : NULL),
-					   _nickname.SA_terminatedCString,
-					   _username.SA_terminatedCString,
-					   _realname.SA_terminatedCString);
+					   (_password.length > 0 ? _password.terminatedCString : NULL),
+					   _nickname.terminatedCString,
+					   _username.terminatedCString,
+					   _realname.terminatedCString);
 }
 
 -(void) disconnect {
@@ -248,14 +248,14 @@ static NSDictionary* ircNumericCodeList;
 
 -(int) sendRaw:(NSData *)message {
 	return irc_send_raw(_irc_session,
-						message.SA_terminatedCString);
+						message.terminatedCString);
 }
 
 - (int) quit:(NSData *)reason {
 	return irc_send_raw(_irc_session,
 						"QUIT :%s",
 						(reason
-						 ? reason.SA_terminatedCString
+						 ? reason.terminatedCString
 						 : "quit"));
 }
 
@@ -267,19 +267,19 @@ static NSDictionary* ircNumericCodeList;
 	if (key && key.length > 0)
 		return irc_send_raw(_irc_session,
 							"JOIN %s :%s",
-							channel.SA_terminatedCString,
-							key.SA_terminatedCString);
+							channel.terminatedCString,
+							key.terminatedCString);
 	else
 		return irc_send_raw(_irc_session,
 							"JOIN %s",
-							channel.SA_terminatedCString);
+							channel.terminatedCString);
 }
 
 -(int) names:(NSData *)channel {
 	if (channel)
 		return irc_send_raw(_irc_session,
 							"NAMES %s",
-							channel.SA_terminatedCString);
+							channel.terminatedCString);
 	else
 		return irc_send_raw(_irc_session,
 							"NAMES");
@@ -289,7 +289,7 @@ static NSDictionary* ircNumericCodeList;
 	if (channel)
 		return irc_send_raw(_irc_session,
 							"LIST %s",
-							channel.SA_terminatedCString);
+							channel.terminatedCString);
 	else
 		return irc_send_raw(_irc_session,
 							"LIST");
@@ -299,12 +299,12 @@ static NSDictionary* ircNumericCodeList;
 	if (mode)
 		return irc_send_raw(_irc_session,
 							"MODE %s %s",
-							_nickname.SA_terminatedCString,
-							mode.SA_terminatedCString);
+							_nickname.terminatedCString,
+							mode.terminatedCString);
 	else
 		return irc_send_raw(_irc_session,
 							"MODE %s",
-							_nickname.SA_terminatedCString);
+							_nickname.terminatedCString);
 }
 
 -(int) nick:(NSData *)newnick {
@@ -313,7 +313,7 @@ static NSDictionary* ircNumericCodeList;
 
 	return irc_send_raw(_irc_session,
 						"NICK %s",
-						newnick.SA_terminatedCString);
+						newnick.terminatedCString);
 }
 
 -(int) who:(NSData *)nickmask {
@@ -322,7 +322,7 @@ static NSDictionary* ircNumericCodeList;
 
 	return irc_send_raw(_irc_session,
 						"WHO %s",
-						nickmask.SA_terminatedCString);
+						nickmask.terminatedCString);
 }
 
 -(int) whois:(NSData *)nick {
@@ -331,7 +331,7 @@ static NSDictionary* ircNumericCodeList;
 
 	return irc_send_raw(_irc_session,
 						"WHOIS %s",
-						nick.SA_terminatedCString);
+						nick.terminatedCString);
 }
 
 -(int) message:(NSData *)message 
@@ -342,8 +342,8 @@ static NSDictionary* ircNumericCodeList;
 
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :%s",
-						target.SA_terminatedCString,
-						irc_color_convert_to_mirc(message.SA_terminatedCString));
+						target.terminatedCString,
+						irc_color_convert_to_mirc(message.terminatedCString));
 }
 
 -(int) action:(NSData *)action
@@ -354,8 +354,8 @@ static NSDictionary* ircNumericCodeList;
 
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :\x01" "ACTION %s\x01",
-						target.SA_terminatedCString,
-						irc_color_convert_to_mirc(action.SA_terminatedCString));
+						target.terminatedCString,
+						irc_color_convert_to_mirc(action.terminatedCString));
 }
 
 -(int) notice:(NSData *)notice 
@@ -366,8 +366,8 @@ static NSDictionary* ircNumericCodeList;
 
 	return irc_send_raw(_irc_session,
 						"NOTICE %s :%s",
-						target.SA_terminatedCString,
-						notice.SA_terminatedCString);
+						target.terminatedCString,
+						notice.terminatedCString);
 }
 
 -(int) ctcpRequest:(NSData *)request 
@@ -378,8 +378,8 @@ static NSDictionary* ircNumericCodeList;
 
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :\x01%s\x01",
-						target.SA_terminatedCString,
-						request.SA_terminatedCString);
+						target.terminatedCString,
+						request.terminatedCString);
 }
 
 -(int) ctcpReply:(NSData *)reply 
@@ -390,8 +390,8 @@ static NSDictionary* ircNumericCodeList;
 
 	return irc_send_raw(_irc_session,
 						"NOTICE %s :\x01%s\x01",
-						target.SA_terminatedCString,
-						reply.SA_terminatedCString);
+						target.terminatedCString,
+						reply.terminatedCString);
 }
 
 /********************************/
@@ -864,29 +864,29 @@ static NSDictionary* ircNumericCodeList;
 				   fromUser:(NSData *)nick {
 	NSData *nickOnly = [IRCClientSession nickFromNickUserHost:nick];
 
-	if (!strncmp(request.SA_terminatedCString, "PING", 4)) {
+	if (!strncmp(request.terminatedCString, "PING", 4)) {
 		[self ctcpReply:request
 				 target:nickOnly];
-	} else if (!strcmp(request.SA_terminatedCString, "VERSION")) {
+	} else if (!strcmp(request.terminatedCString, "VERSION")) {
 		const char *versionFormat = "VERSION %s";
 		NSMutableData* versionReply = [NSMutableData dataWithLength:(strlen(versionFormat) + (_version.length - 2))];
 		sprintf(versionReply.mutableBytes,
 				versionFormat,
-				_version.SA_terminatedCString);
+				_version.terminatedCString);
 
 		[self ctcpReply:versionReply
 				 target:nickOnly];
-	} else if (!strcmp(request.SA_terminatedCString, "FINGER")) {
+	} else if (!strcmp(request.terminatedCString, "FINGER")) {
 		const char *fingerFormat = "FINGER %s (%s) Idle 0 seconds)";
 		NSMutableData* fingerReply = [NSMutableData dataWithLength:(strlen(fingerFormat) + (_username.length - 2) + (_realname.length - 2))];
 		sprintf(fingerReply.mutableBytes,
 				fingerFormat,
-				_username.SA_terminatedCString,
-				_realname.SA_terminatedCString);
+				_username.terminatedCString,
+				_realname.terminatedCString);
 
 		[self ctcpReply:fingerReply
 				 target:nickOnly];
-	} else if (!strcmp(request.SA_terminatedCString, "TIME")) {
+	} else if (!strcmp(request.terminatedCString, "TIME")) {
 		time_t current_time;
 		char timestamp[40];
 		struct tm *time_info;

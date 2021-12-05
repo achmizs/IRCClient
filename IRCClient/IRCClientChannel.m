@@ -78,7 +78,7 @@
 -(int) part {
 	return irc_send_raw(_irc_session,
 						"PART %s",
-						_name.SA_terminatedCString);
+						_name.terminatedCString);
 }
 
 -(int) invite:(NSData *)nick {
@@ -87,26 +87,26 @@
 
 	return irc_send_raw(_irc_session,
 						"INVITE %s %s",
-						nick.SA_terminatedCString,
-						_name.SA_terminatedCString);
+						nick.terminatedCString,
+						_name.terminatedCString);
 }
 
 -(int) refreshNames {
 	return irc_send_raw(_irc_session,
 						"NAMES %s",
-						_name.SA_terminatedCString);
+						_name.terminatedCString);
 }
 
 -(int) setChannelTopic:(NSData *)newTopic {
 	if (newTopic)
 		return irc_send_raw(_irc_session,
 							"TOPIC %s :%s",
-							_name.SA_terminatedCString,
-							newTopic.SA_terminatedCString);
+							_name.terminatedCString,
+							newTopic.terminatedCString);
 	else
 		return irc_send_raw(_irc_session,
 							"TOPIC %s",
-							_name.SA_terminatedCString);
+							_name.terminatedCString);
 }
 
 -(int) setMode:(NSData *)mode 
@@ -117,17 +117,17 @@
 										 [NSMutableData dataWithLength:mode.length + 1]);
 		sprintf(fullModeString.mutableBytes, 
 				"%s %s", 
-				mode.SA_terminatedCString,
-				params.SA_terminatedCString);
+				mode.terminatedCString,
+				params.terminatedCString);
 		
 		return irc_send_raw(_irc_session,
 							"MODE %s %s",
-							_name.SA_terminatedCString,
-							fullModeString.SA_terminatedCString);
+							_name.terminatedCString,
+							fullModeString.terminatedCString);
 	} else {
 		return irc_send_raw(_irc_session,
 							"MODE %s",
-							_name.SA_terminatedCString);
+							_name.terminatedCString);
 	}
 }
 
@@ -137,8 +137,8 @@
 
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :%s",
-						_name.SA_terminatedCString,
-						irc_color_convert_to_mirc(message.SA_terminatedCString));
+						_name.terminatedCString,
+						irc_color_convert_to_mirc(message.terminatedCString));
 }
 
 -(int) action:(NSData *)action {
@@ -147,8 +147,8 @@
 
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :\x01" "ACTION %s\x01",
-						_name.SA_terminatedCString,
-						irc_color_convert_to_mirc(action.SA_terminatedCString));
+						_name.terminatedCString,
+						irc_color_convert_to_mirc(action.terminatedCString));
 }
 
 -(int) notice:(NSData *)notice {
@@ -157,8 +157,8 @@
 
 	return irc_send_raw(_irc_session,
 						"NOTICE %s :%s",
-						_name.SA_terminatedCString,
-						notice.SA_terminatedCString);
+						_name.terminatedCString,
+						notice.terminatedCString);
 }
 
 -(int) kick:(NSData *)nick 
@@ -169,14 +169,14 @@
 	if (reason)
 		return irc_send_raw(_irc_session,
 							"KICK %s %s :%s",
-							_name.SA_terminatedCString,
-							nick.SA_terminatedCString,
-							reason.SA_terminatedCString);
+							_name.terminatedCString,
+							nick.terminatedCString,
+							reason.terminatedCString);
 	else
 		return irc_send_raw(_irc_session,
 							"KICK %s %s",
-							_name.SA_terminatedCString,
-							nick.SA_terminatedCString);
+							_name.terminatedCString,
+							nick.terminatedCString);
 }
 
 -(int) ctcpRequest:(NSData *)request {
@@ -185,8 +185,8 @@
 
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :\x01%s\x01",
-						_name.SA_terminatedCString,
-						request.SA_terminatedCString);
+						_name.terminatedCString,
+						request.terminatedCString);
 }
 
 /****************************/
