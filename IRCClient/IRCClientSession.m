@@ -1,21 +1,11 @@
 //
 //	IRCClientSession.m
-//	IRCClient
-/*
- * Copyright 2015 Said Achmiz (www.saidachmiz.net)
- *
- * Copyright (C) 2009 Nathan Ollerenshaw chrome@stupendous.net
- *
- * This library is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or (at your 
- * option) any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public 
- * License for more details.
- */
+//
+//  Modified IRCClient Copyright 2015-2021 Said Achmiz.
+//  Original IRCClient Copyright 2009 Nathan Ollerenshaw.
+//  libircclient Copyright 2004-2009 Georgy Yunaev.
+//
+//  See LICENSE and README.md for more info.
 
 /********************************/
 #pragma mark Defines and includes
@@ -48,8 +38,8 @@ static NSDictionary* ircNumericCodeList;
 /***************************************************/
 
 @implementation IRCClientSession {
-	irc_callbacks_t		_callbacks;
-	irc_session_t		*_irc_session;
+	irc_callbacks_t _callbacks;
+	irc_session_t *_irc_session;
 
 	NSMutableDictionary <NSData *, IRCClientChannel *> *_channels;
 }
@@ -86,20 +76,21 @@ static NSDictionary* ircNumericCodeList;
 /*************************************/
 
 +(NSData *) nickFromNickUserHost:(NSData *)nickUserHost {
-	if (nickUserHost == nil) return nil;
+	if (nickUserHost == nil)
+		return nil;
 
 	NSRange rangeOfNickUserSeparator = [nickUserHost rangeOfData:[NSData dataFromCString:"!"]
 														 options:(NSDataSearchOptions) 0
 														   range:NSRangeMake(0, nickUserHost.length)];
 
-	return ((rangeOfNickUserSeparator.location == NSNotFound) ?
-			nickUserHost :
-			[nickUserHost subdataWithRange:NSRangeMake(0,
-													   rangeOfNickUserSeparator.location)]);
+	return (rangeOfNickUserSeparator.location == NSNotFound
+			? nickUserHost
+			: [nickUserHost subdataWithRange:NSRangeMake(0, rangeOfNickUserSeparator.location)]);
 }
 
 +(NSData *) userFromNickUserHost:(NSData *)nickUserHost {
-	if (nickUserHost == nil) return nil;
+	if (nickUserHost == nil)
+		return nil;
 
 	NSRange rangeOfNickUserSeparator = [nickUserHost rangeOfData:[NSData dataFromCString:"!"]
 														 options:(NSDataSearchOptions) 0
@@ -109,23 +100,25 @@ static NSDictionary* ircNumericCodeList;
 														 options:(NSDataSearchOptions) 0
 														   range:NSRangeMake(0, nickUserHost.length)];
 
-	return ((rangeOfNickUserSeparator.location == NSNotFound || rangeOfUserHostSeparator.location == NSNotFound) ?
-			[NSData data] :
-			[nickUserHost subdataWithRange:NSRangeMake(rangeOfNickUserSeparator.location + 1,
-													   rangeOfUserHostSeparator.location - (rangeOfNickUserSeparator.location + 1))]);
+	return ((   rangeOfNickUserSeparator.location == NSNotFound
+			 || rangeOfUserHostSeparator.location == NSNotFound)
+			? [NSData data]
+			: [nickUserHost subdataWithRange:NSRangeMake(rangeOfNickUserSeparator.location + 1,
+														 rangeOfUserHostSeparator.location - (rangeOfNickUserSeparator.location + 1))]);
 }
 
 +(NSData *) hostFromNickUserHost:(NSData *)nickUserHost {
-	if (nickUserHost == nil) return nil;
+	if (nickUserHost == nil)
+		return nil;
 
 	NSRange rangeOfUserHostSeparator = [nickUserHost rangeOfData:[NSData dataFromCString:"@"]
 														 options:(NSDataSearchOptions) 0
 														   range:NSRangeMake(0, nickUserHost.length)];
 
-	return ((rangeOfUserHostSeparator.location == NSNotFound) ?
-			[NSData data] :
-			[nickUserHost subdataWithRange:NSRangeMake(rangeOfUserHostSeparator.location + 1,
-													   nickUserHost.length - (rangeOfUserHostSeparator.location + 1))]);
+	return (rangeOfUserHostSeparator.location == NSNotFound
+			? [NSData data]
+			: [nickUserHost subdataWithRange:NSRangeMake(rangeOfUserHostSeparator.location + 1,
+														 nickUserHost.length - (rangeOfUserHostSeparator.location + 1))]);
 }
 
 /***************************/
@@ -261,7 +254,9 @@ static NSDictionary* ircNumericCodeList;
 - (int) quit:(NSData *)reason {
 	return irc_send_raw(_irc_session,
 						"QUIT :%s",
-						reason ? reason.SA_terminatedCString : "quit");
+						(reason
+						 ? reason.SA_terminatedCString
+						 : "quit"));
 }
 
 -(int) join:(NSData *)channel 
@@ -413,6 +408,7 @@ static NSDictionary* ircNumericCodeList;
 		SA_IRC_IgnoreColorCodes,
 	} SA_IRC_ColorCodeHandling;
 
+	// TODO: Support setting this somehow...
 	SA_IRC_ColorCodeHandling whatAboutColors = SA_IRC_ParseColorCodes;
 
 	NSMutableArray <NSData *> *params_array;
@@ -425,9 +421,9 @@ static NSDictionary* ircNumericCodeList;
 			|| !strcmp(event, "SERVNOTICE")
 			|| !strcmp(event, "CTCP_ACTION")
 		)) {
-			char* (*process_color_codes) (const char *) = (whatAboutColors == SA_IRC_ParseColorCodes ?
-														   irc_color_convert_from_mirc :
-														   irc_color_strip_from_mirc);
+			char* (*process_color_codes) (const char *) = (whatAboutColors == SA_IRC_ParseColorCodes
+														   ? irc_color_convert_from_mirc
+														   : irc_color_strip_from_mirc);
 
 			params_array = [NSMutableArray arrayWithCapacity:count];
 			for (NSUInteger i = 0; i < count; i++) {
@@ -439,9 +435,15 @@ static NSDictionary* ircNumericCodeList;
 	}
 
 	NSData *origin_data = origin ? [NSData dataFromCString:origin] : nil;
-	NSData *param_0_data = ((count > 0) ? params_array[0] : nil);
-	NSData *param_1_data = ((count > 1) ? params_array[1] : nil);
-	NSData *param_2_data = ((count > 2) ? params_array[2] : nil);
+	NSData *param_0_data = (count > 0
+							? params_array[0]
+							: nil);
+	NSData *param_1_data = (count > 1
+							? params_array[1]
+							: nil);
+	NSData *param_2_data = (count > 2
+							? params_array[2]
+							: nil);
 
 	if (!strcmp(event, "CONNECT")) {
 		/*!
@@ -451,6 +453,8 @@ static NSDictionary* ircNumericCodeList;
 		 */
 		[_delegate connectionSucceeded:self];
 	} else if (!strcmp(event, "PING")) {
+		// TODO: the part about LIBIRC_OPTION_PING_PASSTHROUGH seems to be a lie??
+		// But see also LIBIRC_OPTION_IGNORE_PING???
 		/*!
 		 * The ‘ping’ event is triggered when the client receives a PING message.
 		 * It is only generated if the LIBIRC_OPTION_PING_PASSTHROUGH option is set;
@@ -459,8 +463,9 @@ static NSDictionary* ircNumericCodeList;
 		 * \param origin the person, who generated the ping.
 		 * \param params[0] mandatory, contains who knows what.
 		 */
-		if ([_delegate respondsToSelector:@selector(ping:session:)]) {
+		if ([_delegate respondsToSelector:@selector(ping:from:session:)]) {
 			[_delegate ping:param_0_data
+					   from:origin_data
 					session:self];
 		}
 	} else if (!strcmp(event, "NICK")) {
@@ -899,20 +904,20 @@ static NSDictionary* ircNumericCodeList;
 													 options:(NSDataSearchOptions) 0
 													   range:NSRangeMake(0, request.length)];
 
-			NSRange rangeOfSecondSpace = (rangeOfFirstSpace.location != NSNotFound ?
-										  [request rangeOfData:[NSData dataFromCString:" "]
-													   options:(NSDataSearchOptions) 0
-														 range:NSRangeMake(rangeOfFirstSpace.location + 1,
-																		   request.length - (rangeOfFirstSpace.location + 1))] :
-										  NSRangeMake(NSNotFound, 0));
+			NSRange rangeOfSecondSpace = (rangeOfFirstSpace.location != NSNotFound
+										  ? [request rangeOfData:[NSData dataFromCString:" "]
+														 options:(NSDataSearchOptions) 0
+														   range:NSRangeMake(rangeOfFirstSpace.location + 1,
+																			 request.length - (rangeOfFirstSpace.location + 1))]
+										  : NSRangeMake(NSNotFound, 0));
 
-			NSData *requestTypeData = (rangeOfFirstSpace.location != NSNotFound ?
-									   [request subdataWithRange:NSRangeMake(0, rangeOfFirstSpace.location)] :
-									   request);
-			NSData *requestBodyData = ((rangeOfSecondSpace.location != NSNotFound) ?
-									   [request subdataWithRange:NSRangeMake(rangeOfFirstSpace.location + 1,
-																			 rangeOfSecondSpace.location - (rangeOfFirstSpace.location + 1))] :
-									   nil);
+			NSData *requestTypeData = (rangeOfFirstSpace.location != NSNotFound
+									   ? [request subdataWithRange:NSRangeMake(0, rangeOfFirstSpace.location)]
+									   : request);
+			NSData *requestBodyData = (rangeOfSecondSpace.location != NSNotFound
+									   ? [request subdataWithRange:NSRangeMake(rangeOfFirstSpace.location + 1,
+																			   rangeOfSecondSpace.location - (rangeOfFirstSpace.location + 1))]
+									   : nil);
 			
 			[_delegate CTCPRequestReceived:requestBodyData 
 									ofType:requestTypeData 

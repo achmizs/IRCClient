@@ -1,21 +1,11 @@
 //
 //	IRCClientChannelDelegate.h
-//	IRCClient
-/*
- * Copyright 2015 Said Achmiz (www.saidachmiz.net)
- *
- * Copyright (C) 2009 Nathan Ollerenshaw chrome@stupendous.net
- *
- * This library is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or (at your 
- * option) any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public 
- * License for more details.
- */
+//
+//  Modified IRCClient Copyright 2015-2021 Said Achmiz.
+//  Original IRCClient Copyright 2009 Nathan Ollerenshaw.
+//  libircclient Copyright 2004-2009 Georgy Yunaev.
+//
+//  See LICENSE and README.md for more info.
 
 #import <Foundation/Foundation.h>
 
@@ -37,7 +27,7 @@
  *  nickname, depending on the server implementation.
  *
  *  You should also expect to see this event when the client first joins a channel,
- *	with a parameter of the client's nickname.
+ *	with a parameter of the client’s nickname.
  *
  *  @param nick The nickname of the user that joined the channel.
  */
@@ -59,9 +49,9 @@
 /** Received when an IRC client changes the channel mode. What modes are available
  *  for a given channel is an implementation detail for each server.
  *
- *  @param mode the new channel mode.
- *  @param params any parameters with the mode (such as channel key).
- *  @param nick the nickname of the IRC client that changed the mode.
+ *  @param mode The new channel mode.
+ *  @param params Any parameters with the mode (such as channel key).
+ *  @param nick The nickname of the IRC client that changed the mode.
  */
 -(void) modeSet:(NSData *)mode 
 	 forChannel:(IRCClientChannel *)session
@@ -79,9 +69,9 @@
 
 /** Received when an IRC client is kicked from a channel.
  *
- *  @param nick nickname of the client that was kicked
- *  @param reason reason message given for the kick
- *  @param byNick nickname of the client that performed the kick command
+ *  @param nick Nickname of the client that was kicked.
+ *  @param reason Reason message given for the kick.
+ *  @param byNick Nickname of the client that performed the kick command.
  *	@param wasItUs Was it us who got kicked, or another user?
  */
 -(void) userKicked:(NSData *)nick 
@@ -94,8 +84,8 @@
  *  user may not necessarily be required to be on the channel to send a message
  *	to it.
  *
- *  @param message the message sent to the channel.
- *  @param nick the nickname of the IRC client that sent the message.
+ *  @param message The message sent to the channel.
+ *  @param nick The nickname of the IRC client that sent the message.
  */
 -(void) messageSent:(NSData *)message 
 			 byUser:(NSData *)nick 
@@ -106,8 +96,8 @@
  *	it. Furthermore, the RFC states that the only difference between PRIVMSG and
  *  NOTICE is that a NOTICE may never be responded to automatically.
  *
- *  @param notice the notice sent to the channel.
- *  @param nick the nickname of the IRC client that sent the notice.
+ *  @param notice The notice sent to the channel.
+ *  @param nick The nickname of the IRC client that sent the notice.
  */
 -(void) noticeSent:(NSData *)notice 
 			byUser:(NSData *)nick 
@@ -115,8 +105,8 @@
 
 /** Received when an IRC client sends a CTCP ACTION message to the channel.
  *
- *  @param action the action message sent to the channel.
- *  @param nick the nickname of the IRC client that sent the message.
+ *  @param action The action message sent to the channel.
+ *  @param nick The nickname of the IRC client that sent the message.
  */
 -(void) actionPerformed:(NSData *)action 
 				 byUser:(NSData *)nick 

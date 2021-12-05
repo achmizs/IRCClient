@@ -1,22 +1,11 @@
 //
 //  IRCClient.h
-//  IRCClient
 //
-/*
- * Modified IRCClient Copyright 2015 Said Achmiz (www.saidachmiz.net)
- *
- * Original IRCClient Copyright (C) 2009 Nathan Ollerenshaw chrome@stupendous.net
- *
- * This library is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
- */
+//  Modified IRCClient Copyright 2015-2021 Said Achmiz.
+//  Original IRCClient Copyright 2009 Nathan Ollerenshaw.
+//  libircclient Copyright 2004-2009 Georgy Yunaev.
+//
+//  See LICENSE and README.md for more info.
 
 #ifndef IRCCLIENT
 #define IRCCLIENT
