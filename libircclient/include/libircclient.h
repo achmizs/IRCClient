@@ -15,7 +15,7 @@
 /*! 
  * \file libircclient.h
  * \author George Yunaev
- * \version 1.5
+ * \version 1.9
  * \date 01.2012
  * \brief This file defines all prototypes and functions to use libircclient.
  *
@@ -46,7 +46,7 @@
 
 #include <stdlib.h>
 
-#if !defined (WIN32)
+#if !defined (_WIN32)
 	#include <sys/select.h>	/* fd_set */
 #else
 	#include <winsock2.h>
@@ -126,7 +126,7 @@ typedef unsigned int				irc_dcc_t;
  *
  * \ingroup dccstuff
  */
-typedef void (*irc_dcc_callback_t) (irc_session_t * session, irc_dcc_t id, int status, void * ctx, const char * data, unsigned int length);
+typedef void (*irc_dcc_callback_t) (irc_session_t *session, irc_dcc_t id, int status, void *ctx, const char *data, size_t length);
 
 
 #define IN_INCLUDE_LIBIRC_H
@@ -166,7 +166,7 @@ typedef void (*irc_dcc_callback_t) (irc_session_t * session, irc_dcc_t id, int s
  * \sa irc_destroy_session
  * \ingroup initclose
  */
-irc_session_t * irc_create_session (irc_callbacks_t	* callbacks);
+irc_session_t* irc_create_session (irc_callbacks_t *callbacks);
 
 
 /*!
@@ -181,7 +181,7 @@ irc_session_t * irc_create_session (irc_callbacks_t	* callbacks);
  *
  * \ingroup initclose
  */
-void irc_destroy_session (irc_session_t * session);
+void irc_destroy_session (irc_session_t *session);
 
 
 /*!
@@ -222,13 +222,13 @@ void irc_destroy_session (irc_session_t * session);
  * \sa irc_run
  * \ingroup conndisc
  */
-int irc_connect (irc_session_t * session, 
-			const char * server, 
-			unsigned short port,
-			const char * server_password,
-			const char * nick,
-			const char * username,
-			const char * realname);
+int irc_connect (irc_session_t *session,
+				 const char *server,
+				 unsigned short port,
+				 const char *server_password,
+				 const char *nick,
+				 const char *username,
+				 const char *realname);
 
 
 /*!
@@ -269,13 +269,13 @@ int irc_connect (irc_session_t * session,
  * \sa irc_run
  * \ingroup conndisc
  */
-int irc_connect6 (irc_session_t * session, 
-			const char * server, 
-			unsigned short port,
-			const char * server_password,
-			const char * nick,
-			const char * username,
-			const char * realname);
+int irc_connect6 (irc_session_t *session,
+				  const char *server,
+				  unsigned short port,
+				  const char *server_password,
+				  const char *nick,
+				  const char *username,
+				  const char *realname);
 
 /*!
  * \fn void irc_disconnect (irc_session_t * session)
@@ -292,7 +292,7 @@ int irc_connect6 (irc_session_t * session,
  * \sa irc_connect irc_run
  * \ingroup conndisc
  */
-void irc_disconnect (irc_session_t * session);
+void irc_disconnect (irc_session_t *session);
 
 
 /*!
@@ -307,7 +307,7 @@ void irc_disconnect (irc_session_t * session);
  * \sa irc_connect irc_run
  * \ingroup conndisc
  */
-int irc_is_connected (irc_session_t * session);
+int irc_is_connected (irc_session_t *session);
 
 
 /*!
@@ -330,7 +330,7 @@ int irc_is_connected (irc_session_t * session);
  *
  * \ingroup running 
  */
-int irc_run (irc_session_t * session);
+int irc_run (irc_session_t *session);
 
 
 /*!
@@ -355,7 +355,10 @@ int irc_run (irc_session_t * session);
  * \sa irc_process_select_descriptors
  * \ingroup running 
  */
-int irc_add_select_descriptors (irc_session_t * session, fd_set *in_set, fd_set *out_set, int * maxfd);
+int irc_add_select_descriptors (irc_session_t *session,
+								fd_set *in_set,
+								fd_set *out_set,
+								int *maxfd);
 
 
 /*!
@@ -375,7 +378,9 @@ int irc_add_select_descriptors (irc_session_t * session, fd_set *in_set, fd_set 
  * \sa irc_add_select_descriptors
  * \ingroup running 
  */
-int irc_process_select_descriptors (irc_session_t * session, fd_set *in_set, fd_set *out_set);
+int irc_process_select_descriptors (irc_session_t *session,
+									fd_set *in_set,
+									fd_set *out_set);
 
 
 /*!
@@ -395,7 +400,9 @@ int irc_process_select_descriptors (irc_session_t * session, fd_set *in_set, fd_
  *
  * \ingroup ircmd_oth
  */
-int irc_send_raw (irc_session_t * session, const char * format, ...);
+int irc_send_raw (irc_session_t *session,
+				  const char *format,
+				  ...);
 
 
 /*!
@@ -415,7 +422,8 @@ int irc_send_raw (irc_session_t * session, const char * format, ...);
  *
  * \ingroup ircmd_oth
  */
-int irc_cmd_quit (irc_session_t * session, const char * reason);
+int irc_cmd_quit (irc_session_t *session,
+				  const char *reason);
 
 
 /*!
@@ -457,7 +465,9 @@ int irc_cmd_quit (irc_session_t * session, const char * reason);
  * 
  * \ingroup ircmd_ch
  */
-int irc_cmd_join (irc_session_t * session, const char * channel, const char * key);
+int irc_cmd_join (irc_session_t *session,
+				  const char *channel,
+				  const char *key);
 
 
 /*!
@@ -482,7 +492,8 @@ int irc_cmd_join (irc_session_t * session, const char * channel, const char * ke
  *
  * \ingroup ircmd_ch
  */
-int irc_cmd_part (irc_session_t * session, const char * channel);
+int irc_cmd_part (irc_session_t *session,
+				  const char *channel);
 
 
 /*!
@@ -517,7 +528,9 @@ int irc_cmd_part (irc_session_t * session, const char * channel);
  * \sa irc_callbacks_t::event_invite irc_cmd_channel_mode
  * \ingroup ircmd_ch
  */
-int irc_cmd_invite (irc_session_t * session, const char * nick, const char * channel);
+int irc_cmd_invite (irc_session_t *session,
+					const char *nick,
+					const char *channel);
 
 
 /*!
@@ -545,7 +558,8 @@ int irc_cmd_invite (irc_session_t * session, const char * nick, const char * cha
  *
  * \ingroup ircmd_ch
  */
-int irc_cmd_names (irc_session_t * session, const char * channel);
+int irc_cmd_names (irc_session_t *session,
+				   const char *channel);
 
 
 /*!
@@ -580,7 +594,8 @@ int irc_cmd_names (irc_session_t * session, const char * channel);
  *
  * \ingroup ircmd_ch
  */
-int irc_cmd_list (irc_session_t * session, const char * channel);
+int irc_cmd_list (irc_session_t *session,
+				  const char *channel);
 
 
 /*!
@@ -620,7 +635,9 @@ int irc_cmd_list (irc_session_t * session, const char * channel);
  * \sa irc_callbacks_t::event_topic irc_cmd_channel_mode
  * \ingroup ircmd_ch
  */
-int irc_cmd_topic (irc_session_t * session, const char * channel, const char * topic);
+int irc_cmd_topic (irc_session_t *session,
+				   const char *channel,
+				   const char *topic);
 
 
 /*!
@@ -713,7 +730,9 @@ int irc_cmd_topic (irc_session_t * session, const char * channel, const char * t
  * \sa irc_cmd_topic irc_cmd_list
  * \ingroup ircmd_ch
  */
-int irc_cmd_channel_mode (irc_session_t * session, const char * channel, const char * mode);
+int irc_cmd_channel_mode (irc_session_t *session,
+						  const char *channel,
+						  const char *mode);
 
 
 /*!
@@ -774,7 +793,8 @@ int irc_cmd_channel_mode (irc_session_t * session, const char * channel, const c
  *
  * \ingroup ircmd_oth
  */
-int irc_cmd_user_mode (irc_session_t * session, const char * mode);
+int irc_cmd_user_mode (irc_session_t *session,
+					   const char *mode);
 
 
 /*!
@@ -800,7 +820,8 @@ int irc_cmd_user_mode (irc_session_t * session, const char * mode);
  *
  * \ingroup ircmd_oth
  */
-int irc_cmd_nick (irc_session_t * session, const char * newnick);
+int irc_cmd_nick (irc_session_t *session,
+				  const char *newnick);
 
 
 /*!
@@ -835,7 +856,8 @@ int irc_cmd_nick (irc_session_t * session, const char * newnick);
  *
  * \ingroup ircmd_oth
  */
-int irc_cmd_whois (irc_session_t * session, const char * nick);
+int irc_cmd_whois (irc_session_t *session,
+				   const char *nick);
 
 
 /*!
@@ -870,7 +892,9 @@ int irc_cmd_whois (irc_session_t * session, const char * nick);
  *
  * \ingroup ircmd_msg
  */
-int irc_cmd_msg  (irc_session_t * session, const char * nch, const char * text);
+int irc_cmd_msg  (irc_session_t *session,
+				  const char *nch,
+				  const char *text);
 
 
 /*!
@@ -904,7 +928,9 @@ int irc_cmd_msg  (irc_session_t * session, const char * nch, const char * text);
  * \sa irc_cmd_msg
  * \ingroup ircmd_msg
  */
-int irc_cmd_me (irc_session_t * session, const char * nch, const char * text);
+int irc_cmd_me (irc_session_t *session,
+				const char *nch,
+				const char *text);
 
 
 /*!
@@ -944,7 +970,9 @@ int irc_cmd_me (irc_session_t * session, const char * nch, const char * text);
  * \sa irc_cmd_msg
  * \ingroup ircmd_msg
  */
-int irc_cmd_notice (irc_session_t * session, const char * nch, const char * text);
+int irc_cmd_notice (irc_session_t *session,
+					const char *nch,
+					const char *text);
 
 
 /*!
@@ -975,7 +1003,10 @@ int irc_cmd_notice (irc_session_t * session, const char * nch, const char * text
  * \sa irc_callbacks_t::event_numeric
  * \ingroup ircmd_ch
  */
-int irc_cmd_kick (irc_session_t * session, const char * nick, const char * channel, const char * reason);
+int irc_cmd_kick (irc_session_t *session,
+				  const char *nick,
+				  const char *channel,
+				  const char *reason);
 
 
 /*!
@@ -1013,7 +1044,9 @@ int irc_cmd_kick (irc_session_t * session, const char * nick, const char * chann
  * \sa irc_callbacks_t::event_ctcp_rep irc_callbacks_t::event_numeric
  * \ingroup ctcp
  */
-int irc_cmd_ctcp_request (irc_session_t * session, const char * nick, const char * request);
+int irc_cmd_ctcp_request (irc_session_t *session,
+						  const char *nick,
+						  const char *request);
 
 
 /*!
@@ -1045,28 +1078,32 @@ int irc_cmd_ctcp_request (irc_session_t * session, const char * nick, const char
  *
  * \ingroup ctcp
  */
-int irc_cmd_ctcp_reply (irc_session_t * session, const char * nick, const char * reply);
+int irc_cmd_ctcp_reply (irc_session_t *session,
+						const char *nick,
+						const char *reply);
 
 
 /*!
  * \fn void irc_target_get_nick (const char * target, char *nick, size_t size)
  * \brief Gets the nick part from the target
  *
- * \param target  A nick in common IRC server form like tim!root\@mycomain.com
+ * \param target  A nick in common IRC server form like tim!root\@mycomain.com; cannot be NULL
  * \param nick    A buffer to hold the nickname.
  * \param size    A buffer size. If nick is longer than buffer size, it will 
  *                be truncated.
  *
  * For most events IRC server returns 'origin' (i.e. the person, who 
  * generated this event) in i.e. "common" form, like nick!host\@domain.
- * However, all the irc_cmd_* functions require just a nick/
+ * However, all the irc_cmd_* functions require just a nick.
  * This function parses this origin, and gets the nick, storing it into 
  * user-provided buffer.
  * A buffer of size 90 should be enough for most nicks :)
  *
  * \ingroup nnparse
  */
-void irc_target_get_nick (const char * target, char *nick, size_t size);
+void irc_target_get_nick (const char *target,
+						  char *nick,
+						  size_t size);
 
 
 /*!
@@ -1086,20 +1123,22 @@ void irc_target_get_nick (const char * target, char *nick, size_t size);
  *
  * \ingroup nnparse
  */
-void irc_target_get_host (const char * target, char *nick, size_t size);
+void irc_target_get_host (const char *target,
+						  char *nick,
+						  size_t size);
 
 
 /*!
  * \fn int irc_dcc_chat(irc_session_t * session, void * ctx, const char * nick, irc_dcc_callback_t callback, irc_dcc_t * dccid)
  * \brief Initiates a DCC CHAT.
  *
- * \param session An initiated and connected session.
- * \param ctx     A user-supplied DCC session context, which will be passed to 
- *                the DCC callback function. May be NULL.
- * \param nick    A nick to DCC CHAT with.
- * \param callback A DCC callback function, which will be called when 
- *                anything is said by other party. Must not be NULL.
- * \param dccid   On success, DCC session ID will be stored in this var.
+ * \param session	An initiated and connected session.
+ * \param ctx		A user-supplied DCC session context, which will be passed to
+ *					the DCC callback function. May be NULL.
+ * \param nick		A nick to DCC CHAT with.
+ * \param callback	A DCC callback function, which will be called when
+ *					anything is said by other party. Must not be NULL.
+ * \param dccid		On success, DCC session ID will be stored in this var.
  *
  * \return Return code 0 means success. Other value means error, the error 
  *  code may be obtained through irc_errno(). Any error, generated by the 
@@ -1127,7 +1166,12 @@ void irc_target_get_host (const char * target, char *nick, size_t size);
  * \sa irc_dcc_callback_t irc_dcc_msg
  * \ingroup dccstuff
  */
-int irc_dcc_chat (irc_session_t * session, void * ctx, const char * nick, irc_dcc_callback_t callback, irc_dcc_t * dccid);
+int irc_dcc_chat (irc_session_t *session,
+				  void *ctx,
+				  const char *nick,
+				  irc_dcc_callback_t
+				  callback,
+				  irc_dcc_t *dccid);
 
 
 /*!
@@ -1148,7 +1192,9 @@ int irc_dcc_chat (irc_session_t * session, void * ctx, const char * nick, irc_dc
  * \sa irc_dcc_chat
  * \ingroup dccstuff
  */
-int irc_dcc_msg	(irc_session_t * session, irc_dcc_t dccid, const char * text);
+int irc_dcc_msg	(irc_session_t *session,
+				 irc_dcc_t dccid,
+				 const char *text);
 
 
 /*!
@@ -1179,7 +1225,10 @@ int irc_dcc_msg	(irc_session_t * session, irc_dcc_t dccid, const char * text);
  * \sa irc_dcc_decline event_dcc_chat_req event_dcc_send_req
  * \ingroup dccstuff
  */
-int	irc_dcc_accept (irc_session_t * session, irc_dcc_t dccid, void * ctx, irc_dcc_callback_t callback);
+int	irc_dcc_accept (irc_session_t *session,
+					irc_dcc_t dccid,
+					void *ctx,
+					irc_dcc_callback_t callback);
 
 
 /*!
@@ -1207,7 +1256,8 @@ int	irc_dcc_accept (irc_session_t * session, irc_dcc_t dccid, void * ctx, irc_dc
  * \sa irc_dcc_accept irc_callbacks_t::event_dcc_chat_req irc_callbacks_t::event_dcc_send_req irc_dcc_destroy
  * \ingroup dccstuff
  */
-int irc_dcc_decline (irc_session_t * session, irc_dcc_t dccid);
+int irc_dcc_decline (irc_session_t *session,
+					 irc_dcc_t dccid);
 
 
 /*!
@@ -1245,7 +1295,12 @@ int irc_dcc_decline (irc_session_t * session, irc_dcc_t dccid);
  * \sa irc_dcc_callback_t
  * \ingroup dccstuff
  */
-int irc_dcc_sendfile (irc_session_t * session, void * ctx, const char * nick, const char * filename, irc_dcc_callback_t callback, irc_dcc_t * dccid);
+int irc_dcc_sendfile (irc_session_t *session,
+					  void *ctx,
+					  const char *nick,
+					  const char *filename,
+					  irc_dcc_callback_t callback,
+					  irc_dcc_t *dccid);
 
 
 /*!
@@ -1267,7 +1322,8 @@ int irc_dcc_sendfile (irc_session_t * session, void * ctx, const char * nick, co
  *
  * \ingroup dccstuff
  */
-int irc_dcc_destroy (irc_session_t * session, irc_dcc_t dccid);
+int irc_dcc_destroy (irc_session_t *session,
+					 irc_dcc_t dccid);
 
 
 /*!
@@ -1285,7 +1341,8 @@ int irc_dcc_destroy (irc_session_t * session, irc_dcc_t dccid);
  *
  * \ingroup common
  */
-void irc_get_version (unsigned int * high, unsigned int * low);
+void irc_get_version (unsigned int *high,
+					  unsigned int *low);
 
 
 /*!
@@ -1305,7 +1362,8 @@ void irc_get_version (unsigned int * high, unsigned int * low);
  * \sa irc_get_ctx
  * \ingroup contexts
  */
-void irc_set_ctx (irc_session_t * session, void * ctx);
+void irc_set_ctx (irc_session_t *session,
+				  void *ctx);
 
 /*!
  * \fn void irc_set_ctcp_version (irc_session_t * session, const char *version)
@@ -1320,7 +1378,8 @@ void irc_set_ctx (irc_session_t * session, void * ctx);
  *
  * \ingroup contexts
  */
-void irc_set_ctcp_version(irc_session_t * session, const char * version);
+void irc_set_ctcp_version(irc_session_t *session,
+						  const char *version);
 
 /*!
  * \fn void * irc_get_ctx (irc_session_t * session)
@@ -1334,7 +1393,7 @@ void irc_set_ctcp_version(irc_session_t * session, const char * version);
  * \sa irc_set_ctx
  * \ingroup contexts
  */
-void * irc_get_ctx (irc_session_t * session);
+void* irc_get_ctx (irc_session_t *session);
 
 
 /*!
@@ -1356,7 +1415,7 @@ void * irc_get_ctx (irc_session_t * session);
  * \sa irc_strerror
  * \ingroup errors
  */
-int irc_errno (irc_session_t * session);
+int irc_errno (irc_session_t *session);
 
 
 /*!
@@ -1370,7 +1429,7 @@ int irc_errno (irc_session_t * session);
  * \sa irc_errno()
  * \ingroup errors
  */
-const char * irc_strerror (int ircerrno);
+const char* irc_strerror (int ircerrno);
 
 
 /*!
@@ -1386,7 +1445,8 @@ const char * irc_strerror (int ircerrno);
  * \sa irc_option_reset
  * \ingroup options
  */
-void irc_option_set (irc_session_t * session, unsigned int option);
+void irc_option_set (irc_session_t *session,
+					 unsigned int option);
 
 
 /*!
@@ -1402,7 +1462,8 @@ void irc_option_set (irc_session_t * session, unsigned int option);
  * \sa irc_option_set
  * \ingroup options
  */
-void irc_option_reset (irc_session_t * session, unsigned int option);
+void irc_option_reset (irc_session_t *session,
+					   unsigned int option);
 
 
 /*!
@@ -1419,7 +1480,7 @@ void irc_option_reset (irc_session_t * session, unsigned int option);
  * \sa irc_color_convert_from_mirc irc_color_convert_to_mirc
  * \ingroup colors
  */
-char * irc_color_strip_from_mirc (const char * message);
+char* irc_color_strip_from_mirc (const char *message);
 
 
 /*!
@@ -1438,7 +1499,7 @@ char * irc_color_strip_from_mirc (const char * message);
  * \sa irc_color_strip_from_mirc irc_color_convert_to_mirc
  * \ingroup colors
  */
-char * irc_color_convert_from_mirc (const char * message);
+char* irc_color_convert_from_mirc (const char *message);
 
 
 /*!
@@ -1490,7 +1551,7 @@ char * irc_color_convert_from_mirc (const char * message);
  * \sa irc_color_strip_from_mirc irc_color_convert_from_mirc
  * \ingroup colors
  */
-char * irc_color_convert_to_mirc (const char * message);
+char* irc_color_convert_to_mirc (const char *message);
 
 #ifdef	__cplusplus
 }

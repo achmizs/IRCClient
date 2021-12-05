@@ -54,8 +54,7 @@
 #endif
 
 
-static int socket_error()
-{
+static int socket_error() {
 #if !defined (_WIN32)
 	return errno;
 #else
@@ -64,26 +63,25 @@ static int socket_error()
 }
 
 
-static int socket_create (int domain, int type, socket_t * sock)
-{
+static int socket_create (int domain,
+						  int type,
+						  socket_t *sock) {
 	*sock = socket (domain, type, 0);
 	return IS_SOCKET_ERROR(*sock) ? 1 : 0;
 }
 
 
-static int socket_make_nonblocking (socket_t * sock)
-{
+static int socket_make_nonblocking (socket_t *sock) {
 #if !defined (_WIN32)
 	return fcntl (*sock, F_SETFL, fcntl (*sock, F_GETFL,0 ) | O_NONBLOCK) != 0;
 #else
-	unsigned long mode = 0;
+	unsigned long mode = 1;
 	return ioctlsocket (*sock, FIONBIO, &mode) == SOCKET_ERROR;
 #endif
 }
 
 
-static int socket_close (socket_t * sock)
-{
+static int socket_close (socket_t *sock) {
 #if !defined (_WIN32)
 	close (*sock);
 #else
@@ -95,16 +93,15 @@ static int socket_close (socket_t * sock)
 }
 
 
-static int socket_connect (socket_t * sock, const struct sockaddr *saddr, socklen_t len)
-{
-	while ( 1 )
-	{
-	    if ( connect (*sock, saddr, len) < 0 )
-	    {
-	    	if ( socket_error() == EINTR )
+static ssize_t socket_connect (socket_t *sock,
+							   const struct sockaddr *saddr,
+							   socklen_t len) {
+	while (1) {
+	    if (connect(*sock, saddr, len) < 0) {
+	    	if (socket_error() == EINTR)
 	    		continue;
 
-			if ( socket_error() != EINPROGRESS && socket_error() != EWOULDBLOCK )
+			if (socket_error() != EINPROGRESS && socket_error() != EWOULDBLOCK)
 				return 1;
 		}
 
@@ -113,11 +110,12 @@ static int socket_connect (socket_t * sock, const struct sockaddr *saddr, sockle
 }
 
 
-static int socket_accept (socket_t * sock, socket_t * newsock, struct sockaddr *saddr, socklen_t * len)
-{
-	while ( IS_SOCKET_ERROR(*newsock = accept (*sock, saddr, len)) )
-	{
-    	if ( socket_error() == EINTR )
+static ssize_t socket_accept (socket_t *sock,
+							  socket_t *newsock,
+							  struct sockaddr *saddr,
+							  socklen_t *len) {
+	while (IS_SOCKET_ERROR(*newsock = accept(*sock, saddr, len))) {
+    	if (socket_error() == EINTR)
     		continue;
 
 		return 1;
@@ -127,15 +125,15 @@ static int socket_accept (socket_t * sock, socket_t * newsock, struct sockaddr *
 }
 
 
-static int socket_recv (socket_t * sock, void * buf, size_t len)
-{
-	int length;
+static ssize_t socket_recv (socket_t *sock,
+							void *buf,
+							size_t len) {
+	ssize_t length;
 
-	while ( (length = recv (*sock, buf, len, 0)) < 0 )
-	{
+	while ((length = recv(*sock, buf, len, 0)) < 0) {
 		int err = socket_error();
 		
-		if ( err != EINTR && err != EAGAIN )
+		if (err != EINTR && err != EAGAIN)
 			break;
 	}
 
@@ -143,12 +141,12 @@ static int socket_recv (socket_t * sock, void * buf, size_t len)
 }
 
 
-static int socket_send (socket_t * sock, const void *buf, size_t len)
-{
-	int length;
+static ssize_t socket_send (socket_t *sock,
+							const void *buf,
+							size_t len) {
+	ssize_t length;
 
-	while ( (length = send (*sock, buf, len, 0)) < 0 )
-	{
+	while ((length = send(*sock, buf, len, 0)) < 0) {
 		int err = socket_error();
 		
 		if ( err != EINTR && err != EAGAIN )

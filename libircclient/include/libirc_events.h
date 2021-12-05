@@ -52,7 +52,7 @@
  *
  * \ingroup events
  */
-typedef void (*irc_event_callback_t) (irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count);
+typedef void (*irc_event_callback_t) (irc_session_t *session, const char *event, const char *origin, const char **params, unsigned int count);
 
 
 /*!
@@ -84,7 +84,7 @@ typedef void (*irc_event_callback_t) (irc_session_t * session, const char * even
  *
  * \ingroup events
  */
-typedef void (*irc_eventcode_callback_t) (irc_session_t * session, unsigned int event, const char * origin, const char ** params, unsigned int count);
+typedef void (*irc_eventcode_callback_t) (irc_session_t *session, unsigned int event, const char *origin, const char **params, unsigned int count);
 
 
 /*!
@@ -104,15 +104,15 @@ typedef void (*irc_eventcode_callback_t) (irc_session_t * session, unsigned int 
  * \sa irc_dcc_accept or irc_dcc_decline
  * \ingroup events
  */
-typedef void (*irc_event_dcc_chat_t) (irc_session_t * session, const char * nick, const char * addr, irc_dcc_t dccid);
+typedef void (*irc_event_dcc_chat_t) (irc_session_t *session, const char *nick, const char *addr, irc_dcc_t dccid);
 
 
 /*!
  * \fn typedef void (*irc_event_dcc_send_t) (irc_session_t * session, const char * nick, const char * addr, const char * filename, unsigned long size, irc_dcc_t dccid)
- * \brief A remote DCC CHAT request callback
+ * \brief A remote DCC SEND request callback
  *
  * \param session the session, which generates an event
- * \param nick    the person who requested DCC CHAT with you.
+ * \param nick    the person who requested DCC SEND to you.
  * \param addr    the person's IP address in decimal-dot notation.
  * \param filename the sent filename.
  * \param size    the filename size.
@@ -127,7 +127,7 @@ typedef void (*irc_event_dcc_chat_t) (irc_session_t * session, const char * nick
  * \sa irc_dcc_accept or irc_dcc_decline
  * \ingroup events
  */
-typedef void (*irc_event_dcc_send_t) (irc_session_t * session, const char * nick, const char * addr, const char * filename, unsigned long size, irc_dcc_t dccid);
+typedef void (*irc_event_dcc_send_t) (irc_session_t *session, const char *nick, const char *addr, const char *filename, size_t size, irc_dcc_t dccid);
 
 
 /*! \brief Event callbacks structure.
@@ -156,6 +156,16 @@ typedef struct
      * No extra params supplied; \a params is 0.
 	 */
 	irc_event_callback_t	event_connect;
+
+	/*!
+	 * The "ping" event is triggered when the client receives a PING message.
+	 * It is only generated if the LIBIRC_OPTION_PING_PASSTHROUGH option is set;
+	 * otherwise, the library responds to PING messages automatically.
+	 *
+	 * \param origin the person, who generated the ping.
+	 * \param params[0] mandatory, contains who knows what.
+	 */
+	irc_event_callback_t	event_ping;
 
 	/*!
 	 * The "nick" event is triggered when the client receives a NICK message,
@@ -246,6 +256,15 @@ typedef struct
 	 * \param params[1] optional, contains the kick text
 	 */
 	irc_event_callback_t	event_kick;
+
+	/*!
+	 * The "error" event is triggered upon receipt of an ERROR message, which
+	 * (when sent to clients) usually means the client has been disconnected.
+	 *
+	 * \param origin the person, who generates the message.
+	 * \param params optional, contains who knows what.
+	 */
+	irc_event_callback_t	event_error;
 
 	/*!
 	 * The "channel" event is triggered upon receipt of a PRIVMSG message
@@ -401,7 +420,7 @@ typedef struct
 	irc_event_dcc_chat_t		event_dcc_chat_req;
 
 	/*!
-	 * The "dcc chat" event is triggered when someone wants to send a file 
+	 * The "dcc send" event is triggered when someone wants to send a file
 	 * to you via DCC SEND request.
      *
      * See the params in ::irc_event_dcc_send_t specification.

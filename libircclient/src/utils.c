@@ -12,19 +12,21 @@
  * License for more details.
  */
 
-static void libirc_add_to_set (int fd, fd_set *set, int * maxfd)
-{
+static void libirc_add_to_set (int fd,
+							   fd_set *set,
+							   int *maxfd) {
 	FD_SET (fd, set);
 
-	if ( *maxfd < fd )
+	if (*maxfd < fd)
 		*maxfd = fd;
 }
 
 #if defined (ENABLE_DEBUG)
-static void libirc_dump_data (const char * prefix, const char * buf, unsigned int length)
-{
+static void libirc_dump_data (const char *prefix,
+							  const char *buf,
+							  unsigned int length) {
 	printf ("%s: ", prefix);
-	for ( ; length > 0; length -- )
+	for (; length > 0; length--)
 		printf ("%c", *buf++);
 }
 #endif
@@ -33,43 +35,45 @@ static void libirc_dump_data (const char * prefix, const char * buf, unsigned in
 /*
  * Finds a separator (\x0D\x0A), which separates two lines.
  */
-static int libirc_findcrlf (const char * buf, int length)
-{
-	int offset = 0;
-	for ( ; offset < length; offset++ )
-	{
-		if ( buf[offset] == 0x0D && offset < length - 1 && buf[offset+1] == 0x0A )
+static size_t libirc_findcrlf (const char *buf,
+							   size_t length) {
+	size_t offset = 0;
+	for (; offset < length; offset++) {
+		if (   buf[offset] == 0x0D
+			&& offset < length - 1
+			&& buf[offset+1] == 0x0A)
 			return offset;
-		if ( buf[offset] == 0x0A)
+		if (buf[offset] == 0x0A)
 			return offset;
 	}
 
 	return 0;
 }
 
-static int libirc_findcrlf_offset(const char *buf, int offset, const int length)
-{
-	for(; offset < length; offset++)
-	{
-		if(buf[offset] != 0x0D && buf[offset] != 0x0A)
-		{
+static size_t libirc_findcrlf_offset (const char *buf,
+									  size_t offset,
+									  const size_t length) {
+	for(; offset < length; offset++) {
+		if (   buf[offset] != 0x0D
+			&& buf[offset] != 0x0A) {
 			break;
 		}
 	}
 	return offset;
 }
 
-static int libirc_findcrorlf (char * buf, int length)
-{
-	int offset = 0;
-	for ( ; offset < length; offset++ ) 
-	{
-		if ( buf[offset] == 0x0D || buf[offset] == 0x0A )
-		{
+static size_t libirc_findcrorlf (char *buf,
+								 size_t length) {
+	size_t offset = 0;
+	for (; offset < length; offset++) {
+		if (   buf[offset] == 0x0D
+			|| buf[offset] == 0x0A) {
 			buf[offset++] = '\0';
 
-			if ( offset < (length - 1) 
-			&& (buf[offset] == 0x0D || buf[offset] == 0x0A) )
+			if (   offset < (length - 1)
+				&& (   buf[offset] == 0x0D
+					|| buf[offset] == 0x0A)
+				)
 				offset++;
 
 			return offset;
@@ -80,48 +84,44 @@ static int libirc_findcrorlf (char * buf, int length)
 }
 
 
-static void libirc_event_ctcp_internal (irc_session_t * session, const char * event, const char * origin, const char ** params, unsigned int count)
-{
-	(void)event;
-	(void)count;
+static void libirc_event_ctcp_internal (irc_session_t *session,
+										const char *event,
+										const char *origin,
+										const char **params,
+										unsigned int count) {
+	(void) event;
+	(void) count;
 
-	if ( origin )
-	{
+	if (origin) {
 		char nickbuf[128], textbuf[256];
 		irc_target_get_nick (origin, nickbuf, sizeof(nickbuf));
 
-		if ( strstr (params[0], "PING") == params[0] )
+		if (strstr (params[0], "PING") == params[0]) {
 			irc_cmd_ctcp_reply (session, nickbuf, params[0]);
-		else if ( !strcmp (params[0], "VERSION") )
-		{
-			if ( !session->ctcp_version )
-			{
+		} else if (!strcmp (params[0], "VERSION")) {
+			if (!session->ctcp_version) {
 				unsigned int high, low;
 				irc_get_version (&high, &low);
 
 				snprintf (textbuf, sizeof (textbuf), "VERSION libircclient by Georgy Yunaev ver.%d.%d", high, low);
-			}
-			else
+			} else {
 				snprintf (textbuf, sizeof (textbuf), "VERSION %s", session->ctcp_version);
+			}
 
 			irc_cmd_ctcp_reply (session, nickbuf, textbuf);
-		}
-		else if ( !strcmp (params[0], "FINGER") )
-		{
+		} else if (!strcmp (params[0], "FINGER")) {
 			sprintf (textbuf, "FINGER %s (%s) Idle 0 seconds", 
 				session->username ? session->username : "nobody",
 				session->realname ? session->realname : "noname");
 
 			irc_cmd_ctcp_reply (session, nickbuf, textbuf);
-		}
-		else if ( !strcmp (params[0], "TIME") )
-		{
+		} else if (!strcmp (params[0], "TIME")) {
 			time_t now = time(0);
 
 #if defined (ENABLE_THREADS) && defined (HAVE_LOCALTIME_R)
 			struct tm tmtmp, *ltime = localtime_r (&now, &tmtmp);
 #else
-			struct tm * ltime = localtime (&now);
+			struct tm *ltime = localtime (&now);
 #endif
 			strftime (textbuf, sizeof(textbuf), "%a %b %d %H:%M:%S %Z %Y", ltime);
 			irc_cmd_ctcp_reply (session, nickbuf, textbuf);

@@ -19,8 +19,7 @@
 /*
  * This structure keeps the state of a single DCC connection.
  */
-struct irc_dcc_session_s
-{
+struct irc_dcc_session_s {
 	irc_dcc_session_t	*	next;
 
 	irc_dcc_t		id;
@@ -35,16 +34,16 @@ struct irc_dcc_session_s
 	time_t			timeout;
 
 	FILE		*	dccsend_file_fp;
-	unsigned int	received_file_size;
-	unsigned int	file_confirm_offset;
+	size_t			received_file_size;
+	size_t			file_confirm_offset;
 
 	struct sockaddr_in	remote_addr;
 
 	char 			incoming_buf[LIBIRC_DCC_BUFFER_SIZE];
-	unsigned int	incoming_offset;
+	size_t			incoming_offset;
 
 	char 			outgoing_buf[LIBIRC_DCC_BUFFER_SIZE];
-	unsigned int	outgoing_offset;
+	size_t			outgoing_offset;
 	port_mutex_t	mutex_outbuf;
 
 	irc_dcc_callback_t		cb;

@@ -52,5 +52,13 @@
  */
 #define LIBIRC_OPTION_SSL_NO_VERIFY (1 << 3)
 
+/*! \brief Disables automatic response to PING messages.
+ *
+ * The library will still generate events for PING messages, if an event handler
+ * is provided.
+ * \ingroup options
+ */
+#define LIBIRC_OPTION_IGNORE_PING (1 << 4)
+
 
 #endif /* INCLUDE_IRC_OPTIONS_H */

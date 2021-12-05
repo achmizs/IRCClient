@@ -31,8 +31,7 @@
 
 
 
-struct irc_session_s
-{
+struct irc_session_s {
 	void		*	ctx;
 	int				dcc_timeout;
 
@@ -40,10 +39,10 @@ struct irc_session_s
 	int				lasterror;
 
 	char 			incoming_buf[LIBIRC_BUFFER_SIZE];
-	unsigned int	incoming_offset;
+	size_t			incoming_offset;
 
 	char 			outgoing_buf[LIBIRC_BUFFER_SIZE];
-	unsigned int	outgoing_offset;
+	size_t			outgoing_offset;
 	port_mutex_t	mutex_session;
 
 	socket_t		sock;
@@ -72,7 +71,6 @@ struct irc_session_s
 	SSL 		 *	ssl;
 #endif
 
-	
 };
 
 
