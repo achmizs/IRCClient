@@ -25,16 +25,13 @@
 #pragma mark IRCClientChannel class extension
 /********************************************/
 
-@interface IRCClientChannel()
-{
-	irc_session_t		*_irc_session;
+@interface IRCClientChannel() {
+	irc_session_t	*_irc_session;
 
-	NSMutableArray		*_nicks;
+	// TODO: actually keep track of nicks! Use RPL_NAMREPLY and so on...
+	// (see refreshNames...)
+	NSMutableArray	*_nicks;
 }
-
-@property (readwrite) NSData *topic;
-@property (readwrite) NSData *modes;
-@property (readwrite) NSMutableArray *nicks;
 
 @end
 
@@ -44,37 +41,43 @@
 
 @implementation IRCClientChannel
 
-/******************************/
-#pragma mark - Custom accessors
-/******************************/
+/************************/
+#pragma mark - Properties
+/************************/
 
--(NSArray *)nicks
-{
-	NSArray* nicksCopy = [_nicks copy];
-	return nicksCopy;
+-(NSArray *) nicks {
+	return [_nicks copy];
 }
 
--(void)setNicks:(NSArray *)nicks
-{
-	_nicks = [nicks mutableCopy];
+-(IRCClientSession *) session {
+	return (__bridge IRCClientSession *) irc_get_ctx(_irc_session);
+}
+
+/********************************************/
+#pragma mark - Initializers & factory methods
+/********************************************/
+
++(instancetype) channel {
+	return [self new];
 }
 
 /**************************/
 #pragma mark - Initializers
 /**************************/
 
--(instancetype)initWithName:(NSData *)name andIRCSession:(irc_session_t *)irc_session
-{
-    if ((self = [super init]))
-	{
-		_irc_session = irc_session;
+-(instancetype) initWithName:(NSData *)name 
+			   andIRCSession:(irc_session_t *)irc_session {
+	self = [super init];
+	if (!self) return nil;
 
-		_name = name;
-		_encoding = NSUTF8StringEncoding;
-		_topic = [NSData dataWithBlankCString];
-		_modes = [NSData dataWithBlankCString];
-	}
-	
+	_irc_session = irc_session;
+
+	_name = name;
+	_encoding = NSUTF8StringEncoding;
+	_topic = [NSData dataWithBlankCString];
+	_modes = [NSData dataWithBlankCString];
+	_nicks = [NSMutableArray array];
+
 	return self;
 }
 
@@ -82,110 +85,202 @@
 #pragma mark - IRC commands
 /**************************/
 
-- (int)part
-{
-	return irc_cmd_part(_irc_session, _name.SA_terminatedCString);
+-(int) part {
+	return irc_send_raw(_irc_session,
+						"PART %s",
+						_name.SA_terminatedCString);
 }
 
-- (int)invite:(NSData *)nick
-{
-	return irc_cmd_invite(_irc_session, nick.SA_terminatedCString, _name.SA_terminatedCString);
+-(int) invite:(NSData *)nick {
+	if (!nick || nick.length == 0)
+		return LIBIRC_ERR_STATE;
+
+	return irc_send_raw(_irc_session,
+						"INVITE %s %s",
+						nick.SA_terminatedCString,
+						_name.SA_terminatedCString);
 }
 
-- (int)refreshNames
-{
-	return irc_cmd_names(_irc_session, _name.SA_terminatedCString);
+-(int) refreshNames {
+	return irc_send_raw(_irc_session,
+						"NAMES %s",
+						_name.SA_terminatedCString);
 }
 
-- (void)setChannelTopic:(NSData *)newTopic
-{	
-	irc_cmd_topic(_irc_session, _name.SA_terminatedCString, newTopic.SA_terminatedCString);
-}
-
-- (int)setMode:(NSData *)mode params:(NSData *)params
-{
-	if(params != nil)
-	{
-		NSMutableData *fullModeString = (params != nil) ? [NSMutableData dataWithLength:mode.length + 1 + params.length] : [NSMutableData dataWithLength:mode.length];
-		sprintf(fullModeString.mutableBytes, "%s %s", mode.bytes, params.bytes);
-		
-		return irc_cmd_channel_mode(_irc_session, _name.SA_terminatedCString, fullModeString.SA_terminatedCString);
-	}
+-(int) setChannelTopic:(NSData *)newTopic {
+	if (newTopic)
+		return irc_send_raw(_irc_session,
+							"TOPIC %s :%s",
+							_name.SA_terminatedCString,
+							newTopic.SA_terminatedCString);
 	else
-	{
-		return irc_cmd_channel_mode(_irc_session, _name.SA_terminatedCString, mode.SA_terminatedCString);
+		return irc_send_raw(_irc_session,
+							"TOPIC %s",
+							_name.SA_terminatedCString);
+}
+
+-(int) setMode:(NSData *)mode 
+		params:(NSData *)params {
+	if (mode != nil) {
+		NSMutableData *fullModeString = ((params != nil) ?
+										 [NSMutableData dataWithLength:mode.length + 1 + params.length] :
+										 [NSMutableData dataWithLength:mode.length + 1]);
+		sprintf(fullModeString.mutableBytes, 
+				"%s %s", 
+				mode.SA_terminatedCString,
+				params.SA_terminatedCString);
+		
+		return irc_send_raw(_irc_session,
+							"MODE %s %s",
+							_name.SA_terminatedCString,
+							fullModeString.SA_terminatedCString);
+	} else {
+		return irc_send_raw(_irc_session,
+							"MODE %s",
+							_name.SA_terminatedCString);
 	}
 }
 
-- (int)message:(NSData *)message
-{
-	return irc_cmd_msg(_irc_session, _name.SA_terminatedCString, message.SA_terminatedCString);
+-(int) message:(NSData *)message {
+	if (!message || message.length == 0)
+		return LIBIRC_ERR_STATE;
+
+	return irc_send_raw(_irc_session,
+						"PRIVMSG %s :%s",
+						_name.SA_terminatedCString,
+						irc_color_convert_to_mirc(message.SA_terminatedCString));
 }
 
-- (int)action:(NSData *)action
-{
-	return irc_cmd_me(_irc_session, _name.SA_terminatedCString, action.SA_terminatedCString);
+-(int) action:(NSData *)action {
+	if (!action || action.length == 0)
+		return LIBIRC_ERR_STATE;
+
+	return irc_send_raw(_irc_session,
+						"PRIVMSG %s :\x01" "ACTION %s\x01",
+						_name.SA_terminatedCString,
+						irc_color_convert_to_mirc(action.SA_terminatedCString));
 }
 
-- (int)notice:(NSData *)notice
-{
-	return irc_cmd_notice(_irc_session, _name.SA_terminatedCString, notice.SA_terminatedCString);
+-(int) notice:(NSData *)notice {
+	if (!notice || notice.length == 0)
+		return LIBIRC_ERR_STATE;
+
+	return irc_send_raw(_irc_session,
+						"NOTICE %s :%s",
+						_name.SA_terminatedCString,
+						notice.SA_terminatedCString);
 }
 
-- (int)kick:(NSData *)nick reason:(NSData *)reason
-{
-	return irc_cmd_kick(_irc_session, nick.SA_terminatedCString, _name.SA_terminatedCString, reason.SA_terminatedCString);
+-(int) kick:(NSData *)nick 
+	 reason:(NSData *)reason {
+	if (!nick || nick.length == 0)
+		return LIBIRC_ERR_STATE;
+
+	if (reason)
+		return irc_send_raw(_irc_session,
+							"KICK %s %s :%s",
+							_name.SA_terminatedCString,
+							nick.SA_terminatedCString,
+							reason.SA_terminatedCString);
+	else
+		return irc_send_raw(_irc_session,
+							"KICK %s %s",
+							_name.SA_terminatedCString,
+							nick.SA_terminatedCString);
 }
 
-- (int)ctcpRequest:(NSData *)request
-{
-	return irc_cmd_ctcp_request(_irc_session, _name.SA_terminatedCString, request.SA_terminatedCString);
+-(int) ctcpRequest:(NSData *)request {
+	if (!request || request.length == 0)
+		return LIBIRC_ERR_STATE;
+
+	return irc_send_raw(_irc_session,
+						"PRIVMSG %s :\x01%s\x01",
+						_name.SA_terminatedCString,
+						request.SA_terminatedCString);
 }
 
 /****************************/
 #pragma mark - Event handlers
 /****************************/
 
-- (void)userJoined:(NSData *)nick
-{
-	[_delegate userJoined:nick channel:self];
+-(void) userJoined:(NSData *)nick {
+	[_nicks addObject:nick];
+
+	[_delegate userJoined:nick 
+				  channel:self];
 }
 
-- (void)userParted:(NSData *)nick withReason:(NSData *)reason us:(BOOL)wasItUs
-{
-	[_delegate userParted:nick channel:self withReason:reason us:wasItUs];
+-(void) userParted:(NSData *)nick 
+		withReason:(NSData *)reason 
+				us:(BOOL)wasItUs {
+	if (!wasItUs)
+		[_nicks removeObject:nick];
+	// TODO: but what if it was us? the delegate handles it...? or do we do
+	// something here?
+
+	[_delegate userParted:nick 
+				  channel:self 
+			   withReason:reason 
+					   us:wasItUs];
 }
 
-- (void)modeSet:(NSData *)mode withParams:(NSData *)params by:(NSData *)nick
-{
-	[_delegate modeSet:mode forChannel:self withParams:params by:nick];
+-(void) modeSet:(NSData *)mode 
+	 withParams:(NSData *)params 
+			 by:(NSData *)nick {
+	// TODO: actually update the mode based on this event ... figure out what
+	// mode set event returns?
+//	_modes =
+
+	[_delegate modeSet:mode 
+			forChannel:self 
+			withParams:params 
+					by:nick];
 }
 
-- (void)topicSet:(NSData *)topic by:(NSData *)nick
-{
+-(void) topicSet:(NSData *)topic 
+			  by:(NSData *)nick {
 	_topic = topic;
 	
-	[_delegate topicSet:topic forChannel:self by:nick];
+	[_delegate topicSet:topic 
+			 forChannel:self 
+					 by:nick];
 }
 
-- (void)userKicked:(NSData *)nick withReason:(NSData *)reason by:(NSData *)byNick us:(BOOL)wasItUs
-{
-	[_delegate userKicked:nick fromChannel:self withReason:reason by:byNick us:wasItUs];
+-(void) userKicked:(NSData *)nick 
+		withReason:(NSData *)reason 
+				by:(NSData *)byNick
+				us:(BOOL)wasItUs {
+	if (!wasItUs)
+		[_nicks removeObject:nick];
+	// TODO: but what if it was us? the delegate handles it...? or do we do
+	// something here?
+
+	[_delegate userKicked:nick
+			  fromChannel:self 
+			   withReason:reason
+					   by:byNick 
+					   us:wasItUs];
 }
 
-- (void)messageSent:(NSData *)message byUser:(NSData *)nick
-{
-	[_delegate messageSent:message byUser:nick onChannel:self];
+-(void) messageSent:(NSData *)message 
+			 byUser:(NSData *)nick {
+	[_delegate messageSent:message
+					byUser:nick 
+				 onChannel:self];
 }
 
-- (void)noticeSent:(NSData *)notice byUser:(NSData *)nick
-{
-	[_delegate noticeSent:notice byUser:nick onChannel:self];
+-(void) noticeSent:(NSData *)notice 
+			byUser:(NSData *)nick {
+	[_delegate noticeSent:notice 
+				   byUser:nick 
+				onChannel:self];
 }
 
-- (void)actionPerformed:(NSData *)action byUser:(NSData *)nick
-{
-	[_delegate actionPerformed:action byUser:nick onChannel:self];
+-(void) actionPerformed:(NSData *)action 
+				 byUser:(NSData *)nick {
+	[_delegate actionPerformed:action 
+						byUser:nick 
+					 onChannel:self];
 }
 
 @end

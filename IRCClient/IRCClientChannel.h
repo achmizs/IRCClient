@@ -27,6 +27,8 @@
  *  for a given session when the client joins an IRC channel.
  */
 
+@class IRCClientSession;
+
 /**********************************************/
 #pragma mark IRCClientChannel class declaration
 /**********************************************/
@@ -40,6 +42,9 @@
 /** Delegate to send events to */
 @property (assign) id <IRCClientChannelDelegate> delegate;
 
+/** Associated session */
+@property (readonly) IRCClientSession *session;
+
 /** Name of the channel */
 @property (readonly) NSData *name;
 
@@ -50,7 +55,7 @@
  *
  *	You can (attempt to) set the topic by using setChannelTopic:, not by 
  *	changing this property (which is readonly). If the connected user has the
- *	privileges to set the channel topic, the channel's delegate will receive a
+ *	privileges to set the channel topic, the channel’s delegate will receive a
  *	topicSet:by: message (and the topic property of the channel object will be
  *	updated automatically).
  */
@@ -66,18 +71,24 @@
 /** Stores arbitrary user info. */
 @property (strong) NSDictionary *userInfo;
 
+/********************************************/
+#pragma mark - Initializers & factory methods
+/********************************************/
+
++(instancetype) channel;
+
 /**************************/
 #pragma mark - IRC commands
 /**************************/
 
 /** Parts the channel. */
-- (int)part;
+-(int) part;
 
 /** Invites another IRC client to the channel.
  *
  *  @param nick the nickname of the client to invite.
  */
-- (int)invite:(NSData *)nick;
+-(int) invite:(NSData *)nick;
 
 /** Sets the topic of the channel.
  *
@@ -86,7 +97,7 @@
  *
  *  @param aTopic the topic the client wishes to set for the channel.
  */
-- (void)setChannelTopic:(NSData *)newTopic;
+-(int) setChannelTopic:(NSData *)newTopic;
 
 /** Sets the mode of the channel.
  *
@@ -95,33 +106,35 @@
  *
  *  @param mode the mode to set the channel to
  */
-- (int)setMode:(NSData *)mode params:(NSData *)params;
+-(int) setMode:(NSData *)mode 
+		params:(NSData *)params;
 
 /** Sends a public PRIVMSG to the channel. If you try to send more than can fit on an IRC
   	buffer, it will be truncated.
  
     @param message the message to send to the channel.
  */
-- (int)message:(NSData *)message;
+-(int) message:(NSData *)message;
 
 /** Sends a public CTCP ACTION to the channel.
  *
  *  @param action action to send to the channel.
  */
-- (int)action:(NSData *)action;
+-(int) action:(NSData *)action;
 
 /** Sends a public NOTICE to the channel.
  *
  *  @param notice message to send to the channel.
  */
-- (int)notice:(NSData *)notice;
+-(int) notice:(NSData *)notice;
 
 /** Kicks someone from a channel.
  *
  *  @param nick the IRC client to kick from the channel.
  *  @param reason the message to give to the channel and the IRC client for the kick.
  */
-- (int)kick:(NSData *)nick reason:(NSData *)reason;
+-(int) kick:(NSData *)nick 
+	 reason:(NSData *)reason;
 
 /** Sends a CTCP request to the channel.
  *
@@ -130,6 +143,6 @@
  *
  *  @param request the string of the request, in CTCP format.
  */
-- (int)ctcpRequest:(NSData *)request;
+-(int) ctcpRequest:(NSData *)request;
 
 @end
