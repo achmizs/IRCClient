@@ -71,9 +71,78 @@ static NSDictionary* ircNumericCodeList;
 	return [self new];
 }
 
-/*************************************/
-#pragma mark - Useful helper functions
-/*************************************/
+-(instancetype) init {
+	if (!(self = [super init]))
+		return nil;
+
+	_callbacks.event_connect		= onEvent;
+	_callbacks.event_ping			= onEvent;
+	_callbacks.event_nick			= onEvent;
+	_callbacks.event_quit			= onEvent;
+	_callbacks.event_join			= onEvent;
+	_callbacks.event_part			= onEvent;
+	_callbacks.event_mode			= onEvent;
+	_callbacks.event_umode			= onEvent;
+	_callbacks.event_topic			= onEvent;
+	_callbacks.event_kick			= onEvent;
+	_callbacks.event_error			= onEvent;
+	_callbacks.event_channel		= onEvent;
+	_callbacks.event_privmsg		= onEvent;
+	_callbacks.event_server_msg		= onEvent;
+	_callbacks.event_notice			= onEvent;
+	_callbacks.event_channel_notice	= onEvent;
+	_callbacks.event_server_notice	= onEvent;
+	_callbacks.event_invite			= onEvent;
+	_callbacks.event_ctcp_req		= onEvent;
+	_callbacks.event_ctcp_rep		= onEvent;
+	_callbacks.event_ctcp_action	= onEvent;
+	_callbacks.event_unknown		= onEvent;
+	_callbacks.event_numeric		= onNumericEvent;
+	_callbacks.event_dcc_chat_req	= onDCCChatRequest;
+	_callbacks.event_dcc_send_req	= onDCCSendRequest;
+
+	_irc_session = irc_create_session(&_callbacks);
+
+	if (!_irc_session) {
+		NSLog(@"Could not create irc_session.");
+		return nil;
+	}
+
+	// Strip server info from nicks.
+	//	irc_option_set(_irc_session, LIBIRC_OPTION_STRIPNICKS);
+
+	// Set debug mode.
+	//	irc_option_set(_irc_session, LIBIRC_OPTION_DEBUG);
+
+	irc_set_ctx(_irc_session, (__bridge void *)(self));
+
+	unsigned int high, low;
+	irc_get_version (&high, &low);
+
+	_version = [[NSString stringWithFormat:@"IRCClient Framework v%s (Said Achmiz) - libirc v%d.%d (Georgy Yunaev)",
+				 IRCCLIENTVERSION,
+				 high,
+				 low] dataAsUTF8];
+
+	_channels = [NSMutableDictionary dictionary];
+	_encoding = NSUTF8StringEncoding;
+
+	_userInfo = [NSMutableDictionary dictionary];
+
+	return self;
+}
+
+-(void) dealloc {
+	if (irc_is_connected(_irc_session)) {
+		NSLog(@"Warning: IRC Session is not disconnected on dealloc");
+	}
+
+	irc_destroy_session(_irc_session);
+}
+
+/***************************/
+#pragma mark - Class methods
+/***************************/
 
 +(NSData *) nickFromNickUserHost:(NSData *)nickUserHost {
 	if (nickUserHost == nil)
@@ -121,78 +190,9 @@ static NSDictionary* ircNumericCodeList;
 														 nickUserHost.length - (rangeOfUserHostSeparator.location + 1))]);
 }
 
-/***************************/
-#pragma mark - Class methods
-/***************************/
-
--(instancetype) init {
-	if (!(self = [super init]))
-		return nil;
-
-	_callbacks.event_connect		= onEvent;
-	_callbacks.event_ping			= onEvent;
-	_callbacks.event_nick			= onEvent;
-	_callbacks.event_quit			= onEvent;
-	_callbacks.event_join			= onEvent;
-	_callbacks.event_part			= onEvent;
-	_callbacks.event_mode			= onEvent;
-	_callbacks.event_umode			= onEvent;
-	_callbacks.event_topic			= onEvent;
-	_callbacks.event_kick			= onEvent;
-	_callbacks.event_error			= onEvent;
-	_callbacks.event_channel		= onEvent;
-	_callbacks.event_privmsg		= onEvent;
-	_callbacks.event_server_msg		= onEvent;
-	_callbacks.event_notice			= onEvent;
-	_callbacks.event_channel_notice	= onEvent;
-	_callbacks.event_server_notice	= onEvent;
-	_callbacks.event_invite			= onEvent;
-	_callbacks.event_ctcp_req		= onEvent;
-	_callbacks.event_ctcp_rep		= onEvent;
-	_callbacks.event_ctcp_action	= onEvent;
-	_callbacks.event_unknown		= onEvent;
-	_callbacks.event_numeric		= onNumericEvent;
-	_callbacks.event_dcc_chat_req	= onDCCChatRequest;
-	_callbacks.event_dcc_send_req	= onDCCSendRequest;
-	
-	_irc_session = irc_create_session(&_callbacks);
-	
-	if (!_irc_session) {
-		NSLog(@"Could not create irc_session.");
-		return nil;
-	}
-	
-	// Strip server info from nicks.
-//	irc_option_set(_irc_session, LIBIRC_OPTION_STRIPNICKS);
-	
-	// Set debug mode.
-//	irc_option_set(_irc_session, LIBIRC_OPTION_DEBUG);
-	
-	irc_set_ctx(_irc_session, (__bridge void *)(self));
-	
-	unsigned int high, low;
-	irc_get_version (&high, &low);
-	
-	_version = [[NSString stringWithFormat:@"IRCClient Framework v%s (Said Achmiz) - libirc v%d.%d (Georgy Yunaev)",
-				 IRCCLIENTVERSION,
-				 high,
-				 low] dataAsUTF8];
-	
-	_channels = [NSMutableDictionary dictionary];
-	_encoding = NSUTF8StringEncoding;
-
-	_userInfo = [NSMutableDictionary dictionary];
-
-	return self;
-}
-
--(void) dealloc {
-	if (irc_is_connected(_irc_session)) {
-		NSLog(@"Warning: IRC Session is not disconnected on dealloc");
-	}
-	
-	irc_destroy_session(_irc_session);
-}
+/*************************************/
+#pragma mark - Class methods (private)
+/*************************************/
 
 +(void) loadNumericCodes {
 	NSString* numericCodeListPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IRC_Numerics"
@@ -204,6 +204,10 @@ static NSDictionary* ircNumericCodeList;
 		NSLog(@"Could not load IRC numeric codes list!\n");
 	}
 }
+
+/******************************/
+#pragma mark - Instance methods
+/******************************/
 
 -(int) connect {
 	return irc_connect(_irc_session,
@@ -251,7 +255,7 @@ static NSDictionary* ircNumericCodeList;
 						message.terminatedCString);
 }
 
-- (int) quit:(NSData *)reason {
+-(int) quit:(NSData *)reason {
 	return irc_send_raw(_irc_session,
 						"QUIT :%s",
 						(reason

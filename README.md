@@ -61,7 +61,7 @@ properties, and call `-[connect:]` to connect to the server and `-[run:]` to pla
 the connection on a new event queue and start receiving events. For example:
 
 ```
-IRCClientSession *session = [IRCClientSession new];
+IRCClientSession *session = [IRCClientSession session];
 MyIRCClientSessionDelegate *controller = [[MyIRCClientSessionDelegate alloc] init];
 
 session.delegate = controller;
