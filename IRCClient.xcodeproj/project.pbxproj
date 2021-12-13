@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8657E6E21C2B55B900BD4E50 /* IRC_Numerics.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8657E6E11C2B55B900BD4E50 /* IRC_Numerics.plist */; };
+		86627E21276648E400AEFEB7 /* NSData+SA_NSDataExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 86627E1F276648E400AEFEB7 /* NSData+SA_NSDataExtensions.h */; };
+		86627E22276648E400AEFEB7 /* NSData+SA_NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 86627E20276648E400AEFEB7 /* NSData+SA_NSDataExtensions.m */; };
 		86769D6D1C94DC5300B86A72 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 86769D5B1C94DC5300B86A72 /* config.h */; };
 		86769D6E1C94DC5300B86A72 /* dcc.h in Headers */ = {isa = PBXBuildFile; fileRef = 86769D5C1C94DC5300B86A72 /* dcc.h */; };
 		86769D6F1C94DC5300B86A72 /* libirc_errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 86769D5D1C94DC5300B86A72 /* libirc_errors.h */; };
@@ -24,8 +26,6 @@
 		86B0D3ED22C5FF1300E60877 /* NSArray+SA_NSArrayExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B0D3EB22C5FF1300E60877 /* NSArray+SA_NSArrayExtensions.m */; };
 		86BAE5A1232ABFD200936147 /* NSIndexSet+SA_NSIndexSetExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 86BAE59F232ABFD200936147 /* NSIndexSet+SA_NSIndexSetExtensions.m */; };
 		86BAE5A2232ABFD200936147 /* NSIndexSet+SA_NSIndexSetExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 86BAE5A0232ABFD200936147 /* NSIndexSet+SA_NSIndexSetExtensions.h */; };
-		86D02CD6275B79FB00876E93 /* NSData+SA_NSDataExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D02CD4275B79FB00876E93 /* NSData+SA_NSDataExtensions.h */; };
-		86D02CD7275B79FB00876E93 /* NSData+SA_NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D02CD5275B79FB00876E93 /* NSData+SA_NSDataExtensions.m */; };
 		86D02CE0275B9E6B00876E93 /* NSString+SA_NSStringExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 86D02CDE275B9E6B00876E93 /* NSString+SA_NSStringExtensions.h */; };
 		86D02CE1275B9E6B00876E93 /* NSString+SA_NSStringExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D02CDF275B9E6B00876E93 /* NSString+SA_NSStringExtensions.m */; };
 		86F2EFF81C21F81900B033A4 /* IRCClientChannel_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 86F2EFF11C21F81900B033A4 /* IRCClientChannel_Private.h */; };
@@ -39,6 +39,8 @@
 
 /* Begin PBXFileReference section */
 		8657E6E11C2B55B900BD4E50 /* IRC_Numerics.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = IRC_Numerics.plist; sourceTree = "<group>"; };
+		86627E1F276648E400AEFEB7 /* NSData+SA_NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+SA_NSDataExtensions.h"; path = "../../SA_NSDataExtensions/NSData+SA_NSDataExtensions.h"; sourceTree = "<group>"; };
+		86627E20276648E400AEFEB7 /* NSData+SA_NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+SA_NSDataExtensions.m"; path = "../../SA_NSDataExtensions/NSData+SA_NSDataExtensions.m"; sourceTree = "<group>"; };
 		86769D5B1C94DC5300B86A72 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		86769D5C1C94DC5300B86A72 /* dcc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dcc.h; sourceTree = "<group>"; };
 		86769D5D1C94DC5300B86A72 /* libirc_errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirc_errors.h; sourceTree = "<group>"; };
@@ -55,8 +57,6 @@
 		86B0D3EB22C5FF1300E60877 /* NSArray+SA_NSArrayExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "NSArray+SA_NSArrayExtensions.m"; path = "../../OS X Projects/SA_IRCBotServer/NSArray+SA_NSArrayExtensions/NSArray+SA_NSArrayExtensions.m"; sourceTree = "<group>"; };
 		86BAE59F232ABFD200936147 /* NSIndexSet+SA_NSIndexSetExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSIndexSet+SA_NSIndexSetExtensions.m"; path = "../../OS X Projects/XGopher/NSIndexSet+SA_NSIndexSetExtensions/NSIndexSet+SA_NSIndexSetExtensions.m"; sourceTree = "<group>"; };
 		86BAE5A0232ABFD200936147 /* NSIndexSet+SA_NSIndexSetExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSIndexSet+SA_NSIndexSetExtensions.h"; path = "../../OS X Projects/XGopher/NSIndexSet+SA_NSIndexSetExtensions/NSIndexSet+SA_NSIndexSetExtensions.h"; sourceTree = "<group>"; };
-		86D02CD4275B79FB00876E93 /* NSData+SA_NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+SA_NSDataExtensions.h"; path = "../../SA_NSDataExtensions/NSData+SA_NSDataExtensions.h"; sourceTree = "<group>"; };
-		86D02CD5275B79FB00876E93 /* NSData+SA_NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+SA_NSDataExtensions.m"; path = "../../SA_NSDataExtensions/NSData+SA_NSDataExtensions.m"; sourceTree = "<group>"; };
 		86D02CDE275B9E6B00876E93 /* NSString+SA_NSStringExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+SA_NSStringExtensions.h"; path = "../SA_NSStringExtensions/NSString+SA_NSStringExtensions.h"; sourceTree = "<group>"; };
 		86D02CDF275B9E6B00876E93 /* NSString+SA_NSStringExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+SA_NSStringExtensions.m"; path = "../SA_NSStringExtensions/NSString+SA_NSStringExtensions.m"; sourceTree = "<group>"; };
 		86F2EFE61C21F73600B033A4 /* IRCClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IRCClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,8 +84,8 @@
 		866B9D4F1C97530E00F460BB /* NSData+SA_NSDataExtensions */ = {
 			isa = PBXGroup;
 			children = (
-				86D02CD4275B79FB00876E93 /* NSData+SA_NSDataExtensions.h */,
-				86D02CD5275B79FB00876E93 /* NSData+SA_NSDataExtensions.m */,
+				86627E1F276648E400AEFEB7 /* NSData+SA_NSDataExtensions.h */,
+				86627E20276648E400AEFEB7 /* NSData+SA_NSDataExtensions.m */,
 			);
 			name = "NSData+SA_NSDataExtensions";
 			path = SA_NSDataExtensions;
@@ -203,6 +203,7 @@
 				86769D751C94DC5300B86A72 /* session.h in Headers */,
 				86769D6E1C94DC5300B86A72 /* dcc.h in Headers */,
 				86B0D3E922C5A3D700E60877 /* NSRange-Conventional.h in Headers */,
+				86627E21276648E400AEFEB7 /* NSData+SA_NSDataExtensions.h in Headers */,
 				86F2EFFB1C21F81900B033A4 /* IRCClientChannelDelegate.h in Headers */,
 				86769D721C94DC5300B86A72 /* libirc_rfcnumeric.h in Headers */,
 				86D02CE0275B9E6B00876E93 /* NSString+SA_NSStringExtensions.h in Headers */,
@@ -214,7 +215,6 @@
 				86BAE5A2232ABFD200936147 /* NSIndexSet+SA_NSIndexSetExtensions.h in Headers */,
 				86B0D3EC22C5FF1300E60877 /* NSArray+SA_NSArrayExtensions.h in Headers */,
 				86769D6F1C94DC5300B86A72 /* libirc_errors.h in Headers */,
-				86D02CD6275B79FB00876E93 /* NSData+SA_NSDataExtensions.h in Headers */,
 				86769D711C94DC5300B86A72 /* libirc_options.h in Headers */,
 				86F2EFF81C21F81900B033A4 /* IRCClientChannel_Private.h in Headers */,
 			);
@@ -291,9 +291,9 @@
 				86BAE5A1232ABFD200936147 /* NSIndexSet+SA_NSIndexSetExtensions.m in Sources */,
 				86F2EFFD1C21F81900B033A4 /* IRCClientSession.m in Sources */,
 				86B0D3ED22C5FF1300E60877 /* NSArray+SA_NSArrayExtensions.m in Sources */,
-				86D02CD7275B79FB00876E93 /* NSData+SA_NSDataExtensions.m in Sources */,
 				86D02CE1275B9E6B00876E93 /* NSString+SA_NSStringExtensions.m in Sources */,
 				86F2EFFA1C21F81900B033A4 /* IRCClientChannel.m in Sources */,
+				86627E22276648E400AEFEB7 /* NSData+SA_NSDataExtensions.m in Sources */,
 				86769D791C94DC5300B86A72 /* libircclient.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

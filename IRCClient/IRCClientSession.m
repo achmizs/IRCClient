@@ -21,6 +21,7 @@
 #import "NSData+SA_NSDataExtensions.h"
 #import "NSString+SA_NSStringExtensions.h"
 #import "NSRange-Conventional.h"
+#import "NSIndexSet+SA_NSIndexSetExtensions.h"
 
 /********************************************/
 #pragma mark - Callback function declarations
@@ -190,6 +191,73 @@ static NSDictionary* ircNumericCodeList;
 														 nickUserHost.length - (rangeOfUserHostSeparator.location + 1))]);
 }
 
+// TODO: implement color support
+-(NSData *) colorConvertToMIRC:(NSData *)message {
+	NSMutableData *workingCopy = [message mutableCopy];
+
+	[@[ @[ @"[B]", @"[/B]", [NSData dataFromCString:"\x02"] ],
+		@[ @"[I]", @"[/I]", [NSData dataFromCString:"\x16"] ],
+		@[ @"[U]", @"[/U]", [NSData dataFromCString:"\x1F"] ] ] forEach:^(NSArray *tags) {
+			NSData *openingTag = [tags[0] dataUsingEncoding:self.encoding];
+			NSData *closingTag = [tags[1] dataUsingEncoding:self.encoding];
+			NSData *mircCode = tags[2];
+
+			NSRange rangeOfOpeningTag, rangeOfClosingTag;
+			do {
+				// Find next opening tag.
+				rangeOfOpeningTag = [workingCopy rangeOfData:openingTag
+													 options:(NSDataSearchOptions) 0
+													   range:workingCopy.fullRange];
+				if (rangeOfOpeningTag.location != NSNotFound) {
+					// Replace opening tag.
+					[workingCopy replaceBytesInRange:rangeOfOpeningTag
+										   withBytes:mircCode.bytes
+											  length:mircCode.length];
+
+					// Find next closing tag.
+					rangeOfClosingTag = [workingCopy rangeOfData:closingTag
+														 options:(NSDataSearchOptions) 0
+														   range:[workingCopy rangeAfterRange:NSMakeRange(rangeOfOpeningTag.location,
+																										  mircCode.length)]];
+					if (rangeOfClosingTag.location != NSNotFound) {
+						// Replace closing tag, if any.
+						[workingCopy replaceBytesInRange:rangeOfClosingTag
+											   withBytes:mircCode.bytes
+												  length:mircCode.length];
+					} else {
+						// Otherwise, end the string with a closing tag.
+						[workingCopy appendBytes:mircCode.bytes
+										  length:mircCode.length];
+					}
+				}
+			} while (rangeOfOpeningTag.location != NSNotFound);
+
+			// Clean up stray closing tags.
+			do {
+				rangeOfClosingTag = [workingCopy rangeOfData:closingTag
+													 options:(NSDataSearchOptions) 0
+													   range:workingCopy.fullRange];
+				if (rangeOfClosingTag.location != NSNotFound) {
+					[workingCopy replaceBytesInRange:rangeOfClosingTag
+										   withBytes:mircCode.bytes
+											  length:mircCode.length];
+				}
+			} while (rangeOfClosingTag.location != NSNotFound);
+		}];
+
+	return [workingCopy copy];
+}
+
+-(NSData *) colorConvertFromMIRC:(NSData *)message {
+	// TODO: Implement this for real!
+	return [self colorStripFromMIRC:message];
+}
+
+// TODO: implement this!
+-(NSData *) colorStripFromMIRC:(NSData *)message {
+	return message;
+}
+
 /*************************************/
 #pragma mark - Class methods (private)
 /*************************************/
@@ -347,7 +415,8 @@ static NSDictionary* ircNumericCodeList;
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :%s",
 						target.terminatedCString,
-						irc_color_convert_to_mirc(message.terminatedCString));
+//						irc_color_convert_to_mirc(message.terminatedCString));
+						[self colorConvertToMIRC:message].terminatedCString);
 }
 
 -(int) action:(NSData *)action
@@ -359,7 +428,8 @@ static NSDictionary* ircNumericCodeList;
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :\x01" "ACTION %s\x01",
 						target.terminatedCString,
-						irc_color_convert_to_mirc(action.terminatedCString));
+//						irc_color_convert_to_mirc(action.terminatedCString));
+						[self colorConvertToMIRC:action].terminatedCString);
 }
 
 -(int) notice:(NSData *)notice 
@@ -425,17 +495,18 @@ static NSDictionary* ircNumericCodeList;
 			|| !strcmp(event, "SERVNOTICE")
 			|| !strcmp(event, "CTCP_ACTION")
 		)) {
-			char* (*process_color_codes) (const char *) = (whatAboutColors == SA_IRC_ParseColorCodes
-														   ? irc_color_convert_from_mirc
-														   : irc_color_strip_from_mirc);
-
 			params_array = [NSMutableArray arrayWithCapacity:count];
-			for (NSUInteger i = 0; i < count; i++) {
-				[params_array addObject:[NSData dataFromCString:(*process_color_codes)(params[i])]];
-			}
+			[NSIndexSet from:0
+						 for:count
+						  do:^(NSUInteger idx) {
+							  NSData *param = (whatAboutColors == SA_IRC_ParseColorCodes
+											   ? [self colorConvertFromMIRC:[NSData dataFromCString:params[idx]]]
+											   : [self colorStripFromMIRC:[NSData dataFromCString:params[idx]]]);
+							  [params_array addObject:param];
+			}];
 	} else {
-		params_array = (NSMutableArray *) [NSArray arrayOfCStringData:params
-																count:count];
+		params_array = [NSMutableArray arrayOfCStringData:params
+													count:count];
 	}
 
 	NSData *origin_data = origin ? [NSData dataFromCString:origin] : nil;

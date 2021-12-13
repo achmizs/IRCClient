@@ -138,7 +138,8 @@
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :%s",
 						_name.terminatedCString,
-						irc_color_convert_to_mirc(message.terminatedCString));
+//						irc_color_convert_to_mirc(message.terminatedCString));
+						[self.session colorConvertToMIRC:message].terminatedCString);
 }
 
 -(int) action:(NSData *)action {
@@ -148,7 +149,8 @@
 	return irc_send_raw(_irc_session,
 						"PRIVMSG %s :\x01" "ACTION %s\x01",
 						_name.terminatedCString,
-						irc_color_convert_to_mirc(action.terminatedCString));
+//						irc_color_convert_to_mirc(action.terminatedCString));
+						[self.session colorConvertToMIRC:action].terminatedCString);
 }
 
 -(int) notice:(NSData *)notice {

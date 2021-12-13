@@ -168,6 +168,18 @@
  */
 -(void) run;
 
+/** Convert libircclient markup in a message to mIRC format codes.
+ */
+-(NSData *) colorConvertToMIRC:(NSData *)message;
+
+/** Convert mIRC format codes in a message to libircclient markup.
+ */
+-(NSData *) colorConvertFromMIRC:(NSData *)message;
+
+/** Remove mIRC format codes from a message.
+ */
+-(NSData *) colorStripFromMIRC:(NSData *)message;
+
 /**************************/
 #pragma mark - IRC commands
 /**************************/

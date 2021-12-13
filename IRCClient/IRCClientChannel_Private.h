@@ -8,6 +8,7 @@
 //  See LICENSE and README.md for more info.
 
 #import "IRCClientChannel.h"
+#import "IRCClientSession.h"
 #include "libircclient.h"
 
 /********************************************/
