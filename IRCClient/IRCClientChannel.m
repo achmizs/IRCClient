@@ -16,8 +16,6 @@
 /********************************************/
 
 @interface IRCClientChannel() {
-	irc_session_t	*_irc_session;
-
 	// TODO: actually keep track of nicks! Use RPL_NAMREPLY and so on...
 	// (see refreshNames...)
 	NSMutableArray	*_nicks;
@@ -39,10 +37,6 @@
 	return [_nicks copy];
 }
 
--(IRCClientSession *) session {
-	return (__bridge IRCClientSession *) irc_get_ctx(_irc_session);
-}
-
 /********************************************/
 #pragma mark - Initializers & factory methods
 /********************************************/
@@ -56,11 +50,11 @@
 /**************************/
 
 -(instancetype) initWithName:(NSData *)name 
-			   andIRCSession:(irc_session_t *)irc_session {
+			   andIRCSession:(IRCClientSession *)session {
 	if (!(self = [super init]))
 		return nil;
 
-	_irc_session = irc_session;
+	_session = session;
 
 	_name = name;
 	_encoding = NSUTF8StringEncoding;
@@ -76,119 +70,102 @@
 /**************************/
 
 -(int) part {
-	return irc_send_raw(_irc_session,
-						"PART %s",
-						_name.terminatedCString);
+	[_session sendRaw:[NSData dataWithFormat:"PART %@", _name, nil]];
+
+	return 0;
 }
 
 -(int) invite:(NSData *)nick {
 	if (!nick || nick.length == 0)
-		return LIBIRC_ERR_STATE;
+		return 1;
+//		return LIBIRC_ERR_STATE;
 
-	return irc_send_raw(_irc_session,
-						"INVITE %s %s",
-						nick.terminatedCString,
-						_name.terminatedCString);
+	[_session sendRaw:[NSData dataWithFormat:"INVITE %@ %@", nick, _name, nil]];
+
+	return 0;
 }
 
 -(int) refreshNames {
-	return irc_send_raw(_irc_session,
-						"NAMES %s",
-						_name.terminatedCString);
+	[_session sendRaw:[NSData dataWithFormat:"NAMES %@", _name, nil]];
+
+	return 0;
 }
 
--(int) setChannelTopic:(NSData *)newTopic {
+-(int) channelTopic:(NSData *)newTopic {
 	if (newTopic)
-		return irc_send_raw(_irc_session,
-							"TOPIC %s :%s",
-							_name.terminatedCString,
-							newTopic.terminatedCString);
+		[_session sendRaw:[NSData dataWithFormat:"TOPIC %@ :%@", _name, newTopic, nil]];
 	else
-		return irc_send_raw(_irc_session,
-							"TOPIC %s",
-							_name.terminatedCString);
+		[_session sendRaw:[NSData dataWithFormat:"TOPIC %@", _name, nil]];
+
+	return 0;
 }
 
--(int) setMode:(NSData *)mode 
-		params:(NSData *)params {
+-(int) channelMode:(NSData *)mode
+			params:(NSData *)params {
 	if (mode != nil) {
-		NSMutableData *fullModeString = ((params != nil) ?
-										 [NSMutableData dataWithLength:mode.length + 1 + params.length] :
-										 [NSMutableData dataWithLength:mode.length + 1]);
-		sprintf(fullModeString.mutableBytes, 
-				"%s %s", 
-				mode.terminatedCString,
-				params.terminatedCString);
-		
-		return irc_send_raw(_irc_session,
-							"MODE %s %s",
-							_name.terminatedCString,
-							fullModeString.terminatedCString);
+		if (params != nil)
+			[_session sendRaw:[NSData dataWithFormat:"MODE %@ %@ %@", _name, mode, params, nil]];
+		else
+			[_session sendRaw:[NSData dataWithFormat:"MODE %@ %@", _name, mode, nil]];
 	} else {
-		return irc_send_raw(_irc_session,
-							"MODE %s",
-							_name.terminatedCString);
+		[_session sendRaw:[NSData dataWithFormat:"MODE %@", _name, nil]];
 	}
+
+	return 0;
 }
 
 -(int) message:(NSData *)message {
 	if (!message || message.length == 0)
-		return LIBIRC_ERR_STATE;
+		return 1;
+//		return LIBIRC_ERR_STATE;
 
-	return irc_send_raw(_irc_session,
-						"PRIVMSG %s :%s",
-						_name.terminatedCString,
-//						irc_color_convert_to_mirc(message.terminatedCString));
-						[self.session colorConvertToMIRC:message].terminatedCString);
+	[_session sendRaw:[NSData dataWithFormat:"PRIVMSG %@ :%@", _name, [self.session colorConvertToMIRC:message], nil]];
+
+	return 0;
 }
 
 -(int) action:(NSData *)action {
 	if (!action || action.length == 0)
-		return LIBIRC_ERR_STATE;
+		return 1;
+//		return LIBIRC_ERR_STATE;
 
-	return irc_send_raw(_irc_session,
-						"PRIVMSG %s :\x01" "ACTION %s\x01",
-						_name.terminatedCString,
-//						irc_color_convert_to_mirc(action.terminatedCString));
-						[self.session colorConvertToMIRC:action].terminatedCString);
+	[_session sendRaw:[NSData dataWithFormat:"PRIVMSG %@ :\x01" "ACTION %@\x01", _name, [self.session colorConvertToMIRC:action], nil]];
+
+	return 0;
 }
 
 -(int) notice:(NSData *)notice {
 	if (!notice || notice.length == 0)
-		return LIBIRC_ERR_STATE;
+		return 1;
+//		return LIBIRC_ERR_STATE;
 
-	return irc_send_raw(_irc_session,
-						"NOTICE %s :%s",
-						_name.terminatedCString,
-						notice.terminatedCString);
+	[_session sendRaw:[NSData dataWithFormat:"NOTICE %@ :%@", _name, notice, nil]];
+
+	return 0;
 }
 
 -(int) kick:(NSData *)nick 
 	 reason:(NSData *)reason {
 	if (!nick || nick.length == 0)
-		return LIBIRC_ERR_STATE;
+		return 1;
+//		return LIBIRC_ERR_STATE;
 
 	if (reason)
-		return irc_send_raw(_irc_session,
-							"KICK %s %s :%s",
-							_name.terminatedCString,
-							nick.terminatedCString,
-							reason.terminatedCString);
+		[_session sendRaw:[NSData dataWithFormat:"KICK %@ %@ :%@", _name, nick, reason, nil]];
 	else
-		return irc_send_raw(_irc_session,
-							"KICK %s %s",
-							_name.terminatedCString,
-							nick.terminatedCString);
+		[_session sendRaw:[NSData dataWithFormat:"KICK %@ %@", _name, nick, nil]];
+
+	return 0;
 }
 
 -(int) ctcpRequest:(NSData *)request {
 	if (!request || request.length == 0)
-		return LIBIRC_ERR_STATE;
+		return 1;
+//		return LIBIRC_ERR_STATE;
 
-	return irc_send_raw(_irc_session,
-						"PRIVMSG %s :\x01%s\x01",
-						_name.terminatedCString,
-						request.terminatedCString);
+	[_session sendRaw:[NSData dataWithFormat:"PRIVMSG %@ :\x01%@\x01", _name, request, nil]];
+
+	return 0;
 }
 
 /****************************/

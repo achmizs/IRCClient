@@ -9,7 +9,6 @@
 
 #import "IRCClientChannel.h"
 #import "IRCClientSession.h"
-#include "libircclient.h"
 
 /********************************************/
 #pragma mark IRCClientChannel class extension
@@ -20,14 +19,14 @@
 /** initWithName:andIRCSession:
  *
  *	Returns an initialised IRCClientChannel with a given channel name, associated
- *  with the given irc_session_t object. You are not expected to initialize your
+ *  with the given IRCClientSession object. You are not expected to initialize your
  *  own IRCClientChannel objects; if you wish to join a channel you should send a
  *  [IRCClientSession join:key:] message to your IRCClientSession object.
  *
  *  @param aName Name of the channel.
  */
 -(instancetype) initWithName:(NSData *)aName
-			   andIRCSession:(irc_session_t *)session;
+			   andIRCSession:(IRCClientSession *)session;
 
 /****************************/
 #pragma mark - Event handlers

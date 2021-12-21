@@ -27,7 +27,7 @@
 #pragma mark IRCClientSession class declaration
 /**********************************************/
 
-@interface IRCClientSession : NSObject
+@interface IRCClientSession : NSObject <NSStreamDelegate>
 
 /******************************/
 #pragma mark - Class properties
@@ -85,22 +85,21 @@
 /** The suggested text encoding for messages on this server.
  
 	This is almost entirely irrelevant (except for CTCP TIME replies), as 
-	all messages and other strings are taken and returned as C strings
-	encapsulated in NSData objects. This property is for your convenience.
+	all messages and other strings are taken and returned as  NSData objects. 
+	This property is for your convenience.
  
 	You may change this at any time.
  */
 @property (assign) NSStringEncoding encoding;
 
 /** An NSDictionary of channels that the client is currently connected to.
-	Keys are channel names (NSData objects containing C strings), values are
-	IRCClientChannel objects.
+	Keys are channel names (NSData), values are IRCClientChannel objects.
  */
 @property (nonatomic, readonly) NSDictionary <NSData *, IRCClientChannel *> *channels;
 
 /** Returns YES if the server is currently connected successfully, and NO if
 	it is not. */
-@property (readonly, getter=isConnected) bool connected;
+@property (readonly, getter=isConnected) BOOL connected;
 
 /** Stores arbitrary user info. */
 @property (nonatomic, readonly) NSMutableDictionary *userInfo;
@@ -137,20 +136,20 @@
 
 /** Set the nickname, username, and realname for the session.
  
-	Returns 1 if successfully set, 0 otherwise.
-	(0 is returned if you try to call this method after the session has
+	Returns YES if successfully set, NO otherwise.
+	(NO is returned if you try to call this method after the session has
 	already connected; use the nick: method to attempt a nick change while
 	connected.)
  */
--(int) setNickname:(NSData *)nickname 
-		  username:(NSData *)username 
-		  realname:(NSData *)realname;
+-(BOOL) setNickname:(NSData *)nickname
+		   username:(NSData *)username
+		   realname:(NSData *)realname;
 
 /** Connect to the IRC server.
  
 	Note that this performs the initial DNS lookup and the TCP connection, so if
 	there are any problems you will be notified via the return code of the message.
- 
+
 	Look at the libircclient documentation for the different return codes.
  */
 -(int) connect;
@@ -161,12 +160,6 @@
 	in a friendly way, you should use the quit: message.
  */
 -(void) disconnect;
-
-/**	Starts a new thread and starts the libircclient runloop, processing events and
-	firing messages back to the main runloop as required. Calling this again will
-	do nothing other than raise a warning in your logs.
- */
--(void) run;
 
 /** Convert libircclient markup in a message to mIRC format codes.
  */

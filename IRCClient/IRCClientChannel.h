@@ -88,7 +88,7 @@
  *
  *  @param aTopic The topic the client wishes to set for the channel.
  */
--(int) setChannelTopic:(NSData *)newTopic;
+-(int) channelTopic:(NSData *)newTopic;
 
 /** Sets the mode of the channel.
  *
@@ -98,8 +98,8 @@
  *
  *  @param mode The mode to set the channel to.
  */
--(int) setMode:(NSData *)mode 
-		params:(NSData *)params;
+-(int) channelMode:(NSData *)mode
+			params:(NSData *)params;
 
 /** Sends a public PRIVMSG to the channel. If you try to send more than 
 	can fit on an IRC buffer, it will be truncated.

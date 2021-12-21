@@ -97,7 +97,7 @@
 /** The client has received an ERROR message from the server.
  */
 @required
--(void) errorReceived:(NSData *)error
+-(void) errorReceived:(NSArray <NSData *> *)params
 			  session:(IRCClientSession *)session;
 
 /** The client has received a private PRIVMSG from another IRC client.
@@ -127,7 +127,7 @@
  */
 @required
 -(void) serverMessageReceivedFrom:(NSData *)origin
-						   params:(NSArray *)params
+						   params:(NSArray <NSData *> *)params
 						  session:(IRCClientSession *)session;
 
 /** The client has received a private NOTICE from the server.
@@ -137,7 +137,7 @@
  */
 @required
 -(void) serverNoticeReceivedFrom:(NSData *)origin 
-						  params:(NSArray *)params 
+						  params:(NSArray <NSData *> *)params
 						 session:(IRCClientSession *)session;
 
 /** The IRC client has been invited to a channel.
@@ -193,7 +193,7 @@
 @optional
 -(void) numericEventReceived:(NSUInteger)event 
 						from:(NSData *)origin 
-					  params:(NSArray *)params 
+					  params:(NSArray <NSData *> *)params
 					 session:(IRCClientSession *)session;
 
 /** An unhandled event was received from the IRC server.
@@ -205,7 +205,7 @@
 @optional
 -(void) unknownEventReceived:(NSData *)event 
 						from:(NSData *)origin 
-					  params:(NSArray *)params 
+					  params:(NSArray <NSData *> *)params
 					 session:(IRCClientSession *)session;
 
 @end
